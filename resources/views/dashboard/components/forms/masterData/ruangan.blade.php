@@ -1,3 +1,11 @@
+@push('style')
+    <style>
+        .selectgroup-input:checked+.selectgroup-button {
+            border-color: rgba(185, 221, 248, 0.467) !important
+        }
+    </style>
+@endpush
+
 <form action="#" id="{{ $form ?? 'form' }}" method="POST" enctype="multipart/form-data" autocomplete="off">
     @csrf
     @if (isset($method) && $method == 'PUT')
@@ -15,7 +23,7 @@
 
             <div class="col-md-12 col-lg-12 col-xl-12 px-2">
                 <div class="form-group">
-                    @component('dashboard.components.formElements.input', ['label' => 'Nama Ruangan', 'name' => 'nama_ruangan', 'class' => 'req', 'wajib' => '<sup class="text-danger">*</sup>', 'placeholder' => 'Masukkan Nama Ruangan', 'value' => isset($ruangan) ? $ruangan->nama_lengkap : ''])
+                    @component('dashboard.components.formElements.input', ['label' => 'Nama Ruangan', 'name' => 'nama_ruangan', 'class' => 'req', 'wajib' => '<sup class="text-danger">*</sup>', 'placeholder' => 'Masukkan Nama Ruangan', 'value' => isset($ruangan) ? $ruangan->nama_ruangan : ''])
                     @endcomponent
                 </div>
             </div>
@@ -29,30 +37,64 @@
                 <div class="form-group">
                     <label for="">Foto Ruangan <sup class="text-danger">*</sup></label>
                     <div class="row" id="gambar-aset">
-                        <div class="col-md-4 col-lg-4 col-xl-3 text-center" id="col-image-1">
-                            <div class="card mb-1">
-                                <div class="p-2 text-center">
-                                    <img class="card-img-top rounded text-center"
-                                        src="{{ asset('assets/img/blank_photo.png') }}" alt="image" data-iter="1"
-                                        id="preview-image-1" style="height: 180px">
-                                </div>
-                                @if ($method == 'POST')
+                        @if ($method == 'POST')
+                            <div class="col-md-4 col-lg-4 col-xl-3 text-center" id="col-image-1">
+                                <div class="card mb-1">
+                                    <div class="p-2 text-center">
+                                        <img class="card-img-top rounded text-center"
+                                            src="{{ asset('assets/img/blank_photo.png') }}" alt="image" data-iter="1"
+                                            id="preview-image-1" style="height: 180px">
+                                    </div>
                                     <input type="hidden" name="file_gambar" value="" class="req"
                                         data-label="Foto Ruangan (Sampul)" id="foto_ruangan-hidden">
-                                @endif
-                                <input type="file" class="form-control form-control-file file-gambar req"
-                                    id="file-gambar-1" data-iter="1" name="file_gambar[]" accept="image/*">
-                                @if ($method == 'PUT')
-                                    <button type="button"
-                                        class="btn btn-danger fw-bold card-footer bg-danger text-center p-0"
-                                        onclick="deleteImage(1)"><i class="fas fa-trash-alt"></i>
-                                        Hapus</button>
-                                @endif
+                                    <input type="file" class="form-control form-control-file file-gambar req"
+                                        id="file-gambar-1" data-iter="1" name="file_gambar[]" accept="image/*">
+                                    <label class="selectgroup-item mb-0">
+                                        <input type="radio" value="" class="selectgroup-input foto_sampul"
+                                            id="foto-sampul" checked='checked'>
+                                        <span class="selectgroup-button selectgroup-button-icon py-1"><i
+                                                class="fas fa-images"></i><span class="foto-sampul-text"
+                                                id="foto-sampul-text"> Foto Sampul</span>
+                                        </span>
+                                    </label>
+                                </div>
+                                <span class="text-danger error-text file_gambar-error d-block my-0"></span>
                             </div>
-                            <span class="text-muted text-center d-block">Ini akan dijadikan <b>foto sampul</b>
-                            </span>
-                            <span class="text-danger error-text file_gambar-error my-0"></span>
-                        </div>
+                        @else
+                            @foreach ($ruangan->fileUpload as $item)
+                                <div class="col-md-4 col-lg-4 col-xl-3 text-center"
+                                    id="col-image-old-{{ $loop->iteration }}">
+                                    <div class="card mb-1">
+                                        <div class="p-2 text-center">
+                                            <img class="card-img-top rounded text-center preview-image"
+                                                src="{{ Storage::exists('upload/foto_ruangan/' . $item->nama_file) ? Storage::url('upload/foto_ruangan/' . $item->nama_file) : asset('assets/img/blank_photo.png') }}"
+                                                alt="image" data-iter="{{ $loop->iteration }}"
+                                                id="preview-image-{{ $loop->iteration }}" style="height: 180px">
+                                        </div>
+                                        <label class="selectgroup-item mb-0">
+                                            <input type="radio" value="{{ $item->id }}" name="foto_sampul"
+                                                class="selectgroup-input foto_sampul"
+                                                id="foto-sampul-{{ $loop->iteration }}"
+                                                {{ $item->is_sampul == 1 ? 'checked=checked' : '' }}
+                                                data-iter={{ $loop->iteration }}>
+                                            <span class="selectgroup-button selectgroup-button-icon py-2"><i
+                                                    class="fas fa-images"></i><span class="foto-sampul-text"
+                                                    id="foto-sampul-text-{{ $loop->iteration }}">
+                                                    {{ $item->is_sampul == 1 ? ' Foto Sampul' : ' Jadikan Foto Sampul' }}</span>
+                                            </span>
+                                        </label>
+                                        <button type="button"
+                                            class="btn btn-danger fw-bold card-footer bg-danger text-center delete-image p-0 {{ $item->is_sampul == 1 ? 'd-none' : '' }}"
+                                            onclick="deleteImageOld({{ $loop->iteration }})"
+                                            id="delete-image-old-{{ $loop->iteration }}"
+                                            value="{{ $item->id }}"><i class="fas fa-trash-alt"></i>
+                                            Hapus</button>
+                                    </div>
+                                    <span class="text-danger error-text file_gambar-error my-0"></span>
+
+                                </div>
+                            @endforeach
+                        @endif
                         <div class="col-md-2 col-lg-2 col-xl-1 align-self-center col-add-image">
                             <div class="text-center text-muted" onclick="addImage()" style="cursor: pointer">
                                 <h1><i class="fas fa-plus-circle"></i></h1>
@@ -76,7 +118,26 @@
 
 @push('script')
     <script>
-        let itemImage = 2;
+        // function fotoSampul(iter) {
+        //     $('.foto-sampul-text').text(' Jadikan Foto Sampul');
+        //     $('#foto-sampul-' + iter).prop('checked', 'checked');
+        //     $('#foto-sampul-text-' + iter).text(' Foto Sampul');
+        //     $('.delete-image').removeClass('d-none');
+        //     $('#delete-image-' + iter).addClass('d-none');
+        // }
+
+        // let fotoSampul =
+        $('.foto_sampul').change(function() {
+            var iter = $(this).data('iter');
+            var val = $(this).val();
+            $('.foto-sampul-text').text(' Jadikan Foto Sampul');
+            $('#foto-sampul-' + iter).prop('checked', 'checked');
+            $('#foto-sampul-text-' + iter).text(' Foto Sampul');
+            $('.delete-image').removeClass('d-none');
+            $('#delete-image-old-' + iter).addClass('d-none');
+            // fotoSampul = val;
+        });
+
         $(document).on('change', '.file-gambar', function() {
 
             let size = $(this)[0].files[0].size / 1024
@@ -94,6 +155,7 @@
             }
 
             let iter = $(this).data('iter')
+            console.log(iter)
             if (this.files && this.files[0]) {
                 var reader = new FileReader();
                 reader.onload = function(e) {
@@ -103,8 +165,26 @@
             }
         });
 
+        let itemImageOld = [];
+
+        function deleteImageOld(iter) {
+            let val = $('#delete-image-old-' + iter).val();
+            itemImageOld.push(val);
+            $('#col-image-old-' + iter).fadeOut(function() {
+                $('#col-image-old-' + iter).remove();
+            });
+        }
+
+        // $temp = 0;
+        let itemImage = 2;
+
         function addImage() {
-            if ($('#file-gambar-1').val() == '') {
+            if (('{{ $method }}' == 'PUT') && (itemImage == 2)) {
+                // coutn class preview-image
+                let count = {{ $maxImage ?? '' }} + 1;
+                itemImage = count + 1;
+            }
+            if (($('#file-gambar-1').val() == '') && ('{{ $method }}' == 'POST')) {
                 swal({
                     title: "Gagal!",
                     text: "Silahkan masukkan foto sampul terlebih dahulu untuk dapat menambahkan foto lainnya!",
@@ -142,6 +222,8 @@
             }
         }
 
+
+
         function deleteImage(iter) {
             $('#col-image-' + iter).fadeOut(function() {
                 $('#col-image-' + iter).remove();
@@ -158,6 +240,9 @@
             $('.error-text').html('')
             var formData = $(this).serializeArray()
             var data = new FormData(this)
+            if ('{{ $method }}' == 'PUT') {
+                data.append('deleteImageOld', itemImageOld)
+            }
             validation(formData)
             if ('{{ $method }}' == 'POST') {
                 var title = 'Simpan Data?'
@@ -185,7 +270,6 @@
                         contentType: false,
                         success: function(response) {
                             if ($.isEmptyObject(response.error)) {
-                                console.log(response)
                                 if (response == 'tidak_ada_gambar') {
                                     $('.file_gambar-error').text(
                                         'Silahkan masukkan setidaknya 1 Foto Ruangan.'

@@ -41,7 +41,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('/aset-bergerak', AsetBergerakController::class);
 
     Route::resource('/pegawai', PegawaiController::class);
-    Route::resource('/ruangan', RuanganController::class);
     Route::post('/pegawai/delete-selected', [PegawaiController::class, 'deleteSelected']);
+    Route::resource('/ruangan', RuanganController::class);
+    Route::post('/ruangan/delete-selected', [RuanganController::class, 'deleteSelected']);
+
     Route::resource('/akun', UserController::class);
 });

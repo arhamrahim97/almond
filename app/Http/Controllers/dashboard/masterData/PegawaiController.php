@@ -267,9 +267,13 @@ class PegawaiController extends Controller
     {
         foreach ($request->id as $id) {
             $pegawai = Pegawai::find($id);
-            if (Storage::exists('upload/foto_profil/pegawai/' . $pegawai->foto_profil)) {
-                Storage::delete('upload/foto_profil/pegawai/' . $pegawai->foto_profil);
+
+            if ($pegawai->foto_profil != '') {
+                if (Storage::exists('upload/foto_profil/pegawai/' . $pegawai->foto_profil)) {
+                    Storage::delete('upload/foto_profil/pegawai/' . $pegawai->foto_profil);
+                }
             }
+
             $pegawai->delete();
         }
         return response()->json(['success' => 'Data berhasil dihapus']);

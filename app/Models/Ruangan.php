@@ -16,4 +16,19 @@ class Ruangan extends Model
     use SoftDeletes;
     protected $table = 'ruangan';
     protected $guarded = ['id'];
+
+    public function fileUpload()
+    {
+        return $this->hasMany(FileUpload::class, 'another_id')->orderBy('is_sampul', 'desc');
+    }
+
+    public function createdBy()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function updatedBy()
+    {
+        return $this->belongsTo(User::class, 'updated_by');
+    }
 }

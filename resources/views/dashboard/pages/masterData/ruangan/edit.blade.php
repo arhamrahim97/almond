@@ -1,7 +1,7 @@
 @extends('dashboard.layouts.main')
 
 @section('title')
-    Pegawai
+    Ruangan
 @endsection
 
 @push('style')
@@ -18,7 +18,7 @@
             <i class="flaticon-right-arrow"></i>
         </li>
         <li class="nav-item">
-            <span>Pegawai</span>
+            <span>Ruangan</span>
         </li>
         <li class="separator">
             <i class="flaticon-right-arrow"></i>
@@ -35,7 +35,7 @@
             <div class="card">
                 <div class="card-header">
                     <div class="card-head-row">
-                        <div class="card-title">Ubah Pegawai</div>
+                        <div class="card-title">Ubah Ruangan</div>
                         <div class="card-tools">
                             <ul class="nav nav-pills nav-secondary nav-pills-no-bd nav-sm" id="pills-tab" role="tablist">
                                 <li class="nav-item submenu">
@@ -49,13 +49,12 @@
                         </div>
                     </div>
                 </div>
-                @component('dashboard.components.forms.masterData.pegawai')
-                    @slot('action', route('pegawai.store'))
-                    @slot('jabatanStruktural', $jabatanStruktural)
-                    @slot('pegawai', $pegawai)
+                @component('dashboard.components.forms.masterData.ruangan')
                     @slot('method', 'PUT')
-                    @slot('action', route('pegawai.update', $pegawai->id))
                     @slot('labelSubmit', 'Perbarui')
+                    @slot('maxImage', $ruangan->fileUpload->max('urutan'))
+                    @slot('action', route('ruangan.update', $ruangan->id))
+                    @slot('ruangan', $ruangan)
                 @endcomponent
 
             </div>
@@ -67,7 +66,7 @@
     <script>
         $(document).ready(function() {
             $('.nav-item').removeClass('active');
-            $('#nav-pegawai').addClass('active');
+            $('#nav-ruangan').addClass('active');
         })
     </script>
 @endpush

@@ -50,12 +50,11 @@
                     </div>
                 </div>
                 @component('dashboard.components.forms.masterData.pegawai')
-                    @slot('action', route('pegawai.store'))
-                    @slot('jabatanStruktural', $jabatanStruktural)
-                    @slot('pegawai', $pegawai)
                     @slot('method', 'PUT')
                     @slot('action', route('pegawai.update', $pegawai->id))
                     @slot('labelSubmit', 'Perbarui')
+                    @slot('pegawai', $pegawai)
+                    @slot('jabatanStruktural', $jabatanStruktural)
                 @endcomponent
 
             </div>

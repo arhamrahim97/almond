@@ -238,7 +238,6 @@
 
                 success: function(data) {
                     $('#modal-lihat').modal('show');
-                    console.log(data)
                     $('#td-nama-lengkap').text(data.nama_lengkap)
                     $('#td-jenis-kelamin').text(data.jenis_kelamin)
                     $('#td-tempat-lahir').text(data.tempat_lahir)
@@ -301,10 +300,6 @@
             ],
             ajax: {
                 url: "{{ route('pegawai.index') }}",
-                // data: function(d) {
-                //     d.lokasiTugas = $('#lokasi-tugas').val();
-                //     d.search = $('input[type="search"]').val();
-                // }
             },
             columns: [{
                     data: 'checkData',
@@ -396,10 +391,6 @@
                         return moment(data).format('LL');
                     }
                 },
-                // {
-                //     targets: 16,
-                //     className: 'text-center',
-                // },
             ],
         });
 
@@ -496,43 +487,6 @@
                     });
                 }
             })
-            // Swal.fire({
-            //     title: 'Apakah anda yakin?',
-            //     text: "Data bidan yang dipilih akan dihapus!",
-            //     icon: 'warning',
-            //     showCancelButton: true,
-            //     confirmButtonColor: '#3085d6',
-            //     cancelButtonColor: '#d33',
-            //     cancelButtonText: 'Batal',
-            //     confirmButtonText: 'Ya, hapus!'
-            // }).then((result) => {
-            //     if (result.value) {
-            //         $.ajax({
-            //             type: "DELETE",
-            //             url: "",
-            //             data: {
-            //                 _token: _token
-            //             },
-            //             success: function(response) {
-            //                 if (response.res == 'success') {
-            //                     Swal.fire(
-            //                         'Terhapus!',
-            //                         'Data berhasil dihapus.',
-            //                         'success'
-            //                     ).then(function() {
-            //                         table.draw();
-            //                     })
-            //                 } else {
-            //                     Swal.fire(
-            //                         'Gagal!',
-            //                         'Data gagal dihapus.',
-            //                         'error'
-            //                     )
-            //                 }
-            //             }
-            //         })
-            //     }
-            // })
         })
     </script>
 @endpush

@@ -59,6 +59,11 @@
                                         <th>No</th>
                                         <th>Nama Ruangan</th>
                                         <th>Deskripsi</th>
+                                        <th>Jumlah Foto</th>
+                                        <th>Dibuat Tanggal</th>
+                                        <th>Dibuat Oleh</th>
+                                        <th>Diperbarui Tanggal</th>
+                                        <th>Diperbarui Oleh</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
@@ -91,19 +96,43 @@
                                     <tbody>
                                         <tr>
                                             <td>Nama Ruangan:</td>
-                                            <td class="text-right td-modal fw-bold" id="td-nama-lengkap">
+                                            <td class="text-right td-modal fw-bold" id="td-nama-ruangan">
                                                 -
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>Deskripsi:</td>
-                                            <td class="text-right td-modal fw-bold" id="td-jenis-kelamin">
+                                            <td class="text-right td-modal fw-bold" id="td-deskripsi">
                                                 -
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>Foto Profil</td>
-                                            <td class="text-right td-modal fw-bold" id="td-foto-profil">
+                                            <td>Dibuat Tanggal:</td>
+                                            <td class="text-right td-modal fw-bold" id="td-dibuat-tanggal">
+                                                -
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Dibuat Oleh:</td>
+                                            <td class="text-right fw-bold" id="td-dibuat-oleh">
+                                                -
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Diperbarui Tanggal:</td>
+                                            <td class="text-right td-modal fw-bold" id="td-diperbarui-tanggal">
+                                                -
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Diperbarui Oleh:</td>
+                                            <td class="text-right td-modal fw-bold" id="td-diperbarui-oleh">
+                                                -
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Jumlah Foto</td>
+                                            <td class="text-right td-modal fw-bold" id="td-jumlah-foto">
                                                 -
                                             </td>
                                         </tr>
@@ -113,6 +142,9 @@
                             </div>
                         </div>
                     </div>
+                </div>
+                <div id="foto-ruangan" class="p-4">
+
                 </div>
                 <div class="modal-footer py-4">
                     <div class="col-6">
@@ -137,43 +169,130 @@
             $('#nav-ruangan').addClass('active');
         })
 
+        var table = $('#dataTables').DataTable({
+            processing: true,
+            serverSide: true,
+            dom: 'lBfrtip',
+            ordering: false,
+            buttons: [{
+                    extend: 'excel',
+                    className: 'btn btn-sm btn-light-success px-2 btn-export-table d-inline ml-3 font-weight',
+                    text: '<i class="bi bi-file-earmark-arrow-down"></i> Ekspor Data',
+                    exportOptions: {
+                        modifier: {
+                            order: 'index', // 'current', 'applied', 'index',  'original'
+                            page: 'all', // 'all',     'current'
+                            search: 'applied' // 'none',    'applied', 'removed'
+                        },
+                        columns: ':visible'
+                    }
+                },
+                {
+                    extend: 'colvis',
+                    className: 'btn btn-sm btn-light-success px-2 btn-export-table d-inline ml-3 font-weight',
+                    text: '<i class="bi bi-eye-fill"></i> Tampil/Sembunyi Kolom',
+                }
+            ],
+            lengthMenu: [
+                [10, 25, 50, -1],
+                [10, 25, 50, "All"]
+            ],
+            ajax: {
+                url: "{{ route('ruangan.index') }}",
+            },
+            columns: [{
+                    data: 'checkData',
+                    render: function(data, row, type) {
+                        return '<input type="checkbox" class="checkData" value="' + data +
+                            '">';
+                    },
+                    className: 'text-center',
+                },
+                {
+                    data: 'DT_RowIndex',
+                    name: 'DT_RowIndex',
+                    className: 'text-center',
+                    orderable: false,
+                    searchable: false
+                },
+                {
+                    data: 'nama_ruangan',
+                    name: 'nama_ruangan',
+                },
+                {
+                    data: 'deskripsi',
+                    name: 'deskripsi',
+                },
+                {
+                    data: 'jumlah_foto',
+                    name: 'jumlah_foto',
+                    className: 'text-center',
+                },
+                {
+                    data: 'created_at',
+                    name: 'created_at',
+                },
+                {
+                    data: 'created_by',
+                    name: 'created_by',
+                },
+                {
+                    data: 'updated_at',
+                    name: 'updated_at',
+                },
+                {
+                    data: 'updated_by',
+                    name: 'updated_by',
+                },
+                {
+                    data: 'action',
+                    name: 'action',
+                    orderable: false,
+                    searchable: false,
+                    className: 'text-center'
+                },
+            ],
+            columnDefs: [{
+                    targets: [5, 6, 7, 8],
+                    visible: false,
+                },
+                {
+                    targets: [5, 7],
+                    render: function(data) {
+                        return moment(data).format('LL');
+                    }
+                },
+            ],
+        });
+
         $(document).on('click', '.btn-lihat', function() {
             $('.td-modal').text('-')
             let id = $(this).val();
             disabledCloseModal()
             $.ajax({
                 type: "GET",
-                url: "{{ url('pegawai') }}" + '/' + id,
+                url: "{{ url('ruangan') }}" + '/' + id,
                 success: function(data) {
                     $('#modal-lihat').modal('show');
                     console.log(data)
-                    $('#td-nama-lengkap').text(data.nama_lengkap)
-                    $('#td-jenis-kelamin').text(data.jenis_kelamin)
-                    $('#td-tempat-lahir').text(data.tempat_lahir)
-                    $('#td-tanggal-lahir').text(data.tanggal_lahir)
-                    $('#td-nomor-hp').text(data.nomor_hp)
-                    $('#td-email').text(data.email ?? '-')
-                    $('#td-alamat').text(data.alamat)
-                    $('#td-nip').text(data.nip)
-                    $('#td-golongan-jabatan-pangkat').text(data.golongan_jabatan_pangkat)
-
-                    $('#td-unit-kerja').text(data.unit_kerja)
+                    $('#td-nama-ruangan').text(data.nama_ruangan)
+                    $('#td-deskripsi').text(data.deskripsi)
                     $('#td-dibuat-tanggal').text(data.created_at_)
                     $('#td-dibuat-oleh').text(data.created_by_)
                     if (data.created_at_ != data.updated_at_) {
                         $('#td-diperbarui-tanggal').text(data.updated_at_)
                         $('#td-diperbarui-oleh').text(data.updated_by_ ?? '-')
                     }
-                    if ((data.foto_profil != null) && (data.cek_foto_profil)) {
-                        $('#td-foto-profil').html(
-                            '<img src="' + data.foto_profil_ +
-                            '" class="img-thumbnail" style="width: 140px; height: 140px;">'
-                        )
-                    } else {
-                        $('#td-foto-profil').text('-')
-                    }
 
-                    $('#btn-ubah-modal').attr('href', "{{ url('pegawai') }}" + '/' + id + '/edit')
+                    $('#td-jumlah-foto').text(data.jumlah_foto_)
+
+                    $('#foto-ruangan').html('')
+                    $.each(data.foto_ruangan_, function(index, value) {
+                        $('#foto-ruangan').append(`
+                            <img src="${value}" class="img-fluid card-img-top rounded mb-3" alt="">
+                        `)
+                    })
+                    $('#btn-ubah-modal').attr('href', "{{ url('ruangan') }}" + '/' + id + '/edit')
                 }
             });
 
@@ -214,7 +333,7 @@
                     if (result) {
                         $.ajax({
                             type: 'POST',
-                            url: "{{ url('pegawai/delete-selected') }}",
+                            url: "{{ url('ruangan/delete-selected') }}",
                             data: {
                                 id: id,
                                 _token: _token
@@ -253,7 +372,7 @@
                 if (result) {
                     $.ajax({
                         type: 'DELETE',
-                        url: "{{ url('pegawai') }}" + '/' + id,
+                        url: "{{ url('ruangan') }}" + '/' + id,
                         data: {
                             _token: _token
                         },
@@ -274,43 +393,6 @@
                     });
                 }
             })
-            // Swal.fire({
-            //     title: 'Apakah anda yakin?',
-            //     text: "Data bidan yang dipilih akan dihapus!",
-            //     icon: 'warning',
-            //     showCancelButton: true,
-            //     confirmButtonColor: '#3085d6',
-            //     cancelButtonColor: '#d33',
-            //     cancelButtonText: 'Batal',
-            //     confirmButtonText: 'Ya, hapus!'
-            // }).then((result) => {
-            //     if (result.value) {
-            //         $.ajax({
-            //             type: "DELETE",
-            //             url: "",
-            //             data: {
-            //                 _token: _token
-            //             },
-            //             success: function(response) {
-            //                 if (response.res == 'success') {
-            //                     Swal.fire(
-            //                         'Terhapus!',
-            //                         'Data berhasil dihapus.',
-            //                         'success'
-            //                     ).then(function() {
-            //                         table.draw();
-            //                     })
-            //                 } else {
-            //                     Swal.fire(
-            //                         'Gagal!',
-            //                         'Data gagal dihapus.',
-            //                         'error'
-            //                     )
-            //                 }
-            //             }
-            //         })
-            //     }
-            // })
         })
     </script>
 @endpush

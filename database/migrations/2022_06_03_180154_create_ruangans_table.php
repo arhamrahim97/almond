@@ -16,7 +16,7 @@ class CreateRuangansTable extends Migration
         Schema::create('ruangan', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('nama_ruangan');
-            $table->string('deskripsi');
+            $table->text('deskripsi')->nullable();
             $table->uuid('created_by');
             $table->uuid('updated_by');
             $table->timestamps();
