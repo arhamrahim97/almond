@@ -1,13 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\dashboard\masterData;
 
 use App\Models\Ruangan;
 use App\Models\FileUpload;
 use Illuminate\Http\Request;
-use GuzzleHttp\Promise\Create;
 use Illuminate\Support\Carbon;
-use PhpParser\Node\Stmt\Foreach_;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
@@ -37,16 +35,8 @@ class RuanganController extends Controller
                     return $row->fileUpload->count();
                 })
 
-                ->addColumn('created_at', function ($row) {
-                    return $row->created_at;
-                })
-
                 ->addColumn('created_by', function ($row) {
                     return $row->createdBy->nama_lengkap;
-                })
-
-                ->addColumn('updated_at', function ($row) {
-                    return $row->updated_at;
                 })
 
                 ->addColumn('updated_by', function ($row) {
@@ -93,7 +83,7 @@ class RuanganController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
-                'nama_ruangan' => 'required',
+                'nama_ruangan' => 'required|unique:ruangan,nama_ruangan,NULL,id,deleted_at,NULL',
             ],
             [
                 'nama_ruangan.required' => 'Nama Ruangan tidak boleh kosong',
@@ -117,7 +107,7 @@ class RuanganController extends Controller
             $insertRuangan = Ruangan::create($dataRuangan);
 
             foreach ($request->file('file_gambar') as $val) {
-                $namaFile = $request->nama_ruangan . '-' . $no . '.' . $val->getClientOriginalExtension();
+                $namaFile = mt_rand() . '-' . $request->nama_ruangan . '-' . $no . '.' . $val->getClientOriginalExtension();
                 $val->storeAs(
                     'upload/foto_ruangan/',
                     $namaFile
@@ -126,6 +116,7 @@ class RuanganController extends Controller
                 $dataFile = [
                     'another_id' => $insertRuangan->id,
                     'nama_file' => $namaFile,
+                    'jenis_file' => 'Gambar',
                     'urutan' => $no,
                 ];
 
@@ -190,6 +181,21 @@ class RuanganController extends Controller
      */
     public function update(Request $request, Ruangan $ruangan)
     {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'nama_ruangan' => 'required|unique:ruangan,nama_ruangan,' . $ruangan->nama_ruangan . ',nama_ruangan,deleted_at,NULL',
+            ],
+            [
+                'nama_ruangan.required' => 'Nama Ruangan tidak boleh kosong',
+                'nama_ruangan.unique' => 'Nama Ruangan sudah ada',
+            ]
+
+        );
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()]);
+        }
+
         foreach ($ruangan->fileUpload as $item) {
             if ($item->id != $request->foto_sampul) {
                 FileUpload::where('id', $item->id)->update(['is_sampul' => 0]);
@@ -219,7 +225,7 @@ class RuanganController extends Controller
         if ($request->file_gambar !== null) {
             $no = $ruangan->fileUpload->max('urutan') + 1;
             foreach ($request->file('file_gambar') as $val) {
-                $namaFile = $request->nama_ruangan . '-' . $no . '.' . $val->getClientOriginalExtension();
+                $namaFile = $no . '. ' . $request->nama_ruangan . '-' . $no . '.' . $val->getClientOriginalExtension();
                 $val->storeAs(
                     'upload/foto_ruangan/',
                     $namaFile
@@ -228,6 +234,7 @@ class RuanganController extends Controller
                 $dataFile = [
                     'another_id' => $ruangan->id,
                     'nama_file' => $namaFile,
+                    'jenis_file' => 'Gambar',
                     'urutan' => $no,
                 ];
 

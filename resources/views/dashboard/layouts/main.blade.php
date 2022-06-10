@@ -171,6 +171,9 @@
             margin-top: 10px !important;
         }
 
+        .btn:focus {
+            color: white
+        }
     </style>
 
     @stack('style')
@@ -349,6 +352,7 @@
             $('.req').removeClass('is-invalid');
             let count = 0
             $.each(formData, function(i, field) {
+                console.log(field)
                 let getAttr = document.getElementsByName(field.name);
                 let getNodeName = getAttr[0].nodeName;
                 let getType = getAttr[0].type;

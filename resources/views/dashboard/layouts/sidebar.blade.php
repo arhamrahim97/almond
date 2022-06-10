@@ -59,13 +59,13 @@
                     <div class="collapse" id="aset-bergerak">
                         <ul class="nav nav-collapse">
                             <li id="li-manajemen-aset-bergerak">
-                                <a href="{{ url('aset-bergerak') }}">
+                                <a href="{{ url('manajemen-aset-bergerak') }}">
                                     <span class="sub-item">Manajemen Aset</span>
                                 </a>
                             </li>
                             <li>
                                 <a href="email-compose.html">
-                                    <span class="sub-item">Lokasi Aset</span>
+                                    <span class="sub-item">Aset Pegawai</span>
                                 </a>
                             </li>
                             <li>

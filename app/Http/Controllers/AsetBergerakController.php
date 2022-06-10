@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\dashboard\utama;
+namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreAsetBergerakRequest;
+use App\Http\Requests\UpdateAsetBergerakRequest;
 use App\Models\AsetBergerak;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-
 
 class AsetBergerakController extends Controller
 {
@@ -16,7 +15,7 @@ class AsetBergerakController extends Controller
      */
     public function index()
     {
-        return view('dashboard.pages.utama.asetBergerak.manajemenAset.index');
+        //
     }
 
     /**
@@ -26,7 +25,7 @@ class AsetBergerakController extends Controller
      */
     public function create()
     {
-        return view('dashboard.pages.utama.asetBergerak.manajemenAset.create');
+        //
     }
 
     /**
@@ -35,9 +34,9 @@ class AsetBergerakController extends Controller
      * @param  \App\Http\Requests\StoreAsetBergerakRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreAsetBergerakRequest $request)
     {
-        return $request;
+        //
     }
 
     /**
@@ -69,7 +68,7 @@ class AsetBergerakController extends Controller
      * @param  \App\Models\AsetBergerak  $asetBergerak
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, AsetBergerak $asetBergerak)
+    public function update(UpdateAsetBergerakRequest $request, AsetBergerak $asetBergerak)
     {
         //
     }

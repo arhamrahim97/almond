@@ -41,7 +41,7 @@
             <div class="card">
                 <div class="card-header">
                     <div class="card-head-row">
-                        <div class="card-title">Tambah Aset</div>
+                        <div class="card-title">Tambah Aset Bergerak</div>
                         <div class="card-tools">
                             <ul class="nav nav-pills nav-secondary nav-pills-no-bd nav-sm" id="pills-tab" role="tablist">
                                 <li class="nav-item submenu">
@@ -56,7 +56,7 @@
                     </div>
                 </div>
                 @component('dashboard.components.forms.utama.asetBergerak.manajemenAset')
-                    @slot('action', route('aset-bergerak.store'))
+                    @slot('action', route('manajemen-aset-bergerak.store'))
                     @slot('method', 'POST')
                 @endcomponent
 
@@ -67,6 +67,14 @@
 
 @push('script')
     <script>
+        $(document).ready(function() {
+            $('.nav-item').removeClass('active');
+            $('#nav-aset-bergerak').addClass('active submenu');
+            $('#aset-bergerak').addClass('show')
+            $('#li-manajemen-aset-bergerak').addClass('active');
+        })
+    </script>
+    {{-- <script>
         let itemImage = 2;
         let iterDokumen = 2;
         $(document).on('change', '.file-gambar', function() {
@@ -201,5 +209,5 @@
             $('#aset-bergerak').addClass('show')
             $('#li-manajemen-aset-bergerak').addClass('active');
         })
-    </script>
+    </script> --}}
 @endpush

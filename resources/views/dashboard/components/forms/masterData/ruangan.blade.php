@@ -20,7 +20,6 @@
             </div>
         </div>
         <div class="row">
-
             <div class="col-md-12 col-lg-12 col-xl-12 px-2">
                 <div class="form-group">
                     @component('dashboard.components.formElements.input', ['label' => 'Nama Ruangan', 'name' => 'nama_ruangan', 'class' => 'req', 'wajib' => '<sup class="text-danger">*</sup>', 'placeholder' => 'Masukkan Nama Ruangan', 'value' => isset($ruangan) ? $ruangan->nama_ruangan : ''])
@@ -46,7 +45,7 @@
                                             id="preview-image-1" style="height: 180px">
                                     </div>
                                     <input type="hidden" name="file_gambar" value="" class="req"
-                                        data-label="Foto Ruangan (Sampul)" id="foto_ruangan-hidden">
+                                        data-label="Foto Ruangan" id="foto_ruangan-hidden">
                                     <input type="file" class="form-control form-control-file file-gambar req"
                                         id="file-gambar-1" data-iter="1" name="file_gambar[]" accept="image/*">
                                     <label class="selectgroup-item mb-0">
@@ -118,15 +117,6 @@
 
 @push('script')
     <script>
-        // function fotoSampul(iter) {
-        //     $('.foto-sampul-text').text(' Jadikan Foto Sampul');
-        //     $('#foto-sampul-' + iter).prop('checked', 'checked');
-        //     $('#foto-sampul-text-' + iter).text(' Foto Sampul');
-        //     $('.delete-image').removeClass('d-none');
-        //     $('#delete-image-' + iter).addClass('d-none');
-        // }
-
-        // let fotoSampul =
         $('.foto_sampul').change(function() {
             var iter = $(this).data('iter');
             var val = $(this).val();
@@ -135,11 +125,9 @@
             $('#foto-sampul-text-' + iter).text(' Foto Sampul');
             $('.delete-image').removeClass('d-none');
             $('#delete-image-old-' + iter).addClass('d-none');
-            // fotoSampul = val;
         });
 
         $(document).on('change', '.file-gambar', function() {
-
             let size = $(this)[0].files[0].size / 1024
             if (size > 3072) {
                 swal({
@@ -155,7 +143,6 @@
             }
 
             let iter = $(this).data('iter')
-            console.log(iter)
             if (this.files && this.files[0]) {
                 var reader = new FileReader();
                 reader.onload = function(e) {
@@ -175,7 +162,6 @@
             });
         }
 
-        // $temp = 0;
         let itemImage = 2;
 
         function addImage() {
@@ -221,8 +207,6 @@
                 itemImage++;
             }
         }
-
-
 
         function deleteImage(iter) {
             $('#col-image-' + iter).fadeOut(function() {
