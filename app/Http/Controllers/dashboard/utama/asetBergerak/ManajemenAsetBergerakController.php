@@ -25,16 +25,12 @@ class ManajemenAsetBergerakController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = AsetBergerak::with('pegawai', 'fileUpload')->latest();
+            $data = AsetBergerak::with('pegawai', 'fileUploadGambar')->latest();
             return DataTables::of($data)
                 ->addIndexColumn()
 
                 // ->addColumn('checkData', function ($row) {
                 //     return $row->id;
-                // })
-
-                // ->addColumn('jumlah_foto', function ($row) {
-                //     return $row->fileUpload->count();
                 // })
 
                 ->addColumn('pegawai', function ($row) {
@@ -120,7 +116,6 @@ class ManajemenAsetBergerakController extends Controller
                 'merek' => 'required',
                 'model' => 'required',
                 'kode_inventaris' => 'required',
-                // 'pegawai_id' => 'required',
 
             ],
             [
@@ -128,7 +123,6 @@ class ManajemenAsetBergerakController extends Controller
                 'merek.required' => 'Merek tidak boleh kosong',
                 'model.required' => 'Model tidak boleh kosong',
                 'kode_inventaris.required' => 'Kode Inventaris tidak boleh kosong',
-                // 'pegawai_id.required' => 'Pegawai tidak boleh kosong',
             ]
         );
 
@@ -301,9 +295,80 @@ class ManajemenAsetBergerakController extends Controller
      * @param  \App\Models\ManajemenAsetBergerak  $manajemenAsetBergerak
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, ManajemenAsetBergerak $manajemenAsetBergerak)
+    public function update(Request $request, AsetBergerak $manajemenAsetBergerak)
     {
-        return $request->deleteDocumentOld;
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'nama_aset' => 'required',
+                'merek' => 'required',
+                'model' => 'required',
+                'kode_inventaris' => 'required',
+
+            ],
+            [
+                'nama_aset.required' => 'Nama Aset tidak boleh kosong',
+                'merek.required' => 'Merek tidak boleh kosong',
+                'model.required' => 'Model tidak boleh kosong',
+                'kode_inventaris.required' => 'Kode Inventaris tidak boleh kosong',
+            ]
+        );
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()]);
+        }
+
+        foreach ($manajemenAsetBergerak->fileUploadGambar as $item) {
+            if ($item->id != $request->foto_sampul) {
+                FileUpload::where('id', $item->id)->update(['is_sampul' => 0]);
+            } else {
+                FileUpload::where('id', $item->id)->update(['is_sampul' => 1]);
+            }
+        }
+
+        if ($request->deleteImageOld !== null) {
+            $deleteImageOld = explode(',', $request->deleteImageOld);
+            foreach ($deleteImageOld as $item) {
+                $namaFile = FileUpload::where('id', $item)->first()->nama_file;
+                if (Storage::exists('upload/foto_aset_bergerak/' . $namaFile)) {
+                    Storage::delete('upload/foto_aset_bergerak/' . $namaFile);
+                }
+                FileUpload::where('id', $item)->delete();
+            }
+        }
+
+        $dataAsetBergerak = [
+            'nama_aset' => $request->nama_aset,
+            'merek' => $request->merek,
+            'model' => $request->model,
+            'kode_inventaris' => $request->kode_inventaris,
+            'deskripsi' => $request->deskripsi,
+        ];
+
+        $manajemenAsetBergerak->update($dataAsetBergerak);
+
+        if ($request->file_gambar !== null) {
+            $no_gambar = $manajemenAsetBergerak->fileUploadGambar->max('urutan') + 1;
+            foreach ($request->file('file_gambar') as $file) {
+                $namaFile = mt_rand() . '-' . $request->nama_aset . '-' . $request->merek . '-' . $request->model . '-' . $no_gambar . '.' . $file->getClientOriginalExtension();
+                $file->storeAs(
+                    'upload/foto_aset_bergerak/',
+                    $namaFile
+                );
+
+                $dataGambar = [
+                    'another_id' => $manajemenAsetBergerak->id,
+                    'nama_file' => $namaFile,
+                    'jenis_file' => 'Gambar',
+                    'urutan' => $no_gambar,
+                ];
+
+                FileUpload::create($dataGambar);
+                $no_gambar++;
+            }
+        }
+
+        return response()->json('success');
     }
 
     /**
@@ -314,6 +379,5 @@ class ManajemenAsetBergerakController extends Controller
      */
     public function destroy(ManajemenAsetBergerak $manajemenAsetBergerak)
     {
-        //
     }
 }

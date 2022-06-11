@@ -23,7 +23,7 @@ class RuanganController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = Ruangan::with('fileUpload')->latest();
+            $data = Ruangan::with('fileUploadGambar')->latest();
             return DataTables::of($data)
                 ->addIndexColumn()
 
@@ -32,7 +32,7 @@ class RuanganController extends Controller
                 })
 
                 ->addColumn('jumlah_foto', function ($row) {
-                    return $row->fileUpload->count();
+                    return $row->fileUploadGambar->count();
                 })
 
                 ->addColumn('created_by', function ($row) {
@@ -144,15 +144,15 @@ class RuanganController extends Controller
         $ruangan['updated_at_'] = Carbon::parse($ruangan->updated_at)->translatedFormat('j F Y H:i');
         $ruangan['created_by_'] = $ruangan->createdBy->nama_lengkap;
         $ruangan['updated_by_'] = $ruangan->updatedBy->nama_lengkap;
-        $ruangan['jumlah_foto_'] = $ruangan->fileUpload->count();
-        $fotoRuangan = $ruangan->fileUpload->pluck('nama_file');
+        $ruangan['jumlah_foto_'] = $ruangan->fileUploadGambar->count();
+        $fotoRuangan = $ruangan->fileUploadGambar->pluck('nama_file');
         $tempFotoRuangan = [];
         foreach ($fotoRuangan as $val) {
             $init = Storage::exists('upload/foto_ruangan/' . $val) ? Storage::url('upload/foto_ruangan/' . $val) : asset('assets/img/blank_photo.png');
             $tempFotoRuangan[] = $init;
         }
         $ruangan['foto_ruangan_'] = $tempFotoRuangan;
-        // $ruangan['foto_ruangan_'] = $ruangan->fileUpload->pluck('nama_file');
+        // $ruangan['foto_ruangan_'] = $ruangan->fileUploadGambar->pluck('nama_file');
         return $ruangan;
     }
 
@@ -167,7 +167,7 @@ class RuanganController extends Controller
         // dd($ruangan);
         // $data = [
         //     'ruangan' => $ruangan,
-        //     'fileUpload' => $ruangan->fileUpload,
+        //     'fileUpload' => $ruangan->fileUploadGambar,
         // ];
         return view('dashboard.pages.masterData.ruangan.edit', compact('ruangan'));
     }
@@ -196,7 +196,7 @@ class RuanganController extends Controller
             return response()->json(['error' => $validator->errors()]);
         }
 
-        foreach ($ruangan->fileUpload as $item) {
+        foreach ($ruangan->fileUploadGambar as $item) {
             if ($item->id != $request->foto_sampul) {
                 FileUpload::where('id', $item->id)->update(['is_sampul' => 0]);
             } else {
@@ -221,9 +221,8 @@ class RuanganController extends Controller
         ];
         $ruangan->update($dataRuangan);
 
-
         if ($request->file_gambar !== null) {
-            $no = $ruangan->fileUpload->max('urutan') + 1;
+            $no = $ruangan->fileUploadGambar->max('urutan') + 1;
             foreach ($request->file('file_gambar') as $val) {
                 $namaFile = $no . '. ' . $request->nama_ruangan . '-' . $no . '.' . $val->getClientOriginalExtension();
                 $val->storeAs(
@@ -237,10 +236,6 @@ class RuanganController extends Controller
                     'jenis_file' => 'Gambar',
                     'urutan' => $no,
                 ];
-
-                if ($no == 1) {
-                    $dataFile['is_sampul'] = 1;
-                }
 
                 FileUpload::create($dataFile);
                 $no++;
@@ -257,7 +252,7 @@ class RuanganController extends Controller
      */
     public function destroy(Ruangan $ruangan)
     {
-        foreach ($ruangan->fileUpload as $item) {
+        foreach ($ruangan->fileUploadGambar as $item) {
             $namaFile = $item->nama_file;
             if (Storage::exists('upload/foto_ruangan/' . $namaFile)) {
                 Storage::delete('upload/foto_ruangan/' . $namaFile);
@@ -273,8 +268,8 @@ class RuanganController extends Controller
         foreach ($request->id as $id) {
             $ruangan = Ruangan::with('fileUpload')->find($id);
 
-            if (count($ruangan->fileUpload) > 0) {
-                foreach ($ruangan->fileUpload as $item) {
+            if (count($ruangan->fileUploadGambar) > 0) {
+                foreach ($ruangan->fileUploadGambar as $item) {
                     $namaFile = $item->nama_file;
                     if (Storage::exists('upload/foto_ruangan/' . $namaFile)) {
                         Storage::delete('upload/foto_ruangan/' . $namaFile);

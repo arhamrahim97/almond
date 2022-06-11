@@ -60,7 +60,7 @@
                                 <span class="text-danger error-text file_gambar-error d-block my-0"></span>
                             </div>
                         @else
-                            @foreach ($ruangan->fileUpload as $item)
+                            @foreach ($ruangan->fileUploadGambar as $item)
                                 <div class="col-md-4 col-lg-4 col-xl-3 text-center"
                                     id="col-image-old-{{ $loop->iteration }}">
                                     <div class="card mb-1">

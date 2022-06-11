@@ -60,7 +60,7 @@
                     @slot('method', 'POST')
                     @slot('aset', $aset)
                     @slot('pegawai', $pegawai)
-                    @slot('maxDocument', $aset->pegawai ? $aset->fileUpload->max('urutan') : 0)
+                    @slot('maxDocument', $aset->pegawai ? $aset->fileUploadDokumen->max('urutan') : 0)
                 @endcomponent
             </div>
         </div>

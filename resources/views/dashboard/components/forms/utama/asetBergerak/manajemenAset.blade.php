@@ -86,39 +86,41 @@
                                 <span class="text-danger error-text file_gambar-error d-block my-0"></span>
                             </div>
                         @else
-                            @foreach ($ruangan->fileUpload as $item)
-                                <div class="col-md-4 col-lg-4 col-xl-3 text-center"
-                                    id="col-image-old-{{ $loop->iteration }}">
-                                    <div class="card mb-1">
-                                        <div class="p-2 text-center">
-                                            <img class="card-img-top rounded text-center preview-image"
-                                                src="{{ Storage::exists('upload/foto_ruangan/' . $item->nama_file) ? Storage::url('upload/foto_ruangan/' . $item->nama_file) : asset('assets/img/blank_photo.png') }}"
-                                                alt="image" data-iter="{{ $loop->iteration }}"
-                                                id="preview-image-{{ $loop->iteration }}" style="height: 180px">
+                            @if ($aset->fileUploadGambar->count() > 0)
+                                @foreach ($aset->fileUploadGambar as $item)
+                                    <div class="col-md-4 col-lg-4 col-xl-3 text-center"
+                                        id="col-image-old-{{ $loop->iteration }}">
+                                        <div class="card mb-1">
+                                            <div class="p-2 text-center">
+                                                <img class="card-img-top rounded text-center preview-image"
+                                                    src="{{ Storage::exists('upload/foto_aset_bergerak/' . $item->nama_file) ? Storage::url('upload/foto_aset_bergerak/' . $item->nama_file) : asset('assets/img/blank_photo.png') }}"
+                                                    alt="image" data-iter="{{ $loop->iteration }}"
+                                                    id="preview-image-{{ $loop->iteration }}" style="height: 180px">
+                                            </div>
+                                            <label class="selectgroup-item mb-0">
+                                                <input type="radio" value="{{ $item->id }}" name="foto_sampul"
+                                                    class="selectgroup-input foto_sampul"
+                                                    id="foto-sampul-{{ $loop->iteration }}"
+                                                    {{ $item->is_sampul == 1 ? 'checked=checked' : '' }}
+                                                    data-iter={{ $loop->iteration }}>
+                                                <span class="selectgroup-button selectgroup-button-icon py-2"><i
+                                                        class="fas fa-images"></i><span class="foto-sampul-text"
+                                                        id="foto-sampul-text-{{ $loop->iteration }}">
+                                                        {{ $item->is_sampul == 1 ? ' Foto Sampul' : ' Jadikan Foto Sampul' }}</span>
+                                                </span>
+                                            </label>
+                                            <button type="button"
+                                                class="btn btn-danger fw-bold card-footer bg-danger text-center delete-image p-0 {{ $item->is_sampul == 1 ? 'd-none' : '' }}"
+                                                onclick="deleteImageOld({{ $loop->iteration }})"
+                                                id="delete-image-old-{{ $loop->iteration }}"
+                                                value="{{ $item->id }}"><i class="fas fa-trash-alt"></i>
+                                                Hapus</button>
                                         </div>
-                                        <label class="selectgroup-item mb-0">
-                                            <input type="radio" value="{{ $item->id }}" name="foto_sampul"
-                                                class="selectgroup-input foto_sampul"
-                                                id="foto-sampul-{{ $loop->iteration }}"
-                                                {{ $item->is_sampul == 1 ? 'checked=checked' : '' }}
-                                                data-iter={{ $loop->iteration }}>
-                                            <span class="selectgroup-button selectgroup-button-icon py-2"><i
-                                                    class="fas fa-images"></i><span class="foto-sampul-text"
-                                                    id="foto-sampul-text-{{ $loop->iteration }}">
-                                                    {{ $item->is_sampul == 1 ? ' Foto Sampul' : ' Jadikan Foto Sampul' }}</span>
-                                            </span>
-                                        </label>
-                                        <button type="button"
-                                            class="btn btn-danger fw-bold card-footer bg-danger text-center delete-image p-0 {{ $item->is_sampul == 1 ? 'd-none' : '' }}"
-                                            onclick="deleteImageOld({{ $loop->iteration }})"
-                                            id="delete-image-old-{{ $loop->iteration }}"
-                                            value="{{ $item->id }}"><i class="fas fa-trash-alt"></i>
-                                            Hapus</button>
-                                    </div>
-                                    <span class="text-danger error-text file_gambar-error my-0"></span>
+                                        <span class="text-danger error-text file_gambar-error my-0"></span>
 
-                                </div>
-                            @endforeach
+                                    </div>
+                                @endforeach
+                            @endif
                         @endif
                         <div class="col-md-2 col-lg-2 col-xl-1 align-self-center col-add-image">
                             <div class="text-center text-muted" onclick="addImage()" style="cursor: pointer">
@@ -134,7 +136,7 @@
     <div class="card-action">
         <div class="row justify-content-end">
             <div class="col-md-12 text-right">
-                @component('dashboard.components.buttons.submit', ['label' => 'Simpan'])
+                @component('dashboard.components.buttons.submit', ['label' => $labelSubmit ?? 'Simpan'])
                 @endcomponent
             </div>
         </div>
@@ -186,6 +188,7 @@
             $('#col-image-old-' + iter).fadeOut(function() {
                 $('#col-image-old-' + iter).remove();
             });
+            alert(itemImageOld);
         }
 
         let itemImage = 2;
@@ -259,6 +262,9 @@
             $('.error-text').html('')
             var formData = $('.req').serializeArray()
             var data = new FormData(this)
+            if ('{{ $method }}' == 'PUT') {
+                data.append('deleteImageOld', itemImageOld)
+            }
             validation(formData)
 
             if ('{{ $method }}' == 'POST') {
@@ -286,6 +292,7 @@
                         processData: false,
                         contentType: false,
                         success: function(response) {
+                            console.log(response)
                             if ($.isEmptyObject(response.error)) {
                                 if (response == 'tidak_ada_gambar') {
                                     $('.file_gambar-error').text(

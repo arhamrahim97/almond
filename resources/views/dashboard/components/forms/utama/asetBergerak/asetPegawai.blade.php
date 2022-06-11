@@ -46,7 +46,7 @@
                     <label for="">Dokumen (Surat-surat Kendaraan, Berita Acara, dan Lainnya)</label>
                     <div class="row" id="dokumen-aset">
                         @if ($aset->pegawai)
-                            @if ($aset->fileUpload->count() > 0)
+                            @if ($aset->fileUploadDokumen->count() > 0)
                                 @foreach ($aset->fileUploadDokumen as $item)
                                     <div class="col-md-6 col-lg-6 col-xl-6 col-document"
                                         id="col-document-old-{{ $loop->iteration }}">
@@ -90,7 +90,6 @@
                                         <p class="text-danger error-text dokumen-error my-0" id="dokumen-error-1"></p>
                                     </div>
                                 @endforeach
-
                             @endif
                         @else
                             <div class="col-md-6 col-lg-6 col-xl-6 col-document" id="col-dokumen-1">

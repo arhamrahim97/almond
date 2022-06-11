@@ -17,9 +17,9 @@ class Ruangan extends Model
     protected $table = 'ruangan';
     protected $guarded = ['id'];
 
-    public function fileUpload()
+    public function fileUploadGambar()
     {
-        return $this->hasMany(FileUpload::class, 'another_id')->orderBy('is_sampul', 'desc');
+        return $this->hasMany(FileUpload::class, 'another_id')->where('jenis_file', 'Gambar')->orderBy('is_sampul', 'desc')->orderBy('urutan', 'asc');
     }
 
     public function createdBy()
