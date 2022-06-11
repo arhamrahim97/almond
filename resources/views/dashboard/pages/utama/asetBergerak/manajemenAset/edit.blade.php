@@ -30,7 +30,7 @@
             <i class="flaticon-right-arrow"></i>
         </li>
         <li class="nav-item">
-            <span>Tambah</span>
+            <span>Ubah</span>
         </li>
     </ul>
 @endsection
@@ -41,7 +41,7 @@
             <div class="card">
                 <div class="card-header">
                     <div class="card-head-row">
-                        <div class="card-title">Tambah Aset Bergerak</div>
+                        <div class="card-title">Ubah Aset Bergerak</div>
                         <div class="card-tools">
                             <ul class="nav nav-pills nav-secondary nav-pills-no-bd nav-sm" id="pills-tab" role="tablist">
                                 <li class="nav-item submenu">

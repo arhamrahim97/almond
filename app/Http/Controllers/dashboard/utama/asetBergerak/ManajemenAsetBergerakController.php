@@ -8,11 +8,12 @@ use App\Models\AsetBergerak;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\ManajemenAsetBergerak;
+use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
+use App\Policies\ManajemenAsetBergerakPolicy;
 use App\Http\Requests\StoreManajemenAsetBergerakRequest;
 use App\Http\Requests\UpdateManajemenAsetBergerakRequest;
-use App\Policies\ManajemenAsetBergerakPolicy;
 
 class ManajemenAsetBergerakController extends Controller
 {
@@ -173,9 +174,7 @@ class ManajemenAsetBergerakController extends Controller
             $no_gambar++;
         }
 
-
-
-        return response()->json(['success' => 'Data berhasil ditambahkan']);
+        return response()->json('success');
     }
 
 
@@ -204,13 +203,6 @@ class ManajemenAsetBergerakController extends Controller
             return response()->json(['error' => $validator->errors()]);
         }
 
-        // return $request->all();
-
-
-        // if (($manajemenAsetBergerak->pegawai != '') && ($request->nama_dokumen == null)) {
-        //     return 'tidak_ada_dokumen_sama_sekali';
-        // }
-
         if ($request->nama_dokumen != null) {
             if (!$manajemenAsetBergerak->pegawai) { // jika belum ada pegawainya dan baru ditentukan
                 if (($request->file_dokumen == null) && (count($request->nama_dokumen) == 1)) {
@@ -230,7 +222,17 @@ class ManajemenAsetBergerakController extends Controller
             }
         }
 
-        $namaPegawai = Pegawai::find($request->pegawai_id)->nama_lengkap;
+        if ($request->deleteDocumentOld !== null) {
+            $deleteDocumentOld = explode(',', $request->deleteDocumentOld);
+            foreach ($deleteDocumentOld as $item) {
+                $namaFile = FileUpload::where('id', $item)->first()->nama_file;
+                if (Storage::exists('upload/dokumen_aset_bergerak/' . $namaFile)) {
+                    Storage::delete('upload/dokumen_aset_bergerak/' . $namaFile);
+                }
+                FileUpload::where('id', $item)->delete();
+            }
+        }
+
         if ($manajemenAsetBergerak->pegawai) { // jika ada pegawainya dan di ubah
             $no_dokumen = $manajemenAsetBergerak->fileUploadDokumen->max('urutan') + 1;
         } else {
@@ -264,9 +266,7 @@ class ManajemenAsetBergerakController extends Controller
             'status' => 'Digunakan',
         ]);
 
-        return response()->json(['success' => 'Data berhasil ditambahkan']);
-
-        // return $manajemenAsetBergerak;
+        return response()->json('success');
     }
 
     /**
@@ -287,7 +287,11 @@ class ManajemenAsetBergerakController extends Controller
      */
     public function edit(AsetBergerak $manajemen_aset_bergerak)
     {
-        dd($manajemen_aset_bergerak);
+        $data = [
+            'pegawai' => Pegawai::all(),
+            'aset' => $manajemen_aset_bergerak,
+        ];
+        return view('dashboard.pages.utama.asetBergerak.manajemenAset.edit', $data);
     }
 
     /**
@@ -297,9 +301,9 @@ class ManajemenAsetBergerakController extends Controller
      * @param  \App\Models\ManajemenAsetBergerak  $manajemenAsetBergerak
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateManajemenAsetBergerakRequest $request, ManajemenAsetBergerak $manajemenAsetBergerak)
+    public function update(Request $request, ManajemenAsetBergerak $manajemenAsetBergerak)
     {
-        //
+        return $request->deleteDocumentOld;
     }
 
     /**

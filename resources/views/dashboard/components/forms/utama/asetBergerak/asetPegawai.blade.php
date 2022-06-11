@@ -48,7 +48,7 @@
                         @if ($aset->pegawai)
                             @if ($aset->fileUpload->count() > 0)
                                 @foreach ($aset->fileUploadDokumen as $item)
-                                    <div class="col-md-6 col-lg-6 col-xl-4 col-document"
+                                    <div class="col-md-6 col-lg-6 col-xl-6 col-document"
                                         id="col-document-old-{{ $loop->iteration }}">
                                         <div class="card box-upload mb-3 pegawai"
                                             id="box-upload-{{ $loop->iteration }}" class="box-upload">
@@ -93,7 +93,7 @@
 
                             @endif
                         @else
-                            <div class="col-md-6 col-lg-6 col-xl-4 col-document" id="col-dokumen-1">
+                            <div class="col-md-6 col-lg-6 col-xl-6 col-document" id="col-dokumen-1">
                                 <div class="card box-upload mb-3 pegawai" id="box-upload-1" class="box-upload">
                                     <div class="card-body pb-2">
                                         <div class="row">
@@ -149,7 +149,7 @@
                             </div>
 
                         @endif
-                        <div class="col-md-2 col-lg-2 col-xl-1 align-self-center col-add-dokumen">
+                        <div class="col-md-2 col-lg-2 col-xl-2 align-self-center col-add-dokumen">
                             <div class="text-center text-muted" onclick="addDokumen()" style="cursor: pointer">
                                 <h1><i class="fas fa-plus-circle"></i></h1>
                                 <h6>Tambah Dokumen</h6>
@@ -225,7 +225,6 @@
         }
 
         function rmValNamaDokumen(iter) {
-            console.log(iter);
             if ($('#nama-dokumen-' + iter).val() != '') {
                 $('#nama_dokumen-hidden-' + iter).removeClass('req');
             } else {
@@ -234,7 +233,6 @@
         }
 
         function rmValFileDokumen(iter) {
-            console.log(iter);
             if ($('#file-dokumen-' + iter).val() != '') {
                 $('#file_dokumen-hidden-' + iter).removeClass('req');
             } else {
@@ -247,9 +245,9 @@
         //     nama_dokumen - hidden - 2
         // });
 
-        $('.file-dokumen').change(function() {
-            $('#file_dokumen-hidden-' + $(this).data('iter')).remove();
-        });
+        // $('.file-dokumen').change(function() {
+        //     $('#file_dokumen-hidden-' + $(this).data('iter')).remove();
+        // });
 
         let iterDokumen = 2;
 
@@ -260,7 +258,7 @@
             }
             $('.col-add-dokumen').remove();
             $('#dokumen-aset').append(`
-            <div class="col-md-6 col-lg-6 col-xl-4 col-document" id="col-dokumen-` + iterDokumen + `">
+            <div class="col-md-6 col-lg-6 col-xl-6 col-document" id="col-dokumen-` + iterDokumen + `">
                 <div class="card box-upload mb-3" id="box-upload-` +
                 iterDokumen + `" class="box-upload">
                     <div class="card-body pb-2">
@@ -318,7 +316,7 @@
                 </div>
                 <p class="text-danger error-text dokumen-error my-0" id="dokumen-error-1"></p>
             </div>
-            <div class="col-md-2 col-lg-2 col-xl-1 align-self-center col-add-dokumen">
+            <div class="col-md-2 col-lg-2 col-xl-2 align-self-center col-add-dokumen">
                 <div class="text-center text-muted" onclick="addDokumen()" style="cursor: pointer">
                     <h1><i class="fas fa-plus-circle"></i></h1>
                     <h6>Tambah Dokumen</h6>
@@ -332,9 +330,6 @@
 
         $('#form').submit(function(e) {
             e.preventDefault();
-            if (countColDocument == 0) {
-
-            }
             $('.error-text').html('')
             $('.nama-dokumen').removeClass('is-invalid')
             $('.file-dokumen').removeClass('is-invalid')
@@ -346,7 +341,7 @@
             }
             validation(formData)
             /// Remove TIPE HIDDEN INPUT after Validation
-            if ('{{ $method }}' == 'POST') {
+            if ('{{ !$aset->pegawai }}') {
                 var title = 'Simpan Data?'
                 var text = 'Apakah anda yakin ingin menyimpan data ini?'
             } else {
@@ -371,19 +366,7 @@
                         processData: false,
                         contentType: false,
                         success: function(response) {
-                            console.log(response)
                             if ($.isEmptyObject(response.error)) {
-                                if (response == 'tidak_ada_gambar') {
-                                    $('.file_gambar-error').text(
-                                        'Silahkan masukkan setidaknya 1 Foto Aset.'
-                                    )
-                                    swal({
-                                        title: "Gagal!",
-                                        text: "Silahkan masukkan setidaknya 1 Foto Aset.",
-                                        icon: "error",
-                                    })
-                                }
-
                                 if (response == 'tidak_ada_dokumen') {
                                     $('.dokumen-error').text(
                                         'Silahkan masukkan setidaknya 1 Dokumen.'
@@ -448,7 +431,6 @@
                                     });
                                 }
 
-                                console.log(response);
                             } else {
                                 swal({
                                     title: "Gagal!",

@@ -61,10 +61,14 @@
                                             src="{{ asset('assets/img/blank_photo.png') }}" alt="image" data-iter="1"
                                             id="preview-image-1" style="height: 180px">
                                     </div>
-                                    <input type="hidden" name="file_gambar" value="" class="req"
-                                        data-label="Foto Ruangan (Sampul)" id="foto_ruangan-hidden">
-                                    <input type="file" class="form-control form-control-file file-gambar req"
-                                        id="file-gambar-1" data-iter="1" name="file_gambar[]" accept="image/*">
+                                    {{-- start validation --}}
+                                    <input type="hidden" name="file_gambar_1" value="" class="req file_gambar"
+                                        data-label="Foto Aset" data-iter="1" id="file_gambar-hidden-1">
+                                    {{-- start validation --}}
+
+                                    <input type="file" class="form-control form-control-file file-gambar"
+                                        id="file-gambar-1" data-iter="1" name="file_gambar[]" accept="image/*"
+                                        onchange="rmValFileGambar(1)">
                                     <label class="selectgroup-item mb-0">
                                         <input type="radio" value="" class="selectgroup-input foto_sampul"
                                             id="foto-sampul" checked='checked'>
@@ -74,6 +78,11 @@
                                         </span>
                                     </label>
                                 </div>
+                                {{-- start validation --}}
+                                <p class="text-danger error-text file_gambar_1-error my-0" id="file_gambar-error-1">
+                                </p>
+                                {{-- end validation --}}
+
                                 <span class="text-danger error-text file_gambar-error d-block my-0"></span>
                             </div>
                         @else
@@ -120,70 +129,6 @@
                     </div>
                 </div>
             </div>
-            {{-- <div class="col-md-12 col-lg-12 px-2">
-                <div class="form-group">
-                    <label for="">Dokumen (Surat-surat Kendaraan, Berita Acara, dan Lainnya)</label>
-                    <div class="row" id="dokumen-aset">
-                        <div class="col-md-6 col-lg-6 col-xl-3" id="col-dokumen-1">
-                            <div class="card box-upload mb-3 pegawai" id="box-upload-1" class="box-upload">
-                                <div class="card-body pb-2">
-                                    <div class="row">
-                                        <div class="col-3 d-flex align-items-center justify-content-center">
-                                            <img src="{{ asset('assets/img/pdf.png') }}" alt="" width="70px">
-                                        </div>
-                                        <div class="col-9">
-                                            <div class="mb-3 mt-2">
-                                                <input type="text" class="form-control nama-dokumen" id="nama-dokumen-1"
-                                                    name="nama_dokumen[]" placeholder="Masukkan Nama Dokumen" value=""
-                                                    data-iter="1">
-                                                <p class="text-danger error-text nama-dokumen-error my-0"
-                                                    id="nama-dokumen-error-1"></p>
-                                            </div>
-                                            <div class="mb-3">
-                                                <input name="file_dokumen[]" class="form-control file-dokumen"
-                                                    id="file-dokumen-1" type="file" multiple="true" data-iter="1"
-                                                    accept="application/pdf">
-                                                <p class="text-danger error-text file-dokumen-error my-0"
-                                                    id="file-dokumen-error-1"></p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                @if ($method == 'PUT')
-                                    <button type="button"
-                                        class="btn btn-danger fw-bold card-footer bg-danger text-center p-0"
-                                        onclick="deleteDokumen(1)"><i class="fas fa-trash-alt"></i>
-                                        Hapus</button>
-                                @endif
-                            </div>
-                            <p class="text-danger error-text dokumen-error my-0" id="dokumen-error-1"></p>
-                        </div>
-                        <div class="col-md-2 col-lg-2 col-xl-1 align-self-center col-add-dokumen">
-                            <div class="text-center text-muted" onclick="addDokumen()" style="cursor: pointer">
-                                <h1><i class="fas fa-plus-circle"></i></h1>
-                                <h6>Tambah Dokumen</h6>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-12 col-lg-12 px-2">
-                <div class="form-group">
-                    @component('dashboard.components.formElements.select', [
-    'label' => 'Pegawai',
-    'id' => 'pegawai',
-    'name' => 'pegawai_id',
-    'class' => 'select2',
-    'wajib' => '<sup class="text-danger">*</sup>',
-])
-                        @slot('options')
-                            @foreach ($pegawai as $item)
-                                <option value="{{ $item->id }}">{{ $item->nama_lengkap }}</option>
-                            @endforeach
-                        @endslot
-                    @endcomponent
-                </div>
-            </div> --}}
         </div>
     </div>
     <div class="card-action">
@@ -267,15 +212,22 @@
                     itemImage +
                     `" id="preview-image-` + itemImage + `"  style="height: 180px">
                             </div>
+                            <input type="hidden" name="file_gambar_` + itemImage + `" value="" class="req file_gambar"
+                                        data-label="Foto Aset" data-iter="` + itemImage + `" id="file_gambar-hidden-` +
+                    itemImage + `">
                             <input type="file" class="form-control form-control-file file-gambar" id="file-gambar-` +
                     itemImage + `"
-                                data-iter="` + itemImage + `" name="file_gambar[]" accept="image/*">
+                                data-iter="` + itemImage +
+                    `" name="file_gambar[]" accept="image/*" onchange="rmValFileGambar(` + itemImage + `)">
                             <span class="text-danger error-text file-gambar-error my-0"></span>
                             <button type="button"
                                 class="btn btn-danger fw-bold card-footer bg-danger text-center p-0"
                                 onclick="deleteImage(` + itemImage + `)"><i class="fas fa-trash-alt"></i>
                                 Hapus</button>
                         </div>
+                        <p class="text-danger error-text file_gambar_` + itemImage +
+                    `-error my-0" id="file_gambar-error-` + itemImage + `">
+                                </p>
                     </div>
                     <div class="col-md-2 col-lg-2 col-xl-1 align-self-center col-add-image">
                         <div class="text-center text-muted" onclick="addImage()" style="cursor: pointer">
@@ -288,197 +240,92 @@
             }
         }
 
-        $(document).on('change', '.file-dokumen', function() {
-            let size = $(this)[0].files[0].size / 1024
-            if (size > 3072) {
-                swal({
-                    title: "Gagal!",
-                    text: "Ukuran dokumen terlalu besar! Maksimal 3MB",
-                    icon: "error",
-                }).then((value) => {
-                    $(this).val('');
-                });
-            }
-        });
-
         function deleteImage(iter) {
             $('#col-image-' + iter).fadeOut(function() {
                 $('#col-image-' + iter).remove();
             });
         }
 
-        $('#file-gambar-1').change(function() {
-            $('#foto_ruangan-hidden').remove()
-        });
-
-        let iterDokumen = 2;
-
-        function addDokumen() {
-            $('.col-add-dokumen').remove();
-            $('#dokumen-aset').append(`
-            <div class="col-md-6 col-lg-6 col-xl-3" id="col-dokumen-` + iterDokumen + `">
-                <div class="card box-upload mb-3" id="box-upload-` +
-                iterDokumen + `" class="box-upload">
-                    <div class="card-body pb-2">
-                        <div class="row">
-                            <div class="col-3 d-flex align-items-center justify-content-center">
-                                <img src="{{ asset('assets/img/pdf.png') }}" alt="" width="70px">
-                            </div>
-                            <div class="col-9">
-                                <div class="mb-3 mt-2">
-                                    <input type="text" class="form-control nama-dokumen" id="nama-dokumen-` +
-                iterDokumen +
-                `"
-                                        name="nama_dokumen[]" placeholder="Masukkan Nama Dokumen" value="" data-iter="` +
-                iterDokumen +
-                `">
-                <p class="text-danger error-text nama-dokumen-error my-0" id="nama-dokumen-error-` + iterDokumen +
-                `"></p>
-                                </div>
-
-                                <div class="mb-3">
-                                    <input name="file_dokumen[]" class="form-control file-dokumen" type="file" id="file-dokumen-` +
-                iterDokumen + `"
-                                        multiple="true" data-iter="` + iterDokumen +
-                `" accept="application/pdf">
-                                    <p class="text-danger error-text file-dokumen-error my-0" id="file-dokumen-error-` +
-                iterDokumen + `"></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <button type="button"
-                        class="btn btn-danger fw-bold card-footer bg-danger text-center p-0"
-                        onclick="deleteDokumen(` + iterDokumen + `)"><i class="fas fa-trash-alt"></i>
-                        Hapus</button>
-                </div>
-            </div>
-            <div class="col-md-2 col-lg-2 col-xl-1 align-self-center col-add-dokumen">
-                <div class="text-center text-muted" onclick="addDokumen()" style="cursor: pointer">
-                    <h1><i class="fas fa-plus-circle"></i></h1>
-                    <h6>Tambah Dokumen</h6>
-                </div>
-            </div>
-                
-            `);
-            iterDokumen++;
+        function rmValFileGambar(iter) {
+            if ($('#file-gambar-' + iter).val() != '') {
+                $('#file_gambar-hidden-' + iter).removeClass('req');
+            } else {
+                $('#file_gambar-hidden-' + iter).addClass('req');
+            }
         }
-
-        function deleteDokumen(iter) {
-            $('#col-dokumen-' + iter).fadeOut(function() {
-                $('#col-dokumen-' + iter).remove();
-            });
-        }
-
-
 
         $('#form').submit(function(e) {
             e.preventDefault();
             $('.error-text').html('')
-            $('.nama-dokumen').removeClass('is-invalid')
-            $('.file-dokumen').removeClass('is-invalid')
+            var formData = $('.req').serializeArray()
+            var data = new FormData(this)
+            validation(formData)
 
-            var formData = new FormData(this);
-            $.ajax({
-                type: "POST",
-                url: "{{ $action }}",
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                },
-                data: formData,
-                cache: false,
-                processData: false,
-                contentType: false,
-                success: function(response) {
-                    console.log(response)
-                    if ($.isEmptyObject(response.error)) {
-
-                        if (response == 'tidak_ada_gambar') {
-                            $('.file_gambar-error').text(
-                                'Silahkan masukkan setidaknya 1 Foto Aset.'
-                            )
-                            swal({
-                                title: "Gagal!",
-                                text: "Silahkan masukkan setidaknya 1 Foto Aset.",
-                                icon: "error",
-                            })
-                        }
-
-                        if (response == 'tidak_ada_dokumen') {
-                            $('.dokumen-error').text(
-                                'Silahkan masukkan setidaknya 1 Dokumen.'
-                            )
-                            swal({
-                                title: "Gagal!",
-                                text: "Silahkan masukkan setidaknya 1 Dokumen.",
-                                icon: "error",
-                            })
-                            $
-                        }
-
-                        if (response == 'nama_dokumen_kosong') {
-                            swal({
-                                title: "Gagal!",
-                                text: "Terdapat Nama Dokumen yang kosong.",
-                                icon: "error",
-                            })
-                            $.each($('.nama-dokumen'), function(index, value) {
-                                if ($(value).val() == '') {
-                                    $(value).addClass('is-invalid');
-                                    $('#nama-dokumen-error-' + $(value).data('iter')).text(
-                                        'Nama Dokumen tidak boleh kosong.'
+            if ('{{ $method }}' == 'POST') {
+                var title = 'Simpan Data?'
+                var text = 'Apakah anda yakin ingin menyimpan data ini?'
+            } else {
+                var title = 'Perbarui Data?'
+                var text = 'Apakah anda yakin ingin perbarui data ini?'
+            }
+            swal({
+                title: title,
+                text: text,
+                icon: "info",
+                buttons: ["Batal", "Ya"],
+            }).then((result) => {
+                if (result) {
+                    $.ajax({
+                        type: "POST",
+                        url: "{{ $action }}",
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        data: data,
+                        cache: false,
+                        processData: false,
+                        contentType: false,
+                        success: function(response) {
+                            if ($.isEmptyObject(response.error)) {
+                                if (response == 'tidak_ada_gambar') {
+                                    $('.file_gambar-error').text(
+                                        'Silahkan masukkan setidaknya 1 Foto Aset.'
                                     )
+                                    swal({
+                                        title: "Gagal!",
+                                        text: "Silahkan masukkan setidaknya 1 Foto Aset.",
+                                        icon: "error",
+                                    })
                                 }
-                            });
-                        }
 
-                        if (response == 'nama_dokumen_kosong_dan_file_dokumen_kosong') {
-                            swal({
-                                title: "Gagal!",
-                                text: "Terdapat Nama Dokumen dan File Dokumen yang kosong.",
-                                icon: "error",
-                            })
-                            $.each($('.nama-dokumen'), function(index, value) {
-                                if ($(value).val() == '') {
-                                    $(value).addClass('is-invalid');
-                                    $('#nama-dokumen-error-' + $(value).data('iter')).text(
-                                        'Nama Dokumen tidak boleh kosong.'
-                                    )
+                                if (response == 'success') {
+                                    swal({
+                                        title: "Berhasil!",
+                                        text: "Data berhasil disimpan!",
+                                        icon: "success",
+                                    }).then((value) => {
+                                        location.href = "{{ url()->previous() }}";
+                                    });
                                 }
-                            });
-                            $.each($('.file-dokumen'), function(index, value) {
-                                if ($(value).val() == '') {
-                                    $(value).addClass('is-invalid');
-                                    $('#file-dokumen-error-' + $(value).data('iter')).text(
-                                        'File Dokumen tidak boleh kosong.'
-                                    )
-                                }
-                            });
-                        }
-                        if (response == 'success') {
-                            swal({
-                                title: "Berhasil!",
-                                text: "Data berhasil disimpan!",
-                                icon: "success",
-                            }).then((value) => {
-                                location.href = "{{ url()->previous() }}";
-                            });
-                        }
-
-                        console.log(response);
-                    } else {
-                        swal({
-                            title: "Gagal!",
-                            text: "Terjadi kesalahan, mohon periksa kembali data yang diinputkan.",
-                            icon: "error",
-                            button: "Ok",
-                        });
-                        printErrorMsg(response.error);
-                    }
-                },
-                error: function(response) {
-                    alert(response.responseJSON.message)
-                },
+                            } else {
+                                swal({
+                                    title: "Gagal!",
+                                    text: "Terjadi kesalahan, mohon periksa kembali data yang diinputkan.",
+                                    icon: "error",
+                                    button: "Ok",
+                                });
+                                printErrorMsg(response.error);
+                            }
+                        },
+                        error: function(response) {
+                            alert(response.responseJSON.message)
+                        },
+                    });
+                } else {
+                    swal("Data batal disimpan.", {
+                        icon: "error",
+                    });
+                }
             });
         });
         const printErrorMsg = (msg) => {
