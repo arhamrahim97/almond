@@ -239,15 +239,6 @@
             }
         }
 
-        // $('.nama-dokumen').change(function() {
-        //     $('#nama_dokumen-hidden-' + $(this).data('iter')).remove();
-        //     nama_dokumen - hidden - 2
-        // });
-
-        // $('.file-dokumen').change(function() {
-        //     $('#file_dokumen-hidden-' + $(this).data('iter')).remove();
-        // });
-
         let iterDokumen = 2;
 
         function addDokumen() {

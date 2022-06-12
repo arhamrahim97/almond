@@ -21,8 +21,10 @@ class DatabaseSeeder extends Seeder
         // \App\Models\User::factory(10)->create();
         $this->call(JabatanStrukturalSeeder::class);
         $this->call(UserSeeder::class);
-        Pegawai::factory(50)->create();
+        // Pegawai::factory(50)->create();
         $this->call(RuanganSeeder::class);
+        $this->call(PegawaiTableSeeder::class);
+        $this->call(AsetBergerakTableSeeder::class);
         $this->call(FileUploadTableSeeder::class);
     }
 }

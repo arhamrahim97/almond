@@ -152,7 +152,6 @@ class RuanganController extends Controller
             $tempFotoRuangan[] = $init;
         }
         $ruangan['foto_ruangan_'] = $tempFotoRuangan;
-        // $ruangan['foto_ruangan_'] = $ruangan->fileUploadGambar->pluck('nama_file');
         return $ruangan;
     }
 
@@ -164,11 +163,6 @@ class RuanganController extends Controller
      */
     public function edit(Ruangan $ruangan)
     {
-        // dd($ruangan);
-        // $data = [
-        //     'ruangan' => $ruangan,
-        //     'fileUpload' => $ruangan->fileUploadGambar,
-        // ];
         return view('dashboard.pages.masterData.ruangan.edit', compact('ruangan'));
     }
 
@@ -224,7 +218,7 @@ class RuanganController extends Controller
         if ($request->file_gambar !== null) {
             $no = $ruangan->fileUploadGambar->max('urutan') + 1;
             foreach ($request->file('file_gambar') as $val) {
-                $namaFile = $no . '. ' . $request->nama_ruangan . '-' . $no . '.' . $val->getClientOriginalExtension();
+                $namaFile = mt_rand() . '-' . $request->nama_ruangan . '-' . $no . '.' . $val->getClientOriginalExtension();
                 $val->storeAs(
                     'upload/foto_ruangan/',
                     $namaFile
@@ -261,14 +255,15 @@ class RuanganController extends Controller
         }
 
         $ruangan->delete();
+        return response()->json(['success' => 'Data berhasil dihapus']);
     }
 
     public function deleteSelected(Request $request)
     {
         foreach ($request->id as $id) {
-            $ruangan = Ruangan::with('fileUpload')->find($id);
+            $ruangan = Ruangan::with('fileUploadGambar')->find($id);
 
-            if (count($ruangan->fileUploadGambar) > 0) {
+            if ($ruangan->fileUploadGambar) {
                 foreach ($ruangan->fileUploadGambar as $item) {
                     $namaFile = $item->nama_file;
                     if (Storage::exists('upload/foto_ruangan/' . $namaFile)) {

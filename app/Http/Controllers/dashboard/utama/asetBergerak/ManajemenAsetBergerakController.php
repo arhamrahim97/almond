@@ -6,6 +6,7 @@ use App\Models\Pegawai;
 use App\Models\FileUpload;
 use App\Models\AsetBergerak;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use App\Http\Controllers\Controller;
 use App\Models\ManajemenAsetBergerak;
 use Illuminate\Support\Facades\Storage;
@@ -29,25 +30,25 @@ class ManajemenAsetBergerakController extends Controller
             return DataTables::of($data)
                 ->addIndexColumn()
 
-                // ->addColumn('checkData', function ($row) {
-                //     return $row->id;
-                // })
+                ->addColumn('checkData', function ($row) {
+                    return $row->id;
+                })
 
                 ->addColumn('pegawai', function ($row) {
                     if ($row->pegawai) {
                         return $row->pegawai->nama_lengkap;
                     } else {
-                        return '<span class="badge badge-danger">Belum Ditentukan</span>';
+                        return '<span class="badge badge-danger shadow">Belum Ditentukan</span>';
                     }
                 })
 
                 ->addColumn('status', function ($row) {
                     if ($row->status == 'Baru') {
-                        return '<span class="badge badge-success">Baru</span>';
+                        return '<span class="badge badge-success shadow">Baru</span>';
                     } else if ($row->status == 'Digunakan') {
-                        return '<span class="badge badge-secondary">Digunakan</span>';
+                        return '<span class="badge badge-secondary shadow">Digunakan</span>';
                     } else {
-                        return '<span class="badge badge-danger">Rusak</span>';
+                        return '<span class="badge badge-danger shadow">Rusak</span>';
                     }
                 })
 
@@ -68,10 +69,11 @@ class ManajemenAsetBergerakController extends Controller
                     } else {
                         $actionBtn .= '<a href="' . url('tentukan-aset-pegawai', $row->id) . '" id="btn-edit" class="btn btn-success btn-sm me-1 text-white shadow" data-toggle="tooltip" data-placement="top" title="Tentukan Pegawai" value="' . $row->id . '" data-toggle="modal" data-target="#exampleModalCenter"><i class="fas fa-user-plus"></i></a> ';
                     }
+                    $actionBtn .= '<button id="btn-lihat" class="btn btn-primary btn-sm me-1 text-white shadow btn-lihat" data-toggle="tooltip" data-placement="top" title="Lihat" value="' . $row->id . '" data-button="lihat"><i class="fas fa-eye"></i></button>';
 
-                    $actionBtn .= ' <a href="' . route('manajemen-aset-bergerak.edit', $row->id) . '" id="btn-edit" class="btn btn-info btn-sm mr-1 my-1 text-white shadow" data-toggle="tooltip" data-placement="top" title="Duplicate Aset"><i class="fas fa-copy"></i></a>';
-                    $actionBtn .= '<button id="btn-lihat" class="btn btn-primary btn-sm me-1 text-white shadow btn-lihat" data-toggle="tooltip" data-placement="top" title="Lihat" value="' . $row->id . '" data-toggle="modal" data-target="#exampleModalCenter"><i class="fas fa-eye"></i></button>';
-                    $actionBtn .= ' <a href="' . route('manajemen-aset-bergerak.edit', $row->id) . '" id="btn-edit" class="btn btn-warning btn-sm mr-1 my-1 text-white shadow" data-toggle="tooltip" data-placement="top" title="Ubah"><i class="fas fa-edit"></i></a>';
+                    $actionBtn .= ' <button id="btn-duplikat" class="btn btn-info btn-sm me-1 text-white shadow btn-lihat" data-toggle="tooltip" data-placement="top" title="Duplikat Aset" value="' . $row->id . '" data-button="duplikat"><i class="fas fa-copy"></i></button>
+                    ';
+                    $actionBtn .= '<a href="' . route('manajemen-aset-bergerak.edit', $row->id) . '" id="btn-edit" class="btn btn-warning btn-sm mr-1 my-1 text-white shadow" data-toggle="tooltip" data-placement="top" title="Ubah"><i class="fas fa-edit"></i></a>';
                     $actionBtn .= '<button id="btn-delete" class="btn btn-danger btn-sm mr-1 my-1 text-white shadow btn-delete" data-toggle="tooltip" data-placement="top" title="Hapus" value="' . $row->id . '"><i class="fas fa-trash"></i></button>';
                     $actionBtn .= '</div>';
                     return $actionBtn;
@@ -271,6 +273,33 @@ class ManajemenAsetBergerakController extends Controller
      */
     public function show(AsetBergerak $manajemenAsetBergerak)
     {
+        $manajemenAsetBergerak['created_at_'] = Carbon::parse($manajemenAsetBergerak->created_at)->translatedFormat('j F Y H:i');
+        $manajemenAsetBergerak['updated_at_'] = Carbon::parse($manajemenAsetBergerak->updated_at)->translatedFormat('j F Y H:i');
+        $manajemenAsetBergerak['created_by_'] = $manajemenAsetBergerak->createdBy->nama_lengkap;
+        $manajemenAsetBergerak['updated_by_'] = $manajemenAsetBergerak->updatedBy->nama_lengkap;
+        $manajemenAsetBergerak['jumlah_foto_'] = $manajemenAsetBergerak->fileUploadGambar->count();
+        $fotoAsetBergerak = $manajemenAsetBergerak->fileUploadGambar->pluck('nama_file');
+        $tempFotoAsetBergerak = [];
+        foreach ($fotoAsetBergerak as $val) {
+            $init = Storage::exists('upload/foto_aset_bergerak/' . $val) ? Storage::url('upload/foto_aset_bergerak/' . $val) : asset('assets/img/blank_photo.png');
+            $tempFotoAsetBergerak[] = $init;
+        }
+        $manajemenAsetBergerak['foto_aset_bergerak_'] = $tempFotoAsetBergerak;
+
+        $manajemenAsetBergerak['pegawai_'] = $manajemenAsetBergerak->pegawai ?  $manajemenAsetBergerak->pegawai->nama_lengkap : '';
+        $manajemenAsetBergerak['jumlah_dokumen_'] = $manajemenAsetBergerak->fileUploadDokumen->count();
+        $dokumenAsetBergerak = $manajemenAsetBergerak->fileUploadDokumen;
+        $tempDokumenAsetBergerak = [];
+        foreach ($dokumenAsetBergerak as $val) {
+            $nama_file = Storage::exists('upload/dokumen_aset_bergerak/' . $val->nama_file) ? Storage::url('upload/dokumen_aset_bergerak/' . $val->nama_file) : 'tidak-ditemukan';
+            $deskripsi = $val->deskripsi;
+            $tempDokumenAsetBergerak[] = [
+                'nama_file' => $nama_file,
+                'deskripsi' => $deskripsi,
+            ];
+        }
+        $manajemenAsetBergerak['dokumen_aset_bergerak_'] = $tempDokumenAsetBergerak;
+        return $manajemenAsetBergerak;
     }
 
     /**
@@ -371,13 +400,110 @@ class ManajemenAsetBergerakController extends Controller
         return response()->json('success');
     }
 
+    public function duplikatAsetBergerak(Request $request)
+    {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'jumlah_duplikat' => 'required',
+            ],
+            [
+                'jumlah_duplikat.required' => 'Jumlah duplikat tidak boleh kosong',
+            ]
+        );
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()]);
+        }
+
+        $asetBergerak = AsetBergerak::find($request->id);
+
+        for ($i = 0; $i < $request->jumlah_duplikat; $i++) {
+            $dataAsetBergerak = [
+                'nama_aset' => $asetBergerak->nama_aset,
+                'merek' => $asetBergerak->merek,
+                'model' => $asetBergerak->model,
+                'kode_inventaris' => $asetBergerak->kode_inventaris,
+                'deskripsi' => $asetBergerak->deskripsi,
+                'status' => 'Baru',
+            ];
+
+            $insertAset = AsetBergerak::create($dataAsetBergerak);
+
+            foreach ($asetBergerak->fileUploadGambar as $item) {
+                $extension = pathinfo(storage_path('upload/foto_aset_bergerak/' . $item->nama_file), PATHINFO_EXTENSION);
+                $namaFile = mt_rand() . '-' . $asetBergerak->nama_aset . '-' . $asetBergerak->merek . '-' . $asetBergerak->model . '-' . $item->urutan . '.' . $extension;
+                Storage::copy('upload/foto_aset_bergerak/' . $item->nama_file, 'upload/foto_aset_bergerak/' . $namaFile);
+                $dataGambar = [
+                    'another_id' => $insertAset->id,
+                    'nama_file' => $namaFile,
+                    'jenis_file' => 'Gambar',
+                    'urutan' => $item->urutan,
+                ];
+                if ($item->is_sampul == 1) {
+                    $dataGambar['is_sampul'] = 1;
+                }
+                FileUpload::create($dataGambar);
+            }
+        }
+        return response()->json('success');
+    }
+
     /**
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\ManajemenAsetBergerak  $manajemenAsetBergerak
      * @return \Illuminate\Http\Response
      */
-    public function destroy(ManajemenAsetBergerak $manajemenAsetBergerak)
+    public function destroy(AsetBergerak $manajemenAsetBergerak)
     {
+        if ($manajemenAsetBergerak->fileUploadGambar) {
+            foreach ($manajemenAsetBergerak->fileUploadGambar as $item) {
+                if (Storage::exists('upload/foto_aset_bergerak/' . $item->nama_file)) {
+                    Storage::delete('upload/foto_aset_bergerak/' . $item->nama_file);
+                }
+                FileUpload::where('id', $item->id)->delete();
+            }
+        }
+
+        if ($manajemenAsetBergerak->fileUploadDokumen) {
+            foreach ($manajemenAsetBergerak->fileUploadDokumen as $item) {
+                if (Storage::exists('upload/dokumen_aset_bergerak/' . $item->nama_file)) {
+                    Storage::delete('upload/dokumen_aset_bergerak/' . $item->nama_file);
+                }
+                FileUpload::where('id', $item->id)->delete();
+            }
+        }
+
+        $manajemenAsetBergerak->delete();
+        return response()->json(['success' => 'Data berhasil dihapus']);
+    }
+
+    public function deleteSelected(Request $request)
+    {
+        foreach ($request->id as $id) {
+            $asetBergerak = AsetBergerak::with('fileUploadGambar', 'fileUploadDokumen')->find($id);
+
+            if ($asetBergerak->fileUploadGambar) {
+                foreach ($asetBergerak->fileUploadGambar as $item) {
+                    if (Storage::exists('upload/foto_aset_bergerak/' . $item->nama_file)) {
+                        Storage::delete('upload/foto_aset_bergerak/' . $item->nama_file);
+                    }
+                    FileUpload::where('id', $item->id)->delete();
+                }
+            }
+
+            if ($asetBergerak->fileUploadDokumen) {
+                foreach ($asetBergerak->fileUploadDokumen as $item) {
+                    if (Storage::exists('upload/dokumen_aset_bergerak/' . $item->nama_file)) {
+                        Storage::delete('upload/dokumen_aset_bergerak/' . $item->nama_file);
+                    }
+                    FileUpload::where('id', $item->id)->delete();
+                }
+            }
+
+            $asetBergerak->delete();
+        }
+        return response()->json(['success' => 'Data berhasil dihapus']);
     }
 }

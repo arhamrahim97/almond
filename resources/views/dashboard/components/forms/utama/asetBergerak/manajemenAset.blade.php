@@ -188,7 +188,6 @@
             $('#col-image-old-' + iter).fadeOut(function() {
                 $('#col-image-old-' + iter).remove();
             });
-            alert(itemImageOld);
         }
 
         let itemImage = 2;
@@ -292,7 +291,6 @@
                         processData: false,
                         contentType: false,
                         success: function(response) {
-                            console.log(response)
                             if ($.isEmptyObject(response.error)) {
                                 if (response == 'tidak_ada_gambar') {
                                     $('.file_gambar-error').text(

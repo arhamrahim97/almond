@@ -80,10 +80,10 @@
     <!-- Modal -->
     <div class="modal fade bd-example-modal-lg" id="modal-lihat" tabindex="-1" role="dialog"
         aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3 class="modal-title" id="exampleModalLongTitle">Detail</h3>
+                    <h3 class="modal-title" id="exampleModalLongTitle">Lihat Detail</h3>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -143,7 +143,7 @@
                         </div>
                     </div>
                 </div>
-                <div id="foto-ruangan" class="p-4">
+                <div id="foto-ruangan" class="row p-4">
 
                 </div>
                 <div class="modal-footer py-4">
@@ -274,7 +274,6 @@
                 url: "{{ url('ruangan') }}" + '/' + id,
                 success: function(data) {
                     $('#modal-lihat').modal('show');
-                    console.log(data)
                     $('#td-nama-ruangan').text(data.nama_ruangan)
                     $('#td-deskripsi').text(data.deskripsi)
                     $('#td-dibuat-tanggal').text(data.created_at_)
@@ -289,7 +288,9 @@
                     $('#foto-ruangan').html('')
                     $.each(data.foto_ruangan_, function(index, value) {
                         $('#foto-ruangan').append(`
+                        <div class="col-lg-6">
                             <img src="${value}" class="img-fluid card-img-top rounded mb-3" alt="">
+                            </div>
                         `)
                     })
                     $('#btn-ubah-modal').attr('href', "{{ url('ruangan') }}" + '/' + id + '/edit')

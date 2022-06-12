@@ -64,7 +64,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="email-compose.html">
+                                <a href="{{ url('aset-pegawai') }}">
                                     <span class="sub-item">Aset Pegawai</span>
                                 </a>
                             </li>
