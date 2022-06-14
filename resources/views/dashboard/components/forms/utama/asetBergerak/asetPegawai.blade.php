@@ -19,7 +19,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-12 col-lg-3 px-2">
+            <div class="col-md-12 col-lg-5 col-xl-3 px-2">
                 <div class="form-group">
                     @component('dashboard.components.formElements.select',
                         [
@@ -39,16 +39,20 @@
                             @endforeach
                         @endslot
                     @endcomponent
+                    <small
+                        class="text-danger">{{ $aset->pegawai ? 'Memindahkan aset ke pegawai lain akan mengubah ' : 'Menentukan pegawai pada aset yang dipilih akan mengubah' }}
+                        status aset menjadi "<span class="fw-bold">Digunakan</span>".</small>
                 </div>
             </div>
-            <div class="col-md-12 col-lg-9 px-2">
+            <div class="col-md-12 col-lg-7 col-xl-9 px-2">
                 <div class="form-group">
-                    <label for="">Dokumen (Surat-surat Kendaraan, Berita Acara, dan Lainnya)</label>
+                    <label for="" class="mb-0">Dokumen</label>
+                    <label for="">(Surat-surat Kendaraan, Berita Acara, dan Lainnya)</label>
                     <div class="row" id="dokumen-aset">
                         @if ($aset->pegawai)
                             @if ($aset->fileUploadDokumen->count() > 0)
                                 @foreach ($aset->fileUploadDokumen as $item)
-                                    <div class="col-md-6 col-lg-6 col-xl-6 col-document"
+                                    <div class="col-md-6 col-lg-12 col-xl-6 col-document"
                                         id="col-document-old-{{ $loop->iteration }}">
                                         <div class="card box-upload mb-3 pegawai"
                                             id="box-upload-{{ $loop->iteration }}" class="box-upload">
@@ -92,7 +96,7 @@
                                 @endforeach
                             @endif
                         @else
-                            <div class="col-md-6 col-lg-6 col-xl-6 col-document" id="col-dokumen-1">
+                            <div class="col-md-6 col-lg-12 col-xl-6 col-document" id="col-dokumen-1">
                                 <div class="card box-upload mb-3 pegawai" id="box-upload-1" class="box-upload">
                                     <div class="card-body pb-2">
                                         <div class="row">
@@ -248,7 +252,7 @@
             }
             $('.col-add-dokumen').remove();
             $('#dokumen-aset').append(`
-            <div class="col-md-6 col-lg-6 col-xl-6 col-document" id="col-dokumen-` + iterDokumen + `">
+            <div class="col-md-6 col-lg-12 col-xl-6 col-document" id="col-dokumen-` + iterDokumen + `">
                 <div class="card box-upload mb-3" id="box-upload-` +
                 iterDokumen + `" class="box-upload">
                     <div class="card-body pb-2">

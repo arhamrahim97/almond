@@ -1,7 +1,7 @@
 @extends('dashboard.layouts.main')
 
 @section('title')
-    Manajemen Aset Bergerak
+    Aset Pegawai
 @endsection
 
 @push('style')
@@ -24,7 +24,7 @@
             <i class="flaticon-right-arrow"></i>
         </li>
         <li class="nav-item">
-            <span>Manajemen Aset</span>
+            <span>Aset Pegawai</span>
         </li>
     </ul>
 @endsection
@@ -33,64 +33,66 @@
     <div class="row">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header">
+                <div class="card-header ">
                     <div class="card-head-row">
-                        <div class="card-title">Data Aset Bergerak</div>
-                        <div class="card-tools">
-                            <ul class="nav nav-pills nav-secondary nav-pills-no-bd nav-sm" id="pills-tab" role="tablist">
-                                <li class="nav-item submenu">
-                                    @component('dashboard.components.buttons.deletedSelected',
-                                        [
-                                            'id' => 'deleteSelected',
-                                        ])
-                                    @endcomponent
-                                    @component('dashboard.components.buttons.add',
-                                        [
-                                            'url' => url('manajemen-aset-bergerak/create'),
-                                        ])
-                                    @endcomponent
-                                </li>
-                            </ul>
+                        <div class="card-title">Aset Pegawai</div>
+                        <div class="row card-tools">
+                            <div class="col">
+                                <ul class="nav nav-pills nav-secondary nav-pills-no-bd nav-sm float-right" id="pills-tab"
+                                    role="tablist">
+                                    <label for="" class="d-inline mt-1">Cari
+                                        Pegawai :
+                                    </label>
+                                    <li class="nav-item submenu mr-1">
+                                        <div class="form-group p-0">
+                                            <select class="form-control select2" id="cari-pegawai" autocomplete="off">
+                                                <option value="">Semua</option>
+                                                @foreach ($asetPegawaiAll as $pegawai)
+                                                    <option value="{{ $pegawai->id }}">{{ $pegawai->nama_lengkap }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </li>
+                                    <a href="{{ url('aset-pegawai') }}" class="btn btn-sm btn-secondary d-none"
+                                        id="btn-refresh"><i class="fas fa-undo mt-1"></i></a>
+                                </ul>
+
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div class="card-body">
-                    <div class="row">
-                        <div class="table-responsive">
-                            <table class="table table-hover table-striped" id="{{ $id ?? 'dataTables' }}" cellspacing="0"
-                                width="100%">
-                                <thead>
-                                    <tr class="text-center fw-bold">
-                                        <th><input type="checkbox" id="checkAllData" autocomplete="off" />
-                                        </th>
-                                        <th>No</th>
-                                        <th>Aset</th>
-                                        {{-- <th>Merek</th>
-                                        <th>Model</th> --}}
-                                        <th>Kode Inventaris</th>
-                                        {{-- <th>Deskripsi</th> --}}
-                                        <th>Status</th>
-                                        <th>Pegawai</th>
-
-                                        {{-- <th>Dibuat Tanggal</th>
-                                        <th>Dibuat Oleh</th>
-                                        <th>Diperbarui Tanggal</th>
-                                        <th>Diperbarui Oleh</th> --}}
-                                        <th>Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-
-                                </tbody>
-                            </table>
+                    @if (count($asetPegawai) > 0)
+                        <div class="row" id="content-card">
+                            <div class="col-12 mb-3">
+                                <h5>Status: <i class="fas fa-circle text-secondary ml-2"></i> Digunakan, <i
+                                        class="fas fa-circle text-warning ml-2"></i> Diperbaiki, <i
+                                        class="fas fa-circle text-danger ml-2"></i> Rusak</h5>
+                            </div>
+                            @component('dashboard.components.cards.asetBergerak.asetPegawai',
+                                [
+                                    'asetPegawai' => $asetPegawai,
+                                ])
+                            @endcomponent
                         </div>
-                    </div>
+                    @else
+                        <div class="row justify-content-center">
+                            <div class="col">
+                                <h4 class="text-center text-muted py-3">Tidak ada data</h4>
+                            </div>
+                        </div>
+                    @endif
+
+                </div>
+                <div class="d-flex justify-content-center d-none" id="pagination-aset">
+                    {!! $asetPegawai->links() !!}
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Modal -->
+    <!-- Modal Info -->
     <div class="modal fade bd-example-modal-lg" id="modal-lihat" tabindex="-1" role="dialog"
         aria-labelledby="exampleModalLongTitle" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
@@ -188,45 +190,18 @@
                             </div>
                         </div>
                     </div>
-                    <form method="POST" class="px-3 mb-3" id="duplikat-form" data-id="">
-                        @csrf
-                        <div class="row align-items-end">
-                            <div class="col-md-8 col-lg-8 px-2">
-                                <div class="form-group">
-                                    <label for="TextInput" class="form-label">Jumlah Duplikat</label>
-                                    <input type="text" id="jumlah-duplikat" name="jumlah_duplikat"
-                                        class="form-control req angka" value="" placeholder="Masukkan Jumlah Duplikat"
-                                        data-label="Jumlah Duplikat">
-                                </div>
-                            </div>
-                            <div class="col-md-4 col-lg-4 text-right align-items-end pl-md-0">
-                                <div class="form-group px-0">
-                                    <button type="submit" class="btn btn-success w-100" id="btn-submit" value=""><i
-                                            class="fas fa-copy"></i>
-                                        Proses</button>
-                                </div>
-                            </div>
-                            <span class="text-danger mx-3 error-text jumlah_duplikat-error"></span>
-                        </div>
-
-                    </form>
                 </div>
                 <div class="modal-footer py-4 justify-content-center">
                     <div class="row w-100">
-                        {{-- <div class="col-lg col-sm-12 mb-1" id="col-tentukan-aset-pegawai">
-                            <a href="" class="btn btn-md btn-success w-100" id="btn-tentukan-pegawai-modal"><i
-                                    class="fas fa-user-plus"></i>
-                                Tentukan Pegawai</a>
-                        </div>
-                        <div class="col-lg col-sm-12 mb-1" id="col-ubah-aset-pegawai">
+                        {{-- <div class="col-lg col-sm-12 mb-1" id="col-ubah-aset-pegawai">
                             <a href="" class="btn btn-md btn-secondary w-100" id="btn-ubah-pegawai-modal"><i
-                                    class="fas fa-user-edit"></i>
-                                Ubah Pegawai</a>
-                        </div>
-                        <div class="col-lg col-sm-12 mb-1" id="col-ubah-aset">
-                            <a href="" class="btn btn-md btn-warning w-100" id="btn-ubah-aset-modal"><i
-                                    class="fas fa-edit"></i>
-                                Ubah Aset</a>
+                                    class="fas fa-share"></i>
+                                Pindahkan Aset</a>
+                        </div> --}}
+                        {{-- <div class="col-lg col-sm-12 mb-1" id="col-ubah-aset-pegawai">
+                            <a href="" class="btn btn-md btn-secondary w-100" id="btn-ubah-pegawai-modal"><i
+                                    class="fas fa-share"></i>
+                                Pindahkan Aset</a>
                         </div> --}}
                         <div class="col-lg col-sm-12 mb-1">
                             <button type="button" class="btn btn-md btn-dark w-100" data-dismiss="modal"><i
@@ -293,7 +268,21 @@
             $('.nav-item').removeClass('active');
             $('#nav-aset-bergerak').addClass('active submenu');
             $('#aset-bergerak').addClass('show')
-            $('#li-manajemen-aset-bergerak').addClass('active');
+            $('#li-aset-pegawai').addClass('active');
+        })
+
+        $('#cari-pegawai').change(function() {
+            $('#btn-refresh').removeClass('d-none');
+            var id = $(this).val();
+            $.ajax({
+                url: "{{ url('/aset-pegawai/cari-pegawai') }}" + "/" + id,
+                type: "GET",
+                success: function(data) {
+                    $('#pagination-aset').remove();
+                    $('#content-card').html('');
+                    $('#content-card').html(data);
+                }
+            });
         })
 
         $(document).on('click', '.btn-lihat', function() {
@@ -328,6 +317,7 @@
                         </div>
                     `)
                     })
+
 
                     if (button == 'lihat') {
                         $('#title-modal').text('Lihat Detail')
@@ -401,8 +391,6 @@
 
                 }
             });
-
-
         });
 
         $(document).on('click', '.ubah-status-aset', function() {
@@ -416,13 +404,7 @@
                 $(this).remove();
             });
 
-            if (status_aset == 'Baru') {
-                let option = `
-            <option value="Rusak">Rusak</option>
-            <option value="Diperbaiki">Diperbaiki</option>
-            <option value="Dibuang">Dibuang</option>`
-                $('#status-aset').append(option)
-            } else if (status_aset == "Digunakan") {
+            if (status_aset == "Digunakan") {
                 let option = `
             <option value="Rusak">Rusak</option>
             <option value="Diperbaiki">Diperbaiki</option>
@@ -449,67 +431,11 @@
             });
         })
 
-        $('#duplikat-form').submit(function(e) {
-            e.preventDefault();
-            $('.error-text').text('')
-            var formData = $(this).serializeArray()
-            validation(formData)
-            var data = new FormData(this)
-            data.append('id', $('#btn-submit').val())
-            swal({
-                title: 'Apakah Anda yakin?',
-                text: "Data ini akan di duplikat sebanyak " + $('#jumlah-duplikat').val() + " kali.",
-                icon: "warning",
-                dangerMode: true,
-                buttons: ["Batal", "Ya"],
-            }).then((result) => {
-                if (result) {
-                    $.ajax({
-                        type: "POST",
-                        url: "{{ route('duplikatAsetBergerak') }}",
-                        headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                        },
-                        data: data,
-                        cache: false,
-                        processData: false,
-                        contentType: false,
-                        success: function(response) {
-                            if ($.isEmptyObject(response.error)) {
-                                swal({
-                                    title: "Berhasil!",
-                                    text: "Data berhasil di duplikat.",
-                                    icon: "success",
-                                }).then(function() {
-                                    table.ajax.reload();
-                                    $('#modal-lihat').modal('hide');
-                                });
-                            } else {
-                                swal({
-                                    title: "Gagal!",
-                                    text: "Terjadi kesalahan, mohon periksa kembali data yang diinputkan.",
-                                    icon: "error",
-                                    button: "Ok",
-                                });
-                                printErrorMsg(response.error);
-                            }
-                        },
-                        error: function(response) {
-                            alert(response.responseJSON.message)
-                        },
-                    });
-                } else {
-                    swal("Data batal dihapus.", {
-                        icon: "error",
-                    });
-                }
-            })
-        })
-
         $('#form-ubah-status-aset').submit(function(e) {
             e.preventDefault();
             $('.error-text').text('')
-            var formData = $(this).serializeArray()
+            var formData = $('.req').serializeArray()
+
             validation(formData)
             var data = new FormData(this)
             data.append('id', $('#btn-submit').val())
@@ -568,214 +494,5 @@
                 $('.' + key + '-error').text(value);
             });
         }
-
-        var table = $('#dataTables').DataTable({
-            processing: true,
-            serverSide: true,
-            dom: 'lBfrtip',
-            ordering: false,
-            buttons: [{
-                    extend: 'excel',
-                    className: 'btn btn-sm btn-light-success px-2 btn-export-table d-inline ml-3 font-weight',
-                    text: '<i class="bi bi-file-earmark-arrow-down"></i> Ekspor Data',
-                    exportOptions: {
-                        modifier: {
-                            order: 'index', // 'current', 'applied', 'index',  'original'
-                            page: 'all', // 'all',     'current'
-                            search: 'applied' // 'none',    'applied', 'removed'
-                        },
-                        columns: ':visible'
-                    }
-                },
-                {
-                    extend: 'colvis',
-                    className: 'btn btn-sm btn-light-success px-2 btn-export-table d-inline ml-3 font-weight',
-                    text: '<i class="bi bi-eye-fill"></i> Tampil/Sembunyi Kolom',
-                }
-            ],
-            lengthMenu: [
-                [10, 25, 50, -1],
-                [10, 25, 50, "All"]
-            ],
-            ajax: {
-                url: "{{ route('manajemen-aset-bergerak.index') }}",
-            },
-            columns: [{
-                    data: 'checkData',
-                    render: function(data, row, type) {
-                        return '<input type="checkbox" class="checkData" value="' + data +
-                            '">';
-                    },
-                    className: 'text-center',
-                },
-                {
-                    data: 'DT_RowIndex',
-                    name: 'DT_RowIndex',
-                    className: 'text-center',
-                    orderable: false,
-                    searchable: false
-                },
-                {
-                    data: 'aset',
-                    name: 'aset',
-                },
-                // {
-                //     data: 'merek',
-                //     name: 'merek',
-                // },
-                // {
-                //     data: 'model',
-                //     name: 'model',
-                // },
-                {
-                    data: 'kode_inventaris',
-                    name: 'kode_inventaris',
-                    className: 'text-center',
-                },
-                // {
-                //     data: 'deskripsi',
-                //     name: 'deskripsi',
-                // },
-                {
-                    data: 'status',
-                    name: 'status',
-                    className: 'text-center',
-                },
-                {
-                    data: 'pegawai',
-                    name: 'pegawai',
-                    className: 'text-center',
-                },
-                // {
-                //     data: 'created_at',
-                //     name: 'created_at',
-                // },
-                // {
-                //     data: 'created_by',
-                //     name: 'created_by',
-                // },
-                // {
-                //     data: 'updated_at',
-                //     name: 'updated_at',
-                // },
-                // {
-                //     data: 'updated_by',
-                //     name: 'updated_by',
-                // },
-                {
-                    data: 'action',
-                    name: 'action',
-                    orderable: false,
-                    searchable: false,
-                    className: 'text-center'
-                },
-            ],
-            // columnDefs: [{
-            //         targets: [5, 6, 7, 8],
-            //         visible: false,
-            //     },
-            //     {
-            //         targets: [5, 7],
-            //         render: function(data) {
-            //             return moment(data).format('LL');
-            //         }
-            //     },
-            // ],
-        });
-
-        $(document).on('click', '.btn-delete', function() {
-            let id = $(this).val();
-            var _token = "{{ csrf_token() }}";
-            swal({
-                title: 'Apakah Anda yakin?',
-                text: "Data yang dipilih akan dihapus!",
-                icon: "warning",
-                dangerMode: true,
-                buttons: ["Batal", "Ya"],
-            }).then((result) => {
-                if (result) {
-                    $.ajax({
-                        type: 'DELETE',
-                        url: "{{ url('manajemen-aset-bergerak') }}" + '/' + id,
-                        data: {
-                            _token: _token
-                        },
-                        success: function(data) {
-                            swal({
-                                title: "Berhasil!",
-                                text: "Data yang dipilih berhasil dihapus.",
-                                icon: "success",
-                            }).then(function() {
-                                table.ajax.reload();
-                                $('#checkAllData').prop('checked', false);
-                            });
-                        }
-                    })
-                } else {
-                    swal("Data batal dihapus.", {
-                        icon: "error",
-                    });
-                }
-            })
-        })
-
-        $('#checkAllData').click(function() {
-            if ($(this).is(':checked')) {
-                $('.checkData').prop('checked', true);
-            } else {
-                $('.checkData').prop('checked', false);
-            }
-        });
-
-        $('#deleteSelected').click(function() {
-            var id = [];
-            var _token = "{{ csrf_token() }}";
-
-            $('.checkData:checked').each(function() {
-                id.push($(this).val());
-            });
-
-            if (id == '') {
-                swal({
-                    icon: 'error',
-                    title: 'Gagal!',
-                    text: 'Belum ada data yang dipilih!',
-                })
-            } else {
-                swal({
-                    title: 'Apakah Anda yakin?',
-                    text: "Data yang dipilih akan dihapus!",
-                    icon: "warning",
-                    dangerMode: true,
-                    buttons: ["Batal", "Ya"],
-                }).then((result) => {
-                    if (result) {
-                        $.ajax({
-                            type: 'POST',
-                            url: "{{ url('manajemen-aset-bergerak/delete-selected') }}",
-                            data: {
-                                id: id,
-                                _token: _token
-                            },
-                            success: function(data) {
-                                swal({
-                                    title: "Berhasil!",
-                                    text: "Data yang dipilih berhasil dihapus.",
-                                    icon: "success",
-                                }).then(function() {
-                                    table.ajax.reload();
-                                    $('#checkAllData').prop('checked', false);
-                                });
-                            }
-                        })
-                    } else {
-                        swal("Data batal dihapus.", {
-                            icon: "error",
-                        });
-                    }
-                })
-            }
-
-        });
     </script>
 @endpush

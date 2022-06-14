@@ -10,6 +10,8 @@ use App\Http\Controllers\dashboard\masterData\UserController;
 use App\Http\Controllers\dashboard\masterData\RuanganController;
 use App\Http\Controllers\dashboard\utama\asetBergerak\ManajemenAsetBergerakController;
 use App\Http\Controllers\dashboard\utama\asetBergerak\AsetPegawaiController;
+use App\Http\Controllers\dashboard\utama\asetBergerak\StatusAsetController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -46,6 +48,11 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/manajemen-aset-bergerak/delete-selected', [ManajemenAsetBergerakController::class, 'deleteSelected']);
 
     Route::resource('/aset-pegawai', AsetPegawaiController::class);
+    Route::get('/aset-pegawai/cari-pegawai/{asetPegawai}', [AsetPegawaiController::class, 'cariPegawai']);
+    Route::post('/ubah-status-aset-bergerak', [AsetPegawaiController::class, 'ubahStatusAsetBergerak'])->name('ubahStatusAsetBergerak');
+
+    Route::resource('/status-aset-bergerak', StatusAsetController::class);
+
 
     # Stop: Aset Bergerak
 

@@ -34,21 +34,47 @@ class ManajemenAsetBergerakController extends Controller
                     return $row->id;
                 })
 
+                ->addColumn('aset', function ($row) {
+                    return $row->nama_aset . ' ' . $row->merek . ' ' . $row->model;
+                })
+
                 ->addColumn('pegawai', function ($row) {
                     if ($row->pegawai) {
                         return $row->pegawai->nama_lengkap;
                     } else {
-                        return '<span class="badge badge-danger shadow">Belum Ditentukan</span>';
+                        if ($row->status != 'Dibuang') {
+                            return '<a href="' . url('tentukan-aset-pegawai', $row->id) . '" class="badge badge-danger shadow" data-toggle="tooltip" data-placement="top" title="Tentukan Pegawai">Belum Ditentukan</a>';
+                        } else {
+                            return '<span class="badge badge-dark shadow text-gray">Aset Telah Dibuang</span>';
+                        }
                     }
                 })
 
                 ->addColumn('status', function ($row) {
                     if ($row->status == 'Baru') {
-                        return '<span class="badge badge-success shadow">Baru</span>';
+                        return '<a href="#" class="badge badge-success ubah-status-aset shadow text-white" data-toggle="tooltip"
+                        data-placement="top" title="Ubah Status Aset" value="' . $row->id . '"
+                        data-status_aset="' . $row->status . '" data-id="' . $row->id . '"
+                        style="cursor: pointer">Baru</a>';
                     } else if ($row->status == 'Digunakan') {
-                        return '<span class="badge badge-secondary shadow">Digunakan</span>';
-                    } else {
-                        return '<span class="badge badge-danger shadow">Rusak</span>';
+                        return '<a  href="#" class="badge badge-secondary ubah-status-aset shadow text-white" data-toggle="tooltip"
+                        data-placement="top" title="Ubah Status Aset" value="' . $row->id . '"
+                        data-status_aset="' . $row->status . '" data-id="' . $row->id . '"
+                        style="cursor: pointer">Digunakan</a>';
+                    } else if ($row->status == 'Rusak') {
+                        return '<a href="#"  class="badge badge-danger ubah-status-aset shadow text-white" data-toggle="tooltip"
+                        data-placement="top" title="Ubah Status Aset" value="' . $row->id . '"
+                        data-status_aset="' . $row->status . '" data-id="' . $row->id . '"
+                        style="cursor: pointer">Rusak</span>';
+                    } else if ($row->status == 'Diperbaiki') {
+                        return '<a href="#"  class="badge badge-warning ubah-status-aset shadow text-white" data-toggle="tooltip"
+                        data-placement="top" title="Ubah Status Aset" value="' . $row->id . '"
+                        data-status_aset="' . $row->status . '" data-id="' . $row->id . '"
+                        style="cursor: pointer">Diperbaiki</a>';
+                    } else if ($row->status == 'Dibuang') {
+                        return '<span class="badge badge-dark shadow text-gray">Dibuang</span>';
+                    } else { // hilang
+                        return '<span class="badge badge-dark shadow text-gray">Hilang</span>';
                     }
                 })
 
@@ -65,9 +91,11 @@ class ManajemenAsetBergerakController extends Controller
                 ->addColumn('action', function ($row) {
                     $actionBtn = '<div class="text-center justify-content-center text-white">';
                     if ($row->pegawai) {
-                        $actionBtn .= '<a href="' . url('ubah-aset-pegawai', $row->id) . '" id="btn-edit" class="btn btn-secondary btn-sm me-1 text-white shadow" data-toggle="tooltip" data-placement="top" title="Ubah Pegawai" value="' . $row->id . '" data-toggle="modal" data-target="#exampleModalCenter"><i class="fas fa-user-edit"></i></a> ';
+                        $actionBtn .= '<a href="' . url('ubah-aset-pegawai', $row->id) . '" id="btn-edit" class="btn btn-secondary btn-sm me-1 text-white shadow" data-toggle="tooltip" data-placement="top" title="Pindahkan Aset/Ubah Pegawai" value="' . $row->id . '" data-toggle="modal" data-target="#exampleModalCenter"><i class="fas fa-user-edit"></i></a> ';
                     } else {
-                        $actionBtn .= '<a href="' . url('tentukan-aset-pegawai', $row->id) . '" id="btn-edit" class="btn btn-success btn-sm me-1 text-white shadow" data-toggle="tooltip" data-placement="top" title="Tentukan Pegawai" value="' . $row->id . '" data-toggle="modal" data-target="#exampleModalCenter"><i class="fas fa-user-plus"></i></a> ';
+                        if ($row->status != 'Dibuang') {
+                            $actionBtn .= '<a href="' . url('tentukan-aset-pegawai', $row->id) . '" id="btn-edit" class="btn btn-success btn-sm me-1 text-white shadow" data-toggle="tooltip" data-placement="top" title="Tentukan Pegawai" value="' . $row->id . '" data-toggle="modal" data-target="#exampleModalCenter"><i class="fas fa-user-plus"></i></a> ';
+                        }
                     }
                     $actionBtn .= '<button id="btn-lihat" class="btn btn-primary btn-sm me-1 text-white shadow btn-lihat" data-toggle="tooltip" data-placement="top" title="Lihat" value="' . $row->id . '" data-button="lihat"><i class="fas fa-eye"></i></button>';
 
@@ -178,7 +206,7 @@ class ManajemenAsetBergerakController extends Controller
     {
         $data = [
             'aset' => $manajemenAsetBergerak,
-            'pegawai' => Pegawai::all(),
+            'pegawai' => Pegawai::latest()->get(),
         ];
         return view('dashboard.pages.utama.asetBergerak.manajemenAset.tentukanAsetPegawai', $data);
     }

@@ -30,7 +30,7 @@
             <i class="flaticon-right-arrow"></i>
         </li>
         <li class="nav-item">
-            <span>{{ $aset->pegawai ? 'Ubah' : 'Tentukan' }} Aset Pegawai</span>
+            <span>{{ $aset->pegawai ? 'Pindahkan Aset' : 'Tentukan Pegawai' }}</span>
         </li>
     </ul>
 @endsection
@@ -41,7 +41,10 @@
             <div class="card">
                 <div class="card-header">
                     <div class="card-head-row">
-                        <div class="card-title">{{ $aset->pegawai ? 'Ubah' : 'Tentukan' }} Aset Pegawai</div>
+                        <div class="card-title">
+                            {{ $aset->pegawai ? 'Pindahkan Aset' : 'Tentukan Pegawai' }} | <span class="fw-bold">
+                                {{ $aset->nama_aset . ' ' . $aset->merek . ' ' . $aset->model }}</span>
+                        </div>
                         <div class="card-tools">
                             <ul class="nav nav-pills nav-secondary nav-pills-no-bd nav-sm" id="pills-tab" role="tablist">
                                 <li class="nav-item submenu">

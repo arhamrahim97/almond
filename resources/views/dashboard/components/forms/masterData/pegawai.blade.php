@@ -109,7 +109,7 @@
                             class="text-muted"><i>(Optional)</i></span> : </label>
                     <div class="input-file input-file-image">
                         <img class="img-upload-preview img-circle"
-                            src="{{ isset($pegawai) && $pegawai->foto_profil != null && Storage::exists('upload/foto_profil/pegawai/' . $pegawai->foto_profil) ? Storage::url('upload/foto_profil/pegawai/' . $pegawai->foto_profil) : asset('assets/img/blank_photo.png') }}"
+                            src="{{ isset($pegawai) && $pegawai->foto_profil != null && Storage::exists('upload/foto_profil/pegawai/' . $pegawai->foto_profil) ? Storage::url('upload/foto_profil/pegawai/' . $pegawai->foto_profil) : asset('assets/img/no-profile4.png') }}"
                             alt="preview" width="150" height="150">
                         <input type="file" class="form-control form-control-file" id="foto" name="foto_profil"
                             accept="image/*" value="" data-label="Foto Profil">

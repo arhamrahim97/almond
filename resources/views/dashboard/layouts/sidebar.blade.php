@@ -63,16 +63,16 @@
                                     <span class="sub-item">Manajemen Aset</span>
                                 </a>
                             </li>
-                            <li>
+                            <li id="li-aset-pegawai">
                                 <a href="{{ url('aset-pegawai') }}">
                                     <span class="sub-item">Aset Pegawai</span>
                                 </a>
                             </li>
-                            <li>
-                                <a href="email-compose.html">
+                            {{-- <li id="li-status-aset-bergerak">
+                                <a id="li-status-aset" href="{{ url('status-aset-bergerak') }}">
                                     <span class="sub-item">Status Aset</span>
                                 </a>
-                            </li>
+                            </li> --}}
                         </ul>
                     </div>
                 </li>

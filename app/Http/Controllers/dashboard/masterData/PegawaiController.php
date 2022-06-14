@@ -152,6 +152,7 @@ class PegawaiController extends Controller
     public function show(Pegawai $pegawai)
     {
         $pegawai['golongan_jabatan_pangkat'] = $pegawai->jabatanStruktural->golongan . ' - ' . $pegawai->jabatanStruktural->jabatan . ' - ' . $pegawai->jabatanStruktural->pangkat;
+        $pegawai['tanggal_lahir_'] = Carbon::parse($pegawai->tanggal_lahir)->translatedFormat('j F Y');
         $pegawai['created_at_'] = Carbon::parse($pegawai->created_at)->translatedFormat('j F Y H:i');
         $pegawai['updated_at_'] = Carbon::parse($pegawai->updated_at)->translatedFormat('j F Y H:i');
         $pegawai['created_by_'] = $pegawai->createdBy->nama_lengkap;

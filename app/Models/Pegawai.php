@@ -17,6 +17,12 @@ class Pegawai extends Model
     protected $table = 'pegawai';
     protected $guarded = ['id'];
 
+
+    public function asetBergerak()
+    {
+        return $this->hasMany(AsetBergerak::class, 'pegawai_id')->orderBy('created_at', 'desc');
+    }
+
     public function jabatanStruktural()
     {
         return $this->belongsTo(JabatanStruktural::class, 'jabatan_struktural_id');

@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\dashboard\utama\asetBergerak;
 
+use App\Models\Pegawai;
 use App\Models\AsetBergerak;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-
+use Illuminate\Support\Facades\Validator;
 
 class AsetPegawaiController extends Controller
 {
@@ -16,7 +17,9 @@ class AsetPegawaiController extends Controller
      */
     public function index()
     {
-        dd('berhasil');
+        $asetPegawaiAll = Pegawai::with('jabatanStruktural', 'asetBergerak')->whereHas('asetBergerak')->latest()->get();
+        $asetPegawai = Pegawai::with('jabatanStruktural', 'asetBergerak')->whereHas('asetBergerak')->latest()->paginate(6);
+        return view('dashboard.pages.utama.asetBergerak.asetPegawai.index', compact('asetPegawai', 'asetPegawaiAll'));
     }
 
     /**
@@ -83,5 +86,45 @@ class AsetPegawaiController extends Controller
     public function destroy(AsetBergerak $asetPegawai)
     {
         //
+    }
+
+    public function cariPegawai(Pegawai $asetPegawai)
+    {
+        $data = [
+            'item' => $asetPegawai,
+        ];
+
+        return view('dashboard.components.cards.asetBergerak.cariAsetPegawai')->with($data)->render();
+    }
+
+    public function ubahStatusAsetBergerak(Request $request)
+    {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'status' => 'required',
+            ],
+            [
+                'status.required' => 'Status tidak boleh kosong',
+            ]
+        );
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()]);
+        }
+
+        $aset = AsetBergerak::find($request->id);
+
+        $update = [
+            'status' => $request->status,
+        ];
+
+        if ($request->status == 'Dibuang') {
+            $update['pegawai_id'] = null;
+        }
+
+        $aset->update($update);
+
+        return $request->all();
     }
 }

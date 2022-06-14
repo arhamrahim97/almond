@@ -34,6 +34,10 @@
     <link rel="stylesheet" href="{{ asset('assets') }}/css/atlantis.css">
 
     <style>
+        .sidebar-wrapper {
+            padding-bottom: 0px !important;
+        }
+
         .table td,
         .table th {
             padding: 0 12px !important;
@@ -341,7 +345,7 @@
         })
 
         function disabledCloseModal() {
-            $('.modal').modal({
+            $('#modal-lihat').modal({
                 backdrop: 'static',
                 keyboard: false
             })

@@ -241,7 +241,7 @@
                     $('#td-nama-lengkap').text(data.nama_lengkap)
                     $('#td-jenis-kelamin').text(data.jenis_kelamin)
                     $('#td-tempat-lahir').text(data.tempat_lahir)
-                    $('#td-tanggal-lahir').text(data.tanggal_lahir)
+                    $('#td-tanggal-lahir').text(data.tanggal_lahir_)
                     $('#td-nomor-hp').text(data.nomor_hp)
                     $('#td-email').text(data.email ?? '-')
                     $('#td-alamat').text(data.alamat)

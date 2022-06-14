@@ -1,7 +1,7 @@
 @extends('dashboard.layouts.main')
 
 @section('title')
-    Manajemen Aset Bergerak
+    Status Aset
 @endsection
 
 @push('style')
@@ -24,7 +24,7 @@
             <i class="flaticon-right-arrow"></i>
         </li>
         <li class="nav-item">
-            <span>Manajemen Aset</span>
+            <span>Status Aset</span>
         </li>
     </ul>
 @endsection
@@ -35,54 +35,66 @@
             <div class="card">
                 <div class="card-header">
                     <div class="card-head-row">
-                        <div class="card-title">Data Aset Bergerak</div>
+                        <div class="card-title">Status Aset</div>
                         <div class="card-tools">
-                            <ul class="nav nav-pills nav-secondary nav-pills-no-bd nav-sm" id="pills-tab" role="tablist">
-                                <li class="nav-item submenu">
-                                    @component('dashboard.components.buttons.deletedSelected',
-                                        [
-                                            'id' => 'deleteSelected',
-                                        ])
-                                    @endcomponent
-                                    @component('dashboard.components.buttons.add',
-                                        [
-                                            'url' => url('manajemen-aset-bergerak/create'),
-                                        ])
-                                    @endcomponent
-                                </li>
-                            </ul>
                         </div>
                     </div>
                 </div>
                 <div class="card-body">
                     <div class="row">
-                        <div class="table-responsive">
-                            <table class="table table-hover table-striped" id="{{ $id ?? 'dataTables' }}" cellspacing="0"
-                                width="100%">
-                                <thead>
-                                    <tr class="text-center fw-bold">
-                                        <th><input type="checkbox" id="checkAllData" autocomplete="off" />
-                                        </th>
-                                        <th>No</th>
-                                        <th>Aset</th>
-                                        {{-- <th>Merek</th>
-                                        <th>Model</th> --}}
-                                        <th>Kode Inventaris</th>
-                                        {{-- <th>Deskripsi</th> --}}
-                                        <th>Status</th>
-                                        <th>Pegawai</th>
+                        <div class="col-xl-2 col-lg-3 col-md-4">
+                            <div class="nav flex-column nav-pills nav-primary nav-pills-no-bd nav-pills-icons"
+                                id="v-pills-tab-with-icon" role="tablist" aria-orientation="vertical">
+                                <a class="nav-link active show" shadow-sm id="v-pills-baru-tab-icons" data-toggle="pill"
+                                    href="#v-pills-baru-icons" role="tab" aria-controls="v-pills-baru-icons"
+                                    aria-selected="true">
+                                    <i class="flaticon-star"></i>
+                                    Baru
+                                </a>
+                                <a class="nav-link shadow-sm" id="v-pills-home-tab-icons" data-toggle="pill"
+                                    href="#v-pills-home-icons" role="tab" aria-controls="v-pills-home-icons"
+                                    aria-selected="true">
+                                    <i class="flaticon-interface-1"></i>
+                                    Digunakan
+                                </a>
+                                <a class="nav-link shadow-sm" id="v-pills-profile-tab-icons" data-toggle="pill"
+                                    href="#v-pills-profile-icons" role="tab" aria-controls="v-pills-profile-icons"
+                                    aria-selected="false">
+                                    <i class="flaticon-settings"></i>
+                                    Diperbaiki
+                                </a>
+                                <a class="nav-link shadow-sm" id="v-pills-profile-tab-icons" data-toggle="pill"
+                                    href="#v-pills-profile-icons" role="tab" aria-controls="v-pills-profile-icons"
+                                    aria-selected="false">
+                                    <i class="flaticon-close"></i>
+                                    Rusak
+                                </a>
+                                <a class="nav-link shadow-sm" id="v-pills-profile-tab-icons" data-toggle="pill"
+                                    href="#v-pills-profile-icons" role="tab" aria-controls="v-pills-profile-icons"
+                                    aria-selected="false">
+                                    <i class="flaticon-interface-5"></i>
+                                    Dibuang
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-xl-10 col-lg-9 col-md-8">
+                            <div class="tab-content" id="v-pills-with-icon-tabContent">
+                                <div class="tab-pane fade active show" id="v-pills-baru-icons" role="tabpanel"
+                                    aria-labelledby="v-pills-baru-tab-icons">
 
-                                        {{-- <th>Dibuat Tanggal</th>
-                                        <th>Dibuat Oleh</th>
-                                        <th>Diperbarui Tanggal</th>
-                                        <th>Diperbarui Oleh</th> --}}
-                                        <th>Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-
-                                </tbody>
-                            </table>
+                                </div>
+                                <div class="tab-pane fade" id="v-pills-profile-icons" role="tabpanel"
+                                    aria-labelledby="v-pills-profile-tab-icons">
+                                    <p>Even the all-powerful Pointing has no control about the blind texts it is an almost
+                                        unorthographic life One day however a small line of blind text by the name of Lorem
+                                        Ipsum decided to leave for the far World of Grammar.</p>
+                                    <p>The Big Oxmox advised her not to do so, because there were thousands of bad Commas,
+                                        wild Question Marks and devious Semikoli, but the Little Blind Text didn’t listen.
+                                        She packed her seven versalia, put her initial into the belt and made herself on the
+                                        way.
+                                    </p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -213,73 +225,16 @@
                 </div>
                 <div class="modal-footer py-4 justify-content-center">
                     <div class="row w-100">
-                        {{-- <div class="col-lg col-sm-12 mb-1" id="col-tentukan-aset-pegawai">
-                            <a href="" class="btn btn-md btn-success w-100" id="btn-tentukan-pegawai-modal"><i
-                                    class="fas fa-user-plus"></i>
-                                Tentukan Pegawai</a>
-                        </div>
                         <div class="col-lg col-sm-12 mb-1" id="col-ubah-aset-pegawai">
                             <a href="" class="btn btn-md btn-secondary w-100" id="btn-ubah-pegawai-modal"><i
-                                    class="fas fa-user-edit"></i>
-                                Ubah Pegawai</a>
+                                    class="fas fa-share"></i>
+                                Pindahkan Aset</a>
                         </div>
-                        <div class="col-lg col-sm-12 mb-1" id="col-ubah-aset">
-                            <a href="" class="btn btn-md btn-warning w-100" id="btn-ubah-aset-modal"><i
-                                    class="fas fa-edit"></i>
-                                Ubah Aset</a>
-                        </div> --}}
                         <div class="col-lg col-sm-12 mb-1">
                             <button type="button" class="btn btn-md btn-dark w-100" data-dismiss="modal"><i
                                     class="fas fa-times"></i>
                                 Tutup</button>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal Ubah Status Aset-->
-    <div class="modal fade" id="modal-ubah-status-aset" tabindex="-1" role="dialog"
-        aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title fw-bold" id="exampleModalLongTitle">Ubah Status Aset</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form method="POST" id="form-ubah-status-aset">
-                        @csrf
-                        <div class="row align-items-end">
-                            <div class="col-md-8 col-lg-8 px-2 w-100">
-                                <div class="form-group pt-0 w-100">
-                                    <label for="exampleFormControlSelect1">Pilih Status</label>
-                                    <select class="form-select select2 w-100 req" id="status-aset" name="status"
-                                        data-label="Status" style="width:100%">
-                                        <option value="">Pilih Salah Satu</option>
-
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-4 col-lg-4 text-right align-items-end pl-md-0">
-                                <div class="form-group px-0">
-                                    <button type="submit" class="btn btn-warning w-100" id="btn-submit" value="">
-                                        <i class="fas fa-cogs"></i>
-                                        Ubah Status</button>
-                                </div>
-                            </div>
-                            <span class="text-danger mx-4 error-text status-error"></span>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <div class="col-lg col-sm-12 mb-1">
-                        <button type="button" class="btn btn-md btn-dark w-100" data-dismiss="modal"><i
-                                class="fas fa-times"></i>
-                            Tutup</button>
                     </div>
                 </div>
             </div>
@@ -293,7 +248,7 @@
             $('.nav-item').removeClass('active');
             $('#nav-aset-bergerak').addClass('active submenu');
             $('#aset-bergerak').addClass('show')
-            $('#li-manajemen-aset-bergerak').addClass('active');
+            $('#li-status-aset-bergerak').addClass('active');
         })
 
         $(document).on('click', '.btn-lihat', function() {
@@ -403,284 +358,6 @@
             });
 
 
-        });
-
-        $(document).on('click', '.ubah-status-aset', function() {
-            let id = $(this).data('id');
-            let status_aset = $(this).data('status_aset'); // status aset bergerak
-
-            $('#status-aset').removeClass('is-invalid')
-            $('.error-text').text('')
-
-            $("#status-aset option[value!='']").each(function() {
-                $(this).remove();
-            });
-
-            if (status_aset == 'Baru') {
-                let option = `
-            <option value="Rusak">Rusak</option>
-            <option value="Diperbaiki">Diperbaiki</option>
-            <option value="Dibuang">Dibuang</option>`
-                $('#status-aset').append(option)
-            } else if (status_aset == "Digunakan") {
-                let option = `
-            <option value="Rusak">Rusak</option>
-            <option value="Diperbaiki">Diperbaiki</option>
-            <option value="Dibuang">Dibuang</option>`
-                $('#status-aset').append(option)
-            } else if (status_aset == "Diperbaiki") {
-                let option = `
-            <option value="Digunakan">Digunakan</option>
-            <option value="Rusak">Rusak</option>
-            <option value="Dibuang">Dibuang</option>`
-                $('#status-aset').append(option)
-            } else if (status_aset == "Rusak") {
-                let option = `
-            <option value="Diperbaiki">Diperbaiki</option>
-            <option value="Dibuang">Dibuang</option>`
-                $('#status-aset').append(option)
-            }
-
-            $('#btn-submit').val(id)
-
-            $('#modal-ubah-status-aset').modal({
-                backdrop: 'static',
-                keyboard: false
-            });
-        })
-
-        $('#duplikat-form').submit(function(e) {
-            e.preventDefault();
-            $('.error-text').text('')
-            var formData = $(this).serializeArray()
-            validation(formData)
-            var data = new FormData(this)
-            data.append('id', $('#btn-submit').val())
-            swal({
-                title: 'Apakah Anda yakin?',
-                text: "Data ini akan di duplikat sebanyak " + $('#jumlah-duplikat').val() + " kali.",
-                icon: "warning",
-                dangerMode: true,
-                buttons: ["Batal", "Ya"],
-            }).then((result) => {
-                if (result) {
-                    $.ajax({
-                        type: "POST",
-                        url: "{{ route('duplikatAsetBergerak') }}",
-                        headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                        },
-                        data: data,
-                        cache: false,
-                        processData: false,
-                        contentType: false,
-                        success: function(response) {
-                            if ($.isEmptyObject(response.error)) {
-                                swal({
-                                    title: "Berhasil!",
-                                    text: "Data berhasil di duplikat.",
-                                    icon: "success",
-                                }).then(function() {
-                                    table.ajax.reload();
-                                    $('#modal-lihat').modal('hide');
-                                });
-                            } else {
-                                swal({
-                                    title: "Gagal!",
-                                    text: "Terjadi kesalahan, mohon periksa kembali data yang diinputkan.",
-                                    icon: "error",
-                                    button: "Ok",
-                                });
-                                printErrorMsg(response.error);
-                            }
-                        },
-                        error: function(response) {
-                            alert(response.responseJSON.message)
-                        },
-                    });
-                } else {
-                    swal("Data batal dihapus.", {
-                        icon: "error",
-                    });
-                }
-            })
-        })
-
-        $('#form-ubah-status-aset').submit(function(e) {
-            e.preventDefault();
-            $('.error-text').text('')
-            var formData = $(this).serializeArray()
-            validation(formData)
-            var data = new FormData(this)
-            data.append('id', $('#btn-submit').val())
-            swal({
-                title: 'Apakah Anda yakin?',
-                text: "Status aset ini akan diubah sesuai dengan pilihan anda.",
-                icon: "warning",
-                buttons: ["Batal", "Ya"],
-            }).then((result) => {
-                if (result) {
-                    $.ajax({
-                        type: "POST",
-                        url: "{{ route('ubahStatusAsetBergerak') }}",
-                        headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                        },
-                        data: data,
-                        cache: false,
-                        processData: false,
-                        contentType: false,
-                        success: function(response) {
-                            console.log(response)
-                            if ($.isEmptyObject(response.error)) {
-                                swal({
-                                    title: "Berhasil!",
-                                    text: "Status aset berhasil diubah.",
-                                    icon: "success",
-                                }).then(function() {
-                                    $('#modal-ubah-status-aset').modal('hide');
-                                    location.reload();
-                                });
-                            } else {
-                                swal({
-                                    title: "Gagal!",
-                                    text: "Terjadi kesalahan, mohon periksa kembali data yang diinputkan.",
-                                    icon: "error",
-                                    button: "Ok",
-                                });
-                                printErrorMsg(response.error);
-                            }
-                        },
-                        error: function(response) {
-                            alert(response.responseJSON.message)
-                        },
-                    });
-                } else {
-                    swal("Status data batal diubah.", {
-                        icon: "error",
-                    });
-                }
-            })
-        })
-
-        const printErrorMsg = (msg) => {
-            $.each(msg, function(key, value) {
-                $('.' + key + '-error').text(value);
-            });
-        }
-
-        var table = $('#dataTables').DataTable({
-            processing: true,
-            serverSide: true,
-            dom: 'lBfrtip',
-            ordering: false,
-            buttons: [{
-                    extend: 'excel',
-                    className: 'btn btn-sm btn-light-success px-2 btn-export-table d-inline ml-3 font-weight',
-                    text: '<i class="bi bi-file-earmark-arrow-down"></i> Ekspor Data',
-                    exportOptions: {
-                        modifier: {
-                            order: 'index', // 'current', 'applied', 'index',  'original'
-                            page: 'all', // 'all',     'current'
-                            search: 'applied' // 'none',    'applied', 'removed'
-                        },
-                        columns: ':visible'
-                    }
-                },
-                {
-                    extend: 'colvis',
-                    className: 'btn btn-sm btn-light-success px-2 btn-export-table d-inline ml-3 font-weight',
-                    text: '<i class="bi bi-eye-fill"></i> Tampil/Sembunyi Kolom',
-                }
-            ],
-            lengthMenu: [
-                [10, 25, 50, -1],
-                [10, 25, 50, "All"]
-            ],
-            ajax: {
-                url: "{{ route('manajemen-aset-bergerak.index') }}",
-            },
-            columns: [{
-                    data: 'checkData',
-                    render: function(data, row, type) {
-                        return '<input type="checkbox" class="checkData" value="' + data +
-                            '">';
-                    },
-                    className: 'text-center',
-                },
-                {
-                    data: 'DT_RowIndex',
-                    name: 'DT_RowIndex',
-                    className: 'text-center',
-                    orderable: false,
-                    searchable: false
-                },
-                {
-                    data: 'aset',
-                    name: 'aset',
-                },
-                // {
-                //     data: 'merek',
-                //     name: 'merek',
-                // },
-                // {
-                //     data: 'model',
-                //     name: 'model',
-                // },
-                {
-                    data: 'kode_inventaris',
-                    name: 'kode_inventaris',
-                    className: 'text-center',
-                },
-                // {
-                //     data: 'deskripsi',
-                //     name: 'deskripsi',
-                // },
-                {
-                    data: 'status',
-                    name: 'status',
-                    className: 'text-center',
-                },
-                {
-                    data: 'pegawai',
-                    name: 'pegawai',
-                    className: 'text-center',
-                },
-                // {
-                //     data: 'created_at',
-                //     name: 'created_at',
-                // },
-                // {
-                //     data: 'created_by',
-                //     name: 'created_by',
-                // },
-                // {
-                //     data: 'updated_at',
-                //     name: 'updated_at',
-                // },
-                // {
-                //     data: 'updated_by',
-                //     name: 'updated_by',
-                // },
-                {
-                    data: 'action',
-                    name: 'action',
-                    orderable: false,
-                    searchable: false,
-                    className: 'text-center'
-                },
-            ],
-            // columnDefs: [{
-            //         targets: [5, 6, 7, 8],
-            //         visible: false,
-            //     },
-            //     {
-            //         targets: [5, 7],
-            //         render: function(data) {
-            //             return moment(data).format('LL');
-            //         }
-            //     },
-            // ],
         });
 
         $(document).on('click', '.btn-delete', function() {
