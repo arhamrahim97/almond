@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\User;
 use App\Models\Pegawai;
 use App\Traits\TraitUuid;
 use App\Models\FileUpload;
@@ -10,17 +9,17 @@ use App\Traits\Blameables;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class AsetBergerak extends Model
+class AsetTidakBergerak extends Model
 {
     use HasFactory;
     use TraitUuid;
     use Blameables;
-    protected $table = 'aset_bergerak';
+    protected $table = 'aset_tidak_bergerak';
     protected $guarded = ['id'];
 
     public function aset()
     {
-        return $this->belongsTo(AsetBergerak::class, 'aset_id');
+        return $this->belongsTo(AsetTidakBergerak::class, 'aset_id');
     }
 
     public function fileUploadAll()

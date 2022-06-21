@@ -19,7 +19,31 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-12 col-lg-5 col-xl-3 px-2">
+            <div class="col-md-12 col-lg-6 col-xl-6 px-2">
+                <div class="form-group">
+                    <label for="" class="mb-2">List Dokumen</label>
+                    <ul class="list-group list-group-bordered list">
+                        @foreach ($aset->fileUploadDokumen as $item)
+                            <li class="list-group-item justify-content-between align-items-center">
+                                <div class="float-left">
+                                    <span class="name">{{ $item->deskripsi }}
+                                    </span>
+                                    <span class="d-block">
+                                        {{ $item->pegawai ? '(' . $item->pegawai->nama_lengkap . ')' : '' }}
+                                    </span>
+                                </div>
+                                <div class="float-right ml-0">
+                                    <a href="{{ Storage::url('upload/dokumen_aset_bergerak/' . $item->nama_file) }}"
+                                        target="_blank" class="badge badge-primary">Lihat</a>
+                                </div>
+
+                            </li>
+                        @endforeach
+
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-12 col-lg-6 col-xl-6 px-2">
                 <div class="form-group">
                     @component('dashboard.components.formElements.select',
                         [
@@ -31,128 +55,80 @@
                         ])
                         @slot('options')
                             @foreach ($pegawai as $item)
-                                @if ($aset->pegawai_id == $item->id)
+                                {{-- @if ($aset->pegawai_id == $item->id)
                                     <option value="{{ $item->id }}" selected>{{ $item->nama_lengkap }}</option>
                                 @else
                                     <option value="{{ $item->id }}">{{ $item->nama_lengkap }}</option>
-                                @endif
+                                @endif --}}
+                                <option value="{{ $item->id }}">{{ $item->nama_lengkap }}</option>
                             @endforeach
                         @endslot
                     @endcomponent
                     <small
-                        class="text-danger">{{ $aset->pegawai ? 'Memindahkan aset ke pegawai lain akan mengubah ' : 'Menentukan pegawai pada aset yang dipilih akan mengubah' }}
+                        class="text-danger d-block">{{ $aset->pegawai ? 'Memindahkan aset ke pegawai lain akan mengubah ' : 'Menentukan pegawai pada aset yang dipilih akan mengubah' }}
                         status aset menjadi "<span class="fw-bold">Digunakan</span>".</small>
                 </div>
-            </div>
-            <div class="col-md-12 col-lg-7 col-xl-9 px-2">
                 <div class="form-group">
-                    <label for="" class="mb-0">Dokumen</label>
-                    <label for="">(Surat-surat Kendaraan, Berita Acara, dan Lainnya)</label>
+                    <label for="" class="mb-2">Dokumen <sup class="text-danger">*</sup></label>
+                    {{-- <label for="">(Surat-surat Kendaraan, Berita Acara, dan Lainnya)</label> --}}
                     <div class="row" id="dokumen-aset">
-                        @if ($aset->pegawai)
-                            @if ($aset->fileUploadDokumen->count() > 0)
-                                @foreach ($aset->fileUploadDokumen as $item)
-                                    <div class="col-md-6 col-lg-12 col-xl-6 col-document"
-                                        id="col-document-old-{{ $loop->iteration }}">
-                                        <div class="card box-upload mb-3 pegawai"
-                                            id="box-upload-{{ $loop->iteration }}" class="box-upload">
-                                            <div class="card-body pb-2">
-                                                <div class="row">
-                                                    <div class="col-3 d-flex align-items-center justify-content-center">
-                                                        <img src="{{ asset('assets/img/pdf.png') }}" alt=""
-                                                            width="70px">
-                                                    </div>
-                                                    <div class="col-9">
-                                                        <div class="mb-3 mt-2">
-                                                            <input type="text" class="form-control nama-dokumen"
-                                                                id="nama-dokumen-{{ $loop->iteration }}"
-                                                                name="nama_dokumen[]"
-                                                                placeholder="Masukkan Nama Dokumen"
-                                                                value="{{ $item->deskripsi }}"
-                                                                data-iter="{{ $loop->iteration }}" disabled>
-                                                            <p class="text-danger error-text nama_dokumen-error my-0"
-                                                                id="nama_dokumen-error-{{ $loop->iteration }}"></p>
-                                                        </div>
-                                                        <div class="mb-3">
-                                                            <a type="button"
-                                                                href="{{ Storage::exists('upload/dokumen_aset_bergerak/' . $item->nama_file) ? Storage::url('upload/dokumen_aset_bergerak/' . $item->nama_file) : 'tidak-ditemukan' }}"
-                                                                target="_blank"
-                                                                class="btn btn-primary shadow-sm w-100"><i
-                                                                    class="fas fa-eye"></i> Lihat
-                                                                Dokumen</a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <button type="button"
-                                                class="btn btn-danger fw-bold card-footer bg-danger text-center delete-document p-0"
-                                                onclick="deleteDocumentOld({{ $loop->iteration }})"
-                                                id="delete-document-old-{{ $loop->iteration }}"
-                                                value="{{ $item->id }}"><i class="fas fa-trash-alt"></i>
-                                                Hapus</button>
+                        <div class="col-md-6 col-lg-12 col-xl-12 col-document" id="col-dokumen-1">
+                            <div class="card box-upload mb-3 pegawai" id="box-upload-1" class="box-upload">
+                                <div class="card-body py-3">
+                                    <div class="row">
+                                        <div class="col-3 d-flex align-items-center justify-content-center">
+                                            <img src="{{ asset('assets/img/pdf.png') }}" alt=""
+                                                width="70px">
                                         </div>
-                                        <p class="text-danger error-text dokumen-error my-0" id="dokumen-error-1"></p>
-                                    </div>
-                                @endforeach
-                            @endif
-                        @else
-                            <div class="col-md-6 col-lg-12 col-xl-6 col-document" id="col-dokumen-1">
-                                <div class="card box-upload mb-3 pegawai" id="box-upload-1" class="box-upload">
-                                    <div class="card-body pb-2">
-                                        <div class="row">
-                                            <div class="col-3 d-flex align-items-center justify-content-center">
-                                                <img src="{{ asset('assets/img/pdf.png') }}" alt="" width="70px">
+                                        <div class="col-9">
+                                            <div class="mb-3 mt-2">
+                                                {{-- start validation --}}
+                                                <input type="hidden" name="nama_dokumen_1" value=""
+                                                    class="nama_dokumen" data-label="Nama Dokumen" data-iter="1"
+                                                    id="nama_dokumen-hidden-1">
+                                                {{-- end validation --}}
+
+                                                <input type="text" class="form-control nama-dokumen"
+                                                    id="nama-dokumen-1" name="nama_dokumen[]"
+                                                    placeholder="Masukkan Nama Dokumen"
+                                                    value="Berita Acara Penanggung Jawab Aset" data-iter="1"
+                                                    onkeyup="rmValNamaDokumen(1)" readonly>
+
+                                                {{-- start validation --}}
+                                                <p class="text-danger error-text nama_dokumen_1-error my-0"
+                                                    id="nama_dokumen-error-1"></p>
+                                                {{-- end validation --}}
+
+                                                <p class="text-danger error-text nama_dokumen-error my-0"
+                                                    id="nama_dokumen-error-1"></p>
                                             </div>
-                                            <div class="col-9">
-                                                <div class="mb-3 mt-2">
-                                                    {{-- start validation --}}
-                                                    <input type="hidden" name="nama_dokumen_1" value=""
-                                                        class="req nama_dokumen" data-label="Nama Dokumen" data-iter="1"
-                                                        id="nama_dokumen-hidden-1">
-                                                    {{-- end validation --}}
+                                            <div class="mb-3">
+                                                {{-- start validation --}}
+                                                <input type="hidden" name="file_dokumen_1" value=""
+                                                    class="req file_dokumen" data-label="File Dokumen" data-iter="1"
+                                                    id="file_dokumen-hidden-1">
+                                                {{-- end validation --}}
 
-                                                    <input type="text" class="form-control nama-dokumen"
-                                                        id="nama-dokumen-1" name="nama_dokumen[]"
-                                                        placeholder="Masukkan Nama Dokumen" value="" data-iter="1"
-                                                        onkeyup="rmValNamaDokumen(1)">
+                                                <input name="file_dokumen[]" class="form-control file-dokumen"
+                                                    id="file-dokumen-1" type="file" multiple="true" data-iter="1"
+                                                    accept="application/pdf" onchange="rmValFileDokumen(1)">
 
-                                                    {{-- start validation --}}
-                                                    <p class="text-danger error-text nama_dokumen_1-error my-0"
-                                                        id="nama_dokumen-error-1"></p>
-                                                    {{-- end validation --}}
+                                                {{-- start validation --}}
+                                                <p class="text-danger error-text file_dokumen_1-error my-0"
+                                                    id="file_dokumen-error-1"></p>
+                                                {{-- end validation --}}
 
-                                                    <p class="text-danger error-text nama_dokumen-error my-0"
-                                                        id="nama_dokumen-error-1"></p>
-                                                </div>
-                                                <div class="mb-3">
-                                                    {{-- start validation --}}
-                                                    <input type="hidden" name="file_dokumen_1" value=""
-                                                        class="req file_dokumen" data-label="File Dokumen" data-iter="1"
-                                                        id="file_dokumen-hidden-1">
-                                                    {{-- end validation --}}
-
-                                                    <input name="file_dokumen[]" class="form-control file-dokumen"
-                                                        id="file-dokumen-1" type="file" multiple="true" data-iter="1"
-                                                        accept="application/pdf" onchange="rmValFileDokumen(1)">
-
-                                                    {{-- start validation --}}
-                                                    <p class="text-danger error-text file_dokumen_1-error my-0"
-                                                        id="file_dokumen-error-1"></p>
-                                                    {{-- end validation --}}
-
-                                                    <p class="text-danger error-text file_dokumen-error my-0"
-                                                        id="file_dokumen-error-1"></p>
-                                                </div>
+                                                <p class="text-danger error-text file_dokumen-error my-0"
+                                                    id="file_dokumen-error-1"></p>
                                             </div>
                                         </div>
                                     </div>
-
                                 </div>
-                                <p class="text-danger error-text dokumen-error my-0" id="dokumen-error-1"></p>
-                            </div>
 
-                        @endif
-                        <div class="col-md-2 col-lg-2 col-xl-2 align-self-center col-add-dokumen">
+                            </div>
+                            <p class="text-danger error-text dokumen-error my-0" id="dokumen-error-1"></p>
+                        </div>
+                        <div class="col-md-2 col-lg-3 col-xl-12 align-self-center col-add-dokumen">
                             <div class="text-center text-muted" onclick="addDokumen()" style="cursor: pointer">
                                 <h1><i class="fas fa-plus-circle"></i></h1>
                                 <h6>Tambah Dokumen</h6>
@@ -161,7 +137,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
     <div class="card-action">
@@ -176,6 +151,21 @@
 
 @push('script')
     <script>
+        $(document).on('change', '.file-dokumen-old', function() {
+            let size = $(this)[0].files[0].size / 1024
+            let id = $(this).data('id')
+            let iter = $(this).data('iter');
+            if (size > 3072) {
+                swal({
+                    title: "Gagal!",
+                    text: "Ukuran dokumen terlalu besar! Maksimal 3MB",
+                    icon: "error",
+                }).then((value) => {
+                    $(this).val('');
+                });
+            }
+        });
+
         $(document).on('change', '.file-dokumen', function() {
             let size = $(this)[0].files[0].size / 1024
             if (size > 3072) {
@@ -191,40 +181,18 @@
 
         let itemDocumentOld = [];
 
-        var countColDocument = $('.col-document').length;
-
         function deleteDocumentOld(iter) {
             let val = $('#delete-document-old-' + iter).val();
             itemDocumentOld.push(val);
             $('#col-document-old-' + iter).fadeOut(function() {
                 $('#col-document-old-' + iter).remove();
             });
-            countColDocument = $('.col-document').length - 1;
-            if (countColDocument == 0) {
-                addDokumen();
-                swal({
-                    title: "Gagal!",
-                    text: "Tambahkan minimal 1 dokumen",
-                    icon: "error",
-                });
-                return false;
-            }
         }
 
         function deleteDokumen(iter) {
             $('#col-dokumen-' + iter).fadeOut(function() {
                 $('#col-dokumen-' + iter).remove();
             });
-            countColDocument = $('.col-document').length - 1;
-            if (countColDocument == 0) {
-                addDokumen();
-                swal({
-                    title: "Gagal!",
-                    text: "Tambahkan minimal 1 dokumen",
-                    icon: "error",
-                });
-                return false;
-            }
         }
 
         function rmValNamaDokumen(iter) {
@@ -243,16 +211,17 @@
             }
         }
 
-        let iterDokumen = 2;
+
+        let iterDokumen = 0;
 
         function addDokumen() {
-            if (('{{ $aset->pegawai }}') && (iterDokumen == 2)) {
-                let count = {{ $maxDocument ?? '' }} + 1;
-                iterDokumen = count + 1;
+            if ((iterDokumen == 0)) {
+                let count = {{ isset($maxDocument) ? $maxDocument : 0 }};
+                iterDokumen = count + 2;
             }
             $('.col-add-dokumen').remove();
             $('#dokumen-aset').append(`
-            <div class="col-md-6 col-lg-12 col-xl-6 col-document" id="col-dokumen-` + iterDokumen + `">
+            <div class="col-md-6 col-lg-12 col-xl-12 col-document" id="col-dokumen-` + iterDokumen + `">
                 <div class="card box-upload mb-3" id="box-upload-` +
                 iterDokumen + `" class="box-upload">
                     <div class="card-body pb-2">
@@ -310,7 +279,7 @@
                 </div>
                 <p class="text-danger error-text dokumen-error my-0" id="dokumen-error-1"></p>
             </div>
-            <div class="col-md-2 col-lg-2 col-xl-2 align-self-center col-add-dokumen">
+            <div class="col-md-2 col-lg-2 col-xl-12 align-self-center col-add-dokumen">
                 <div class="text-center text-muted" onclick="addDokumen()" style="cursor: pointer">
                     <h1><i class="fas fa-plus-circle"></i></h1>
                     <h6>Tambah Dokumen</h6>
@@ -321,6 +290,11 @@
             `);
             iterDokumen++;
         }
+
+        $('.nama-dokumen-old').keyup(function() {
+            let iter = $(this).data('iter');
+            $(`#nama_dokumen-hidden-${iter}`).val($(this).val())
+        })
 
         $('#form').submit(function(e) {
             e.preventDefault();

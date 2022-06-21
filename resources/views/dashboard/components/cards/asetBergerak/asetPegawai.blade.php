@@ -1,5 +1,5 @@
 @foreach ($asetPegawai as $item)
-    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6">
+    <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6">
         <div class="card">
             <div class="profile-picture pt-3" style="text-align: center">
                 <div class="avatar avatar-xxl">
@@ -11,20 +11,24 @@
             <div class="card-body">
                 <h5 class="fw-bold">{{ $item->nama_lengkap }}</h5>
                 <h6 class="mb-4 text-muted fw-bold">NIP: {{ $item->nip }}</h6>
-                <ul class="list-group list-group-flush mb-2 text-center">
+                <ul class="list-group list-group-flush mb-2">
                     @foreach ($item->asetBergerak as $item2)
-                        <li class="list-group-item py-2 fw-bold">
+                        <li class="list-group-item py-2 px-1 fw-bold justify-content-between">
                             <span>
                                 @if ($item2->status == 'Digunakan')
                                     <i class="fas fa-circle text-secondary mr-1"></i>
-                                @elseif ($item2->status == 'Rusak')
-                                    <i class="fas fa-circle text-danger mr-1"></i>
                                 @elseif ($item2->status == 'Diperbaiki')
                                     <i class="fas fa-circle text-warning mr-1"></i>
+                                @elseif ($item2->status == 'Rusak')
+                                    <i class="fas fa-circle text-danger mr-1"></i>
+                                @elseif ($item2->status == 'Hilang')
+                                    <i class="fas fa-circle text-info mr-1"></i>
+                                @elseif ($item2->status == 'Pengganti')
+                                    <i class="fas fa-circle text-primary mr-1"></i>
                                 @endif
-                                {{ $item2->nama_aset . ' ' . $item2->merek . ' ' . $item2->model }}
+                                {{ $item2->nama_barang }}
                             </span>
-                            <span class="float-right ml-auto">
+                            <span class="text-right ml-auto">
                                 <button class="badge badge-primary shadow btn-lihat" data-toggle="tooltip"
                                     data-placement="top" title="Lihat Aset" value="{{ $item2->id }}"
                                     data-button="lihat" style="cursor: pointer"><i class="fas fa-eye"></i>

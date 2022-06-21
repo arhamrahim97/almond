@@ -360,19 +360,30 @@
                 let getNodeName = getAttr[0].nodeName;
                 let getType = getAttr[0].type;
                 let attr = $(getNodeName + "[name=" + field.name + "]");
-                if ((attr.hasClass('req')) && (attr.val() == "")) {
-                    $('.' + field.name + '-error').html('<b>' + attr.data('label') +
-                        '</b> tidak boleh kosong');
+                if ((attr.val() == "")) {
+                    if (attr.hasClass('req garis datar')) {
+                        $('.' + field.name + '-error').html('<b>' + attr.data('label') +
+                            '</b> tidak boleh kosong. Berikan garis datar (-) apabila ingin tetap mengosongkannya.'
+                        );
+                    } else if (attr.hasClass('req')) {
+                        $('.' + field.name + '-error').html('<b>' + attr.data('label') +
+                            '</b> tidak boleh kosong.'
+                        );
+                    }
                     count++;
                     attr.addClass('is-invalid')
                 }
             });
             if (count > 0) {
-                swal(
-                    "Gagal!",
-                    "Terdapat " + count + " kolom yang tidak boleh kosong.",
-                    "error"
-                )
+                swal({
+                    title: "Gagal!",
+                    text: "Terdapat " + count + " kolom yang tidak boleh kosong.",
+                    icon: "error"
+                }).then(function() {
+                    $('.rupiah').mask('000.000.000.000.000', {
+                        reverse: true
+                    })
+                });
                 e.preventDefault()
             }
         }

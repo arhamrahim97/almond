@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AsetBergerak extends Migration
+class CreateAsetTidakBergeraksTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class AsetBergerak extends Migration
      */
     public function up()
     {
-        Schema::create('aset_bergerak', function (Blueprint $table) {
+        Schema::create('aset_tidak_bergerak', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('kategori');
             $table->string('kode_barang');
@@ -29,7 +29,7 @@ class AsetBergerak extends Migration
             $table->string('keadaan_barang');
             $table->string('jumlah_barang')->default(1);
             $table->string('harga_barang');
-            $table->string('nomor_polisi');
+            // $table->string('nomor_polisi');
             $table->text('keterangan')->nullable();
             $table->uuid('pegawai_id')->nullable();
             $table->string('status')->default('Baru');
@@ -46,6 +46,6 @@ class AsetBergerak extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('aset_bergerak');
+        Schema::dropIfExists('aset_tidak_bergerak');
     }
 }

@@ -2,22 +2,16 @@
 
 namespace App\Models;
 
-use App\Traits\TraitUuid;
 use App\Traits\Blameables;
+use App\Traits\TraitUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class FileUpload extends Model
+class Aset extends Model
 {
     use HasFactory;
     use TraitUuid;
     use Blameables;
-    protected $table = 'file_upload';
+    protected $table = 'aset';
     protected $guarded = ['id'];
-
-
-    public function pegawai()
-    {
-        return $this->belongsTo(Pegawai::class, 'pegawai_id')->withTrashed();
-    }
 }

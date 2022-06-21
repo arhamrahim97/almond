@@ -50,6 +50,12 @@
                     </span>
                     <h4 class="text-section">Fitur Utama</h4>
                 </li>
+                <li class="nav-item" id="nav-kelola-aset">
+                    <a href="{{ url('kelola-aset') }}">
+                        <i class="fas fa-archive"></i>
+                        <p>Kelola Aset</p>
+                    </a>
+                </li>
                 <li class="nav-item" id="nav-aset-bergerak">
                     <a data-toggle="collapse" href="#aset-bergerak">
                         <i class="fas fa-car-alt"></i>
@@ -85,7 +91,7 @@
                     <div class="collapse" id="aset-tidak-bergerak">
                         <ul class="nav nav-collapse">
                             <li id="li-manajemen-aset-tidak-bergerak">
-                                <a href="{{ url('aset-tidak-bergerak') }}">
+                                <a href="{{ url('manajemen-aset-tidak-bergerak') }}">
                                     <span class="sub-item">Manajemen Aset</span>
                                 </a>
                             </li>

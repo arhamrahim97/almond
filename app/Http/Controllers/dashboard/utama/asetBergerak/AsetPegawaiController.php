@@ -96,35 +96,4 @@ class AsetPegawaiController extends Controller
 
         return view('dashboard.components.cards.asetBergerak.cariAsetPegawai')->with($data)->render();
     }
-
-    public function ubahStatusAsetBergerak(Request $request)
-    {
-        $validator = Validator::make(
-            $request->all(),
-            [
-                'status' => 'required',
-            ],
-            [
-                'status.required' => 'Status tidak boleh kosong',
-            ]
-        );
-
-        if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()]);
-        }
-
-        $aset = AsetBergerak::find($request->id);
-
-        $update = [
-            'status' => $request->status,
-        ];
-
-        if ($request->status == 'Dibuang') {
-            $update['pegawai_id'] = null;
-        }
-
-        $aset->update($update);
-
-        return $request->all();
-    }
 }

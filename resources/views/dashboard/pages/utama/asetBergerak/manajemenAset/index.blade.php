@@ -64,18 +64,12 @@
                                         <th><input type="checkbox" id="checkAllData" autocomplete="off" />
                                         </th>
                                         <th>No</th>
-                                        <th>Aset</th>
-                                        {{-- <th>Merek</th>
-                                        <th>Model</th> --}}
-                                        <th>Kode Inventaris</th>
-                                        {{-- <th>Deskripsi</th> --}}
+                                        <th>Kode Barang</th>
+                                        <th>Register</th>
+                                        <th>Nama / Jenis Barang</th>
+                                        {{-- <th>Jumlah Barang</th> --}}
                                         <th>Status</th>
-                                        <th>Pegawai</th>
-
-                                        {{-- <th>Dibuat Tanggal</th>
-                                        <th>Dibuat Oleh</th>
-                                        <th>Diperbarui Tanggal</th>
-                                        <th>Diperbarui Oleh</th> --}}
+                                        <th>Penanggung Jawab (Pegawai)</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
@@ -108,32 +102,92 @@
                                 <table class="table mb-0">
                                     <tbody>
                                         <tr>
-                                            <td>Nama Aset:</td>
-                                            <td class="text-right td-modal fw-bold" id="td-nama-aset">
+                                            <td>Kategori Aset:</td>
+                                            <td class="text-right td-modal fw-bold" id="td-kategori">
                                                 -
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>Merek (Brand):</td>
+                                            <td>Kode Barang:</td>
+                                            <td class="text-right td-modal fw-bold" id="td-kode-barang">
+                                                -
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Register:</td>
+                                            <td class="text-right td-modal fw-bold" id="td-register">
+                                                -
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Nama/Jenis Barang:</td>
+                                            <td class="text-right td-modal fw-bold" id="td-nama-barang">
+                                                -
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Merk/Type:</td>
                                             <td class="text-right td-modal fw-bold" id="td-merek">
                                                 -
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>Model:</td>
-                                            <td class="text-right td-modal fw-bold" id="td-model">
+                                            <td>No. Sertifikat/Pabrik/Chasis/Mesin:</td>
+                                            <td class="text-right td-modal fw-bold" id="td-no-sertifikat">
                                                 -
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>Kode Inventaris:</td>
-                                            <td class="text-right td-modal fw-bold" id="td-kode-inventaris">
+                                            <td>Bahan:</td>
+                                            <td class="text-right td-modal fw-bold" id="td-bahan">
                                                 -
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>Deskripsi:</td>
-                                            <td class="text-right td-modal fw-bold" id="td-deskripsi">
+                                            <td>Asal/Cara Perolehan Barang:</td>
+                                            <td class="text-right td-modal fw-bold" id="td-asal-barang">
+                                                -
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Tahun Pembelian:</td>
+                                            <td class="text-right td-modal fw-bold" id="td-tahun-pembelian">
+                                                -
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Ukuran Barang/Kontruksi:</td>
+                                            <td class="text-right td-modal fw-bold" id="td-ukuran-barang">
+                                                -
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Satuan:</td>
+                                            <td class="text-right td-modal fw-bold" id="td-satuan">
+                                                -
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Keadaan Barang:</td>
+                                            <td class="text-right td-modal fw-bold" id="td-keadaan-barang">
+                                                -
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Harga Barang:</td>
+                                            <td class="text-right td-modal fw-bold" id="td-harga-barang">
+                                                -
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Nomor Polisi:</td>
+                                            <td class="text-right td-modal fw-bold" id="td-nomor-polisi">
+                                                -
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Keterangan:</td>
+                                            <td class="text-right td-modal fw-bold" id="td-keterangan">
                                                 -
                                             </td>
                                         </tr>
@@ -173,7 +227,7 @@
                             </div>
                         </div>
                     </div>
-                    <div id="foto-aset-bergerak" class="row p-4">
+                    <div id="foto-aset-bergerak" class="row p-4 d-none">
 
                     </div>
                     <div class="row">
@@ -188,46 +242,9 @@
                             </div>
                         </div>
                     </div>
-                    <form method="POST" class="px-3 mb-3" id="duplikat-form" data-id="">
-                        @csrf
-                        <div class="row align-items-end">
-                            <div class="col-md-8 col-lg-8 px-2">
-                                <div class="form-group">
-                                    <label for="TextInput" class="form-label">Jumlah Duplikat</label>
-                                    <input type="text" id="jumlah-duplikat" name="jumlah_duplikat"
-                                        class="form-control req angka" value="" placeholder="Masukkan Jumlah Duplikat"
-                                        data-label="Jumlah Duplikat">
-                                </div>
-                            </div>
-                            <div class="col-md-4 col-lg-4 text-right align-items-end pl-md-0">
-                                <div class="form-group px-0">
-                                    <button type="submit" class="btn btn-success w-100" id="btn-submit" value=""><i
-                                            class="fas fa-copy"></i>
-                                        Proses</button>
-                                </div>
-                            </div>
-                            <span class="text-danger mx-3 error-text jumlah_duplikat-error"></span>
-                        </div>
-
-                    </form>
                 </div>
                 <div class="modal-footer py-4 justify-content-center">
                     <div class="row w-100">
-                        {{-- <div class="col-lg col-sm-12 mb-1" id="col-tentukan-aset-pegawai">
-                            <a href="" class="btn btn-md btn-success w-100" id="btn-tentukan-pegawai-modal"><i
-                                    class="fas fa-user-plus"></i>
-                                Tentukan Pegawai</a>
-                        </div>
-                        <div class="col-lg col-sm-12 mb-1" id="col-ubah-aset-pegawai">
-                            <a href="" class="btn btn-md btn-secondary w-100" id="btn-ubah-pegawai-modal"><i
-                                    class="fas fa-user-edit"></i>
-                                Ubah Pegawai</a>
-                        </div>
-                        <div class="col-lg col-sm-12 mb-1" id="col-ubah-aset">
-                            <a href="" class="btn btn-md btn-warning w-100" id="btn-ubah-aset-modal"><i
-                                    class="fas fa-edit"></i>
-                                Ubah Aset</a>
-                        </div> --}}
                         <div class="col-lg col-sm-12 mb-1">
                             <button type="button" class="btn btn-md btn-dark w-100" data-dismiss="modal"><i
                                     class="fas fa-times"></i>
@@ -250,11 +267,11 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body mx-2">
                     <form method="POST" id="form-ubah-status-aset">
                         @csrf
                         <div class="row align-items-end">
-                            <div class="col-md-8 col-lg-8 px-2 w-100">
+                            <div class="col-12 px-2 w-100">
                                 <div class="form-group pt-0 w-100">
                                     <label for="exampleFormControlSelect1">Pilih Status</label>
                                     <select class="form-select select2 w-100 req" id="status-aset" name="status"
@@ -262,16 +279,92 @@
                                         <option value="">Pilih Salah Satu</option>
 
                                     </select>
+                                    <span class="text-danger error-text status-error"></span>
                                 </div>
                             </div>
-                            <div class="col-md-4 col-lg-4 text-right align-items-end pl-md-0">
-                                <div class="form-group px-0">
-                                    <button type="submit" class="btn btn-warning w-100" id="btn-submit" value="">
-                                        <i class="fas fa-cogs"></i>
-                                        Ubah Status</button>
+                            <div class="col-12 px-2 w-100 mt-2 d-none" id="dokumen-pendukung">
+                                <div class="form-group pt-0 w-100">
+                                    <label for="exampleFormControlSelect1">Dokumen Pendukung</label>
+                                    <div class="row" id="dokumen-aset">
+                                        <div class="col-12 col-document" id="col-dokumen-1">
+                                            <div class="card box-upload mb-3 pegawai" id="box-upload-1"
+                                                class="box-upload">
+                                                <div class="card-body pb-3">
+                                                    <div class="row">
+                                                        <div
+                                                            class="col-3 d-flex align-items-center justify-content-center">
+                                                            <img src="{{ asset('assets/img/pdf.png') }}" alt=""
+                                                                width="70px">
+                                                        </div>
+                                                        <div class="col-9">
+                                                            <div class="mb-3 mt-2">
+                                                                {{-- start validation --}}
+                                                                <input type="hidden" name="nama_dokumen_1"
+                                                                    value="" class="nama_dokumen"
+                                                                    data-label="Nama Dokumen" data-iter="1"
+                                                                    id="nama_dokumen-hidden-1">
+                                                                {{-- end validation --}}
+
+                                                                <input type="text" class="form-control nama-dokumen"
+                                                                    id="nama-dokumen-1" name="nama_dokumen[]"
+                                                                    placeholder="Masukkan Nama Dokumen" value=""
+                                                                    data-iter="1" onkeyup="rmValNamaDokumen(1)" readonly>
+
+                                                                {{-- start validation --}}
+                                                                <p class="text-danger error-text nama_dokumen_1-error my-0"
+                                                                    id="nama_dokumen-error-1"></p>
+                                                                {{-- end validation --}}
+
+                                                                <p class="text-danger error-text nama_dokumen-error my-0"
+                                                                    id="nama_dokumen-error-1"></p>
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                {{-- start validation --}}
+                                                                <input type="hidden" name="file_dokumen_1"
+                                                                    value="" class="req file_dokumen"
+                                                                    data-label="File Dokumen" data-iter="1"
+                                                                    id="file_dokumen-hidden-1">
+                                                                {{-- end validation --}}
+
+                                                                <input name="file_dokumen[]"
+                                                                    class="form-control file-dokumen" id="file-dokumen-1"
+                                                                    type="file" multiple="true" data-iter="1"
+                                                                    accept="application/pdf"
+                                                                    onchange="rmValFileDokumen(1)">
+
+                                                                {{-- start validation --}}
+                                                                <p class="text-danger error-text file_dokumen_1-error my-0"
+                                                                    id="file_dokumen-error-1"></p>
+                                                                {{-- end validation --}}
+
+                                                                <p class="text-danger error-text file_dokumen-error my-0"
+                                                                    id="file_dokumen-error-1"></p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <p class="text-danger error-text dokumen-error my-0" id="dokumen-error-1"></p>
+                                        </div>
+                                        <div class="col-12 align-self-center col-add-dokumen">
+                                            <div class="text-center text-muted" onclick="addDokumen()"
+                                                style="cursor: pointer">
+                                                <h1><i class="fas fa-plus-circle"></i></h1>
+                                                <h6>Tambah Dokumen</h6>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <span class="text-danger mx-4 error-text status-error"></span>
+                        </div>
+                        <div class="row justify-content-end">
+                            <div class="col-12 justify-content-end text-right">
+                                <button type="submit" class="btn btn-success" id="btn-submit" value="">
+                                    <i class="fas fa-save"></i>
+                                    Perbarui Status</button>
+                            </div>
+
                         </div>
                     </form>
                 </div>
@@ -306,46 +399,62 @@
                 url: "{{ url('manajemen-aset-bergerak') }}" + '/' + id,
                 success: function(data) {
                     $('#modal-lihat').modal('show');
-                    $('#td-nama-aset').text(data.nama_aset)
-                    $('#td-merek').text(data.merek)
-                    $('#td-model').text(data.model)
-                    $('#td-kode-inventaris').text(data.kode_inventaris)
-                    $('#td-deskripsi').text(data.deskripsi)
+                    $('#td-kategori').text(data.kategori)
+                    $('#td-kode-barang').text(data.kode_barang)
+                    $('#td-register').text(data.register)
+                    $('#td-nama-barang').text(data.nama_barang)
+                    $('#td-merek').text(data.merek_tipe)
+                    $('#td-no-sertifikat').text(data.nomor_sertifikat_pabrik_chasis_mesin)
+                    $('#td-bahan').text(data.bahan)
+                    $('#td-asal-barang').text(data.asal_barang)
+                    $('#td-tahun-pembelian').text(data.tahun_pembelian)
+                    $('#td-ukuran-barang').text(data.ukuran_barang_kontruksi)
+                    $('#td-satuan').text(data.satuan)
+                    $('#td-keadaan-barang').text(data.keadaan_barang)
+                    $('#td-harga-barang').text(data.harga_barang)
+                    $('#td-harga-barang').mask('000.000.000.000.000', {
+                        reverse: true
+                    })
+                    $('#td-nomor-polisi').text(data.nomor_polisi)
+                    $('#td-keterangan').text(data.keterangan)
                     $('#td-dibuat-tanggal').text(data.created_at_)
                     $('#td-dibuat-oleh').text(data.created_by_)
                     if (data.created_at_ != data.updated_at_) {
                         $('#td-diperbarui-tanggal').text(data.updated_at_)
                         $('#td-diperbarui-oleh').text(data.updated_by_ ?? '-')
                     }
-
                     $('#td-jumlah-foto').text(data.jumlah_foto_)
 
-                    $('#foto-aset-bergerak').html('')
-                    $.each(data.foto_aset_bergerak_, function(index, value) {
-                        $('#foto-aset-bergerak').append(`
-                        <div class="col-lg-6">
-                            <img src="${value}" class="img-fluid card-img-top rounded mb-3" alt="">
-                        </div>
-                    `)
-                    })
+                    if (data.jumlah_foto_ != 0) {
+                        $('#foto-aset-bergerak').removeClass('d-none')
+                        $('#foto-aset-bergerak').html('')
+                        $.each(data.foto_aset_bergerak_, function(index, value) {
+                            $('#foto-aset-bergerak').append(`
+                            <div class="col-lg-6">
+                                <img src="${value}" class="img-fluid card-img-top rounded mb-3" alt="">
+                            </div>
+                        `)
+                        })
+                    } else {
+                        $('#foto-aset-bergerak').addClass('d-none')
+                    }
 
-                    if (button == 'lihat') {
-                        $('#title-modal').text('Lihat Detail')
-                        $('#duplikat-form').addClass('d-none')
-                        $('#btn-submit').val(id)
-                        $('#tr-pegawai').remove()
-                        if (data.pegawai_) {
-                            $('#dokumen-aset-bergerak').append(`
+                    $('#title-modal').text('Lihat Detail')
+                    $('#duplikat-form').addClass('d-none')
+                    $('#btn-submit').val(id)
+                    $('#tr-pegawai').remove()
+                    if (data.pegawai_) {
+                        $('#dokumen-aset-bergerak').append(`
                             <tr id="tr-pegawai">
                                 <td>Pegawai</td>
-                                <td class="text-right">` + data.pegawai_ + `</td>
+                                <td class="text-right fw-bold">` + data.pegawai_ + `</td>
                             </tr>
                         `)
-                        }
+                    }
 
-                        $('#tr-jumlah-dokumen').remove()
-                        if (data.jumlah_dokumen_) {
-                            $('#dokumen-aset-bergerak').append(`
+                    $('#tr-jumlah-dokumen').remove()
+                    if (data.jumlah_dokumen_) {
+                        $('#dokumen-aset-bergerak').append(`
                         <tr id="tr-jumlah-dokumen">
                             <td>Jumlah Dokumen:</td>
                             <td class="text-right td-modal fw-bold" id="td-jumlah-dokumen">
@@ -354,51 +463,19 @@
                         </tr>
     
                         `)
-                        }
+                    }
 
-                        $('.tr-aset-dokumen').remove()
-                        $.each(data.dokumen_aset_bergerak_, function(index, value) {
-                            $('#dokumen-aset-bergerak').append(`
+                    $('.tr-aset-dokumen').remove()
+                    $.each(data.dokumen_aset_bergerak_, function(index, value) {
+                        $('#dokumen-aset-bergerak').append(`
                             <tr class="tr-aset-dokumen">
-                                <td>` + value.deskripsi + `</td>
+                                <td>` + value.deskripsi + ` <br> ` + value.pegawai + `</td>
                                 <td class="text-right td-modal fw-bold" id="td-jumlah-dokumen">
                                     <a href="` + value.nama_file + `" target="_blank" class="badge badge-primary shadow">Lihat</a>
                                 </td>
                             </tr>
                             `)
-                        })
-
-                        if (data.status == 'Baru') {
-                            $('#col-ubah-aset-pegawai').addClass('d-none')
-                            $('#col-tentukan-aset-pegawai').removeClass('d-none')
-                            $('#btn-tentukan-pegawai-modal').attr('href',
-                                "{{ url('tentukan-aset-pegawai') }}" + '/' + id)
-                        } else {
-                            $('#col-ubah-aset-pegawai').removeClass('d-none')
-                            $('#col-tentukan-aset-pegawai').addClass('d-none')
-                            $('#btn-ubah-pegawai-modal').attr('href',
-                                "{{ url('ubah-aset-pegawai') }}" +
-                                '/' +
-                                id)
-                        }
-                        $('#col-ubah-aset').removeClass('d-none')
-
-                    } else { // button duplikat
-                        $('#title-modal').text('Duplikat Data')
-                        $('#duplikat-form').removeClass('d-none')
-                        $('#btn-submit').val(id)
-                        $('#jumlah-duplikat').val('')
-                        $('#tr-pegawai').remove()
-                        $('#tr-jumlah-dokumen').remove()
-                        $('.tr-aset-dokumen').remove()
-                        $('#col-ubah-aset-pegawai').addClass('d-none')
-                        $('#col-tentukan-aset-pegawai').addClass('d-none')
-                        $('#col-ubah-aset').addClass('d-none')
-                    }
-
-                    $('#btn-ubah-aset-modal').attr('href',
-                        "{{ url('manajemen-aset-bergerak') }}" + '/' + id + '/edit')
-
+                    })
                 }
             });
 
@@ -416,32 +493,66 @@
                 $(this).remove();
             });
 
-            if (status_aset == 'Baru') {
+            if (status_aset == 'Baru' || status_aset == 'Digunakan') {
                 let option = `
             <option value="Rusak">Rusak</option>
             <option value="Diperbaiki">Diperbaiki</option>
-            <option value="Dibuang">Dibuang</option>`
-                $('#status-aset').append(option)
-            } else if (status_aset == "Digunakan") {
-                let option = `
-            <option value="Rusak">Rusak</option>
-            <option value="Diperbaiki">Diperbaiki</option>
-            <option value="Dibuang">Dibuang</option>`
+            <option value="Hilang">Hilang</option>
+            <option value="Pengganti">Pengganti</option>
+            <option value="Dihibahkan">Dihibahkan</option>
+            <option value="Dijual">Dijual</option>
+            <option value="Dimusnahkan">Dimusnahkan</option>
+            `
                 $('#status-aset').append(option)
             } else if (status_aset == "Diperbaiki") {
                 let option = `
             <option value="Digunakan">Digunakan</option>
             <option value="Rusak">Rusak</option>
-            <option value="Dibuang">Dibuang</option>`
+            <option value="Hilang">Hilang</option>
+            <option value="Pengganti">Pengganti</option>
+            <option value="Dihibahkan">Dihibahkan</option>
+            <option value="Dijual">Dijual</option>
+            <option value="Dimusnahkan">Dimusnahkan</option>
+            `
                 $('#status-aset').append(option)
             } else if (status_aset == "Rusak") {
                 let option = `
+            <option value="Digunakan">Digunakan</option>
             <option value="Diperbaiki">Diperbaiki</option>
-            <option value="Dibuang">Dibuang</option>`
+            <option value="Hilang">Hilang</option>
+            <option value="Pengganti">Pengganti</option>
+            <option value="Dihibahkan">Dihibahkan</option>
+            <option value="Dijual">Dijual</option>
+            <option value="Dimusnahkan">Dimusnahkan</option>
+            `
+                $('#status-aset').append(option)
+            } else if (status_aset == "Hilang") {
+                let option = `
+            <option value="Digunakan">Digunakan</option>
+            <option value="Diperbaiki">Diperbaiki</option>
+            <option value="Rusak">Rusak</option>
+            <option value="Pengganti">Pengganti</option>
+            <option value="Dihibahkan">Dihibahkan</option>
+            <option value="Dijual">Dijual</option>
+            <option value="Dimusnahkan">Dimusnahkan</option>
+            `
+                $('#status-aset').append(option)
+            } else if (status_aset == "Pengganti") {
+                let option = `
+            <option value="Digunakan">Digunakan</option>
+            <option value="Diperbaiki">Diperbaiki</option>
+            <option value="Rusak">Rusak</option>
+            <option value="Hilang">Hilang</option>
+            <option value="Dihibahkan">Dihibahkan</option>
+            <option value="Dijual">Dijual</option>
+            <option value="Dimusnahkan">Dimusnahkan</option>
+            `
                 $('#status-aset').append(option)
             }
 
             $('#btn-submit').val(id)
+            $('#dokumen-pendukung').addClass('d-none')
+            $('.file_dokumen').removeClass('req')
 
             $('#modal-ubah-status-aset').modal({
                 backdrop: 'static',
@@ -449,68 +560,146 @@
             });
         })
 
-        $('#duplikat-form').submit(function(e) {
-            e.preventDefault();
-            $('.error-text').text('')
-            var formData = $(this).serializeArray()
-            validation(formData)
-            var data = new FormData(this)
-            data.append('id', $('#btn-submit').val())
-            swal({
-                title: 'Apakah Anda yakin?',
-                text: "Data ini akan di duplikat sebanyak " + $('#jumlah-duplikat').val() + " kali.",
-                icon: "warning",
-                dangerMode: true,
-                buttons: ["Batal", "Ya"],
-            }).then((result) => {
-                if (result) {
-                    $.ajax({
-                        type: "POST",
-                        url: "{{ route('duplikatAsetBergerak') }}",
-                        headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                        },
-                        data: data,
-                        cache: false,
-                        processData: false,
-                        contentType: false,
-                        success: function(response) {
-                            if ($.isEmptyObject(response.error)) {
-                                swal({
-                                    title: "Berhasil!",
-                                    text: "Data berhasil di duplikat.",
-                                    icon: "success",
-                                }).then(function() {
-                                    table.ajax.reload();
-                                    $('#modal-lihat').modal('hide');
-                                });
-                            } else {
-                                swal({
-                                    title: "Gagal!",
-                                    text: "Terjadi kesalahan, mohon periksa kembali data yang diinputkan.",
-                                    icon: "error",
-                                    button: "Ok",
-                                });
-                                printErrorMsg(response.error);
-                            }
-                        },
-                        error: function(response) {
-                            alert(response.responseJSON.message)
-                        },
-                    });
-                } else {
-                    swal("Data batal dihapus.", {
-                        icon: "error",
-                    });
+        $('#status-aset').change(function() {
+            //         
+            $('.file-dokumen').val('')
+            if ($(this).val() == 'Hilang' || $(this).val() == 'Pengganti' || $(this).val() == 'Dihibahkan' || $(
+                    this).val() == 'Dijual' || $(this).val() == 'Dimusnahkan') {
+                $('#dokumen-pendukung').removeClass('d-none')
+                if ($(this).val() == 'Hilang') {
+                    $('#nama-dokumen-1').val('Berita Acara Laporan Kehilangan Aset')
+                } else if ($(this).val() == 'Pengganti') {
+                    $('#nama-dokumen-1').val('Berita Acara Penggantian Aset')
+                } else if ($(this).val() == 'Dihibahkan') {
+                    $('#nama-dokumen-1').val('Berita Acara Penghibahkan Aset')
+                } else if ($(this).val() == 'Dijual') {
+                    $('#nama-dokumen-1').val('Berita Acara Penjualan Aset')
+                } else if ($(this).val() == 'Dimusnahkan') {
+                    $('#nama-dokumen-1').val('Berita Acara Pemusnahan Aset')
                 }
-            })
+
+                $('.file_dokumen').attr('disabled', false)
+                $('.nama_dokumen').attr('disabled', false)
+                $('.file_dokumen').addClass('req')
+            } else {
+                $('#dokumen-pendukung').addClass('d-none')
+                $('.file_dokumen').attr('disabled', true)
+                $('.nama_dokumen').attr('disabled', true)
+                $('.file_dokumen').removeClass('req')
+            }
+            // alert('tets')
         })
+
+        function deleteDokumen(iter) {
+            $('#col-dokumen-' + iter).fadeOut(function() {
+                $('#col-dokumen-' + iter).remove();
+            });
+        }
+
+        function rmValNamaDokumen(iter) {
+            if ($('#nama-dokumen-' + iter).val() != '') {
+                $('#nama_dokumen-hidden-' + iter).removeClass('req');
+            } else {
+                $('#nama_dokumen-hidden-' + iter).addClass('req');
+            }
+        }
+
+        function rmValFileDokumen(iter) {
+            if ($('#file-dokumen-' + iter).val() != '') {
+                $('#file_dokumen-hidden-' + iter).removeClass('req');
+            } else {
+                $('#file_dokumen-hidden-' + iter).addClass('req');
+            }
+        }
+
+
+        let iterDokumen = 2;
+
+        function addDokumen() {
+            if (('{{ isset($aset) && $aset->pegawai }}') && (iterDokumen == 2)) {
+                let count = {{ $maxDocument ?? '' }} + 1;
+                iterDokumen = count + 1;
+            }
+
+            $('.col-add-dokumen').remove();
+            $('#dokumen-aset').append(`
+                <div class="col-12 col-document" id="col-dokumen-` + iterDokumen + `">
+                    <div class="card box-upload mb-3" id="box-upload-` +
+                iterDokumen + `" class="box-upload">
+                        <div class="card-body pb-2">
+                            <div class="row">
+                                <div class="col-3 d-flex align-items-center justify-content-center">
+                                    <img src="{{ asset('assets/img/pdf.png') }}" alt="" width="70px">
+                                </div>
+                                <div class="col-9">
+                                    <div class="mb-3 mt-2">
+                                        <input type="hidden" name="nama_dokumen_` + iterDokumen +
+                `" value=""
+                                                            class="req nama_dokumen" data-label="Nama Dokumen" data-iter="` +
+                iterDokumen + `"
+                                                            id="nama_dokumen-hidden-` + iterDokumen +
+                `">
+                                                            <input type="text" class="form-control nama-dokumen" id="nama-dokumen-` +
+                iterDokumen +
+                `"
+                                                            name="nama_dokumen[]" placeholder="Masukkan Nama Dokumen" value="" data-iter="` +
+                iterDokumen +
+                `"  onkeyup="rmValNamaDokumen(` + iterDokumen +
+                `)">
+                                                            <p class="text-danger error-text nama_dokumen-error my-0" id="nama_dokumen-error-` +
+                iterDokumen +
+                `"></p>
+                                                            <p class="text-danger error-text nama_dokumen_` +
+                iterDokumen + `-error my-0"
+                                                                                id="nama_dokumen-error-` +
+                iterDokumen +
+                `"></p>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <input type="hidden" name="file_dokumen_` + iterDokumen +
+                `" value=""
+                                                            class="req file_dokumen" data-label="File Dokumen" data-iter="` +
+                iterDokumen + `"
+                                                            id="file_dokumen-hidden-` + iterDokumen +
+                `">
+                                        <input name="file_dokumen[]" class="form-control file-dokumen" type="file" id="file-dokumen-` +
+                iterDokumen + `"
+                                            multiple="true" data-iter="` + iterDokumen +
+                `" accept="application/pdf" onchange="rmValFileDokumen(` + iterDokumen + `)">
+                    <p class="text-danger error-text file_dokumen_` + iterDokumen + `-error my-0"
+                                                            id="file_dokumen-error-` + iterDokumen +
+                `"></p>
+                                        <p class="text-danger error-text file_dokumen-error my-0" id="file_dokumen-error-` +
+                iterDokumen + `"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button"
+                            class="btn btn-danger fw-bold card-footer bg-danger text-center p-0 delete-document"
+                            onclick="deleteDokumen(` + iterDokumen + `)"><i class="fas fa-trash-alt"></i>
+                            Hapus</button>
+                    </div>
+                    <p class="text-danger error-text dokumen-error my-0" id="dokumen-error-1"></p>
+                </div>
+                <div class="col-12 align-self-center col-add-dokumen">
+                    <div class="text-center text-muted" onclick="addDokumen()" style="cursor: pointer">
+                        <h1><i class="fas fa-plus-circle"></i></h1>
+                        <h6>Tambah Dokumen</h6>
+                    </div>
+
+                </div>
+                    
+                `);
+            iterDokumen++;
+        }
 
         $('#form-ubah-status-aset').submit(function(e) {
             e.preventDefault();
             $('.error-text').text('')
-            var formData = $(this).serializeArray()
-            validation(formData)
+            var formData = $('.req').serializeArray()
+            // validation(formData)
             var data = new FormData(this)
             data.append('id', $('#btn-submit').val())
             swal({
@@ -533,14 +722,62 @@
                         success: function(response) {
                             console.log(response)
                             if ($.isEmptyObject(response.error)) {
-                                swal({
-                                    title: "Berhasil!",
-                                    text: "Status aset berhasil diubah.",
-                                    icon: "success",
-                                }).then(function() {
-                                    $('#modal-ubah-status-aset').modal('hide');
-                                    location.reload();
-                                });
+                                if (response == 'nama_dokumen_kosong') {
+                                    swal({
+                                        title: "Gagal!",
+                                        text: "Terdapat Nama Dokumen yang kosong.",
+                                        icon: "error",
+                                    })
+                                    $.each($('.nama-dokumen'), function(index, value) {
+                                        if ($(value).val() == '') {
+                                            $(value).addClass('is-invalid');
+                                            $('#nama_dokumen-error-' + $(value)
+                                                .data(
+                                                    'iter')).text(
+                                                'Nama Dokumen tidak boleh kosong.'
+                                            )
+                                        }
+                                    });
+                                }
+
+                                if (response ==
+                                    'nama_dokumen_kosong_dan_file_dokumen_kosong') {
+                                    swal({
+                                        title: "Gagal!",
+                                        text: "Terdapat Nama Dokumen dan File Dokumen yang kosong.",
+                                        icon: "error",
+                                    })
+                                    $.each($('.nama-dokumen'), function(index, value) {
+                                        if ($(value).val() == '') {
+                                            $(value).addClass('is-invalid');
+                                            $('#nama_dokumen-error-' + $(value)
+                                                .data(
+                                                    'iter')).text(
+                                                'Nama Dokumen tidak boleh kosong.'
+                                            )
+                                        }
+                                    });
+                                    $.each($('.file-dokumen'), function(index, value) {
+                                        if ($(value).val() == '') {
+                                            $(value).addClass('is-invalid');
+                                            $('#file_dokumen-error-' + $(value)
+                                                .data(
+                                                    'iter')).text(
+                                                'File Dokumen tidak boleh kosong.'
+                                            )
+                                        }
+                                    });
+                                }
+                                if (response == 'success') {
+                                    swal({
+                                        title: "Berhasil!",
+                                        text: "Status aset berhasil diubah.",
+                                        icon: "success",
+                                    }).then(function() {
+                                        $('#modal-ubah-status-aset').modal('hide');
+                                        location.reload();
+                                    });
+                                }
                             } else {
                                 swal({
                                     title: "Gagal!",
@@ -616,25 +853,23 @@
                     searchable: false
                 },
                 {
-                    data: 'aset',
-                    name: 'aset',
-                },
-                // {
-                //     data: 'merek',
-                //     name: 'merek',
-                // },
-                // {
-                //     data: 'model',
-                //     name: 'model',
-                // },
-                {
-                    data: 'kode_inventaris',
-                    name: 'kode_inventaris',
+                    data: 'kode_barang',
+                    name: 'kode_barang',
                     className: 'text-center',
                 },
+                {
+                    data: 'register',
+                    name: 'register',
+                    className: 'text-center',
+                },
+                {
+                    data: 'nama_barang',
+                    name: 'nama_barang',
+                },
                 // {
-                //     data: 'deskripsi',
-                //     name: 'deskripsi',
+                //     data: 'jumlah_barang',
+                //     name: 'jumlah_barang',
+                //     className: 'text-center',
                 // },
                 {
                     data: 'status',
@@ -646,22 +881,7 @@
                     name: 'pegawai',
                     className: 'text-center',
                 },
-                // {
-                //     data: 'created_at',
-                //     name: 'created_at',
-                // },
-                // {
-                //     data: 'created_by',
-                //     name: 'created_by',
-                // },
-                // {
-                //     data: 'updated_at',
-                //     name: 'updated_at',
-                // },
-                // {
-                //     data: 'updated_by',
-                //     name: 'updated_by',
-                // },
+
                 {
                     data: 'action',
                     name: 'action',

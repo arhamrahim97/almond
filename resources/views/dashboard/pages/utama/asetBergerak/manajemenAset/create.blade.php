@@ -55,8 +55,10 @@
                         </div>
                     </div>
                 </div>
-                @component('dashboard.components.forms.utama.asetBergerak.manajemenAset')
+                @component('dashboard.components.forms.utama.manajemenAset')
                     @slot('action', route('manajemen-aset-bergerak.store'))
+                    @slot('jenis_aset', 'aset_bergerak')
+                    @slot('aset', null)
                     @slot('method', 'POST')
                 @endcomponent
 

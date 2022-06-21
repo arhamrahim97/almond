@@ -43,7 +43,7 @@
                     <div class="card-head-row">
                         <div class="card-title">
                             {{ $aset->pegawai ? 'Pindahkan Aset' : 'Tentukan Pegawai' }} | <span class="fw-bold">
-                                {{ $aset->nama_aset . ' ' . $aset->merek . ' ' . $aset->model }}</span>
+                                {{ $aset->nama_barang }}</span>
                         </div>
                         <div class="card-tools">
                             <ul class="nav nav-pills nav-secondary nav-pills-no-bd nav-sm" id="pills-tab" role="tablist">
@@ -63,7 +63,7 @@
                     @slot('method', 'POST')
                     @slot('aset', $aset)
                     @slot('pegawai', $pegawai)
-                    @slot('maxDocument', $aset->pegawai ? $aset->fileUploadDokumen->max('urutan') : 0)
+                    @slot('maxDocument', $aset->fileUploadDokumen->max('urutan'))
                 @endcomponent
             </div>
         </div>

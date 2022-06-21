@@ -1,7 +1,7 @@
 @extends('dashboard.layouts.main')
 
 @section('title')
-    Manajemen Aset Tidak Bergerak
+    Manajemen Aset Bergerak
 @endsection
 
 @push('style')
@@ -18,7 +18,7 @@
             <i class="flaticon-right-arrow"></i>
         </li>
         <li class="nav-item">
-            <span>Aset Tidak Bergerak</span>
+            <span>Aset Bergerak</span>
         </li>
         <li class="separator">
             <i class="flaticon-right-arrow"></i>
@@ -41,7 +41,7 @@
             <div class="card">
                 <div class="card-header">
                     <div class="card-head-row">
-                        <div class="card-title">Tambah Aset Tidak Bergerak</div>
+                        <div class="card-title">Tambah Aset Bergerak</div>
                         <div class="card-tools">
                             <ul class="nav nav-pills nav-secondary nav-pills-no-bd nav-sm" id="pills-tab" role="tablist">
                                 <li class="nav-item submenu">
@@ -56,9 +56,9 @@
                     </div>
                 </div>
                 @component('dashboard.components.forms.utama.manajemenAset')
-                    @slot('action', route('manajemen-aset-tidak-bergerak.store'))
-                    @slot('jenis_aset', 'aset_tidak_bergerak')
-                    @slot('aset', null)
+                    @slot('action', url('duplikat-aset-bergerak'))
+                    @slot('jenis_aset', 'aset_bergerak')
+                    @slot('aset', $aset)
                     @slot('method', 'POST')
                 @endcomponent
 
@@ -71,9 +71,9 @@
     <script>
         $(document).ready(function() {
             $('.nav-item').removeClass('active');
-            $('#nav-aset-tidak-bergerak').addClass('active submenu');
-            $('#aset-tidak-bergerak').addClass('show')
-            $('#li-manajemen-aset-tidak-bergerak').addClass('active');
+            $('#nav-aset-bergerak').addClass('active submenu');
+            $('#aset-bergerak').addClass('show')
+            $('#li-manajemen-aset-bergerak').addClass('active');
         })
     </script>
 @endpush
