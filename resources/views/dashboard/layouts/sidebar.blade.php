@@ -97,12 +97,7 @@
                             </li>
                             <li>
                                 <a href="email-compose.html">
-                                    <span class="sub-item">Lokasi Aset</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="email-compose.html">
-                                    <span class="sub-item">Status Aset</span>
+                                    <span class="sub-item">Ruangan Aset</span>
                                 </a>
                             </li>
                         </ul>

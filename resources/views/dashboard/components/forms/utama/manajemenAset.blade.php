@@ -183,7 +183,7 @@
                                     <div class="card mb-1">
                                         <div class="p-2 text-center">
                                             <img class="card-img-top rounded text-center preview-image"
-                                                src="{{ Storage::exists('upload/foto_aset_bergerak/' . $item->nama_file) ? Storage::url('upload/foto_aset_bergerak/' . $item->nama_file) : asset('assets/img/blank_photo.png') }}"
+                                                src="{{ Storage::exists('upload/foto_' . $jenis_aset . '/' . $item->nama_file) ? Storage::url('upload/foto_' . $jenis_aset . '/' . $item->nama_file) : asset('assets/img/blank_photo.png') }}"
                                                 alt="image" data-iter="{{ $loop->iteration }}"
                                                 id="preview-image-{{ $loop->iteration }}" style="height: 180px">
                                         </div>
@@ -242,6 +242,10 @@
                                                         <span class="text-secondary"
                                                             style="font-style: italic">Dokumen
                                                             Pegawai: {{ $item->pegawai->nama_lengkap }}</span>
+                                                    @elseif($item->ruangan)
+                                                        <span class="text-secondary"
+                                                            style="font-style: italic">Dokumen
+                                                            Ruangan: {{ $item->ruangan->nama_ruangan }}</span>
                                                     @else
                                                         <span class="text-danger" style="font-style: italic">Dokumen
                                                             Aset</span>
@@ -262,7 +266,7 @@
                                                             placeholder="Masukkan Nama Dokumen"
                                                             value="{{ $item->deskripsi }}"
                                                             data-iter="{{ $loop->iteration }}"
-                                                            {{ $loop->iteration <= 2 ? 'readonly' : '' }}>
+                                                            {{ $jenis_aset == 'aset_bergerak' && $loop->iteration <= 2 ? 'readonly' : '' }}>
                                                         {{-- start validation --}}
                                                         <p class="text-danger error-text nama_dokumen_{{ $loop->iteration }}-error my-0"
                                                             id="nama_dokumen-error-{{ $loop->iteration }}"></p>
@@ -272,7 +276,7 @@
                                                     </div>
                                                     <div class="mb-3">
                                                         <a type="button"
-                                                            href="{{ Storage::exists('upload/dokumen_aset_bergerak/' . $item->nama_file) ? Storage::url('upload/dokumen_aset_bergerak/' . $item->nama_file) : 'tidak-ditemukan' }}"
+                                                            href="{{ Storage::exists('upload/dokumen_' . $jenis_aset . '/' . $item->nama_file) ? Storage::url('upload/dokumen_' . $jenis_aset . '/' . $item->nama_file) : 'tidak-ditemukan' }}"
                                                             target="_blank" class="btn btn-primary shadow-sm w-100"><i
                                                                 class="fas fa-eye"></i> Lihat
                                                             Dokumen</a>
@@ -289,7 +293,15 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        @if ($loop->iteration > 2)
+
+                                        @if ($jenis_aset == 'aset_bergerak' && $loop->iteration > 2)
+                                            <button type="button"
+                                                class="btn btn-danger fw-bold card-footer bg-danger text-center delete-document p-0"
+                                                onclick="deleteDocumentOld({{ $loop->iteration }})"
+                                                id="delete-document-old-{{ $loop->iteration }}"
+                                                value="{{ $item->id }}"><i class="fas fa-trash-alt"></i>
+                                                Hapus</button>
+                                        @elseif ($jenis_aset == 'aset_tidak_bergerak' && $loop->iteration > 0)
                                             <button type="button"
                                                 class="btn btn-danger fw-bold card-footer bg-danger text-center delete-document p-0"
                                                 onclick="deleteDocumentOld({{ $loop->iteration }})"
@@ -302,118 +314,120 @@
                                 </div>
                             @endforeach
                         @else
-                            <div class="col-md-6 col-lg-6 col-xl-6 col-document" id="col-dokumen-1">
-                                <div class="card box-upload mb-3 pegawai" id="box-upload-1" class="box-upload">
-                                    <div class="card-body pb-3">
-                                        <div class="row">
-                                            <div class="col-3 d-flex align-items-center justify-content-center">
-                                                <img src="{{ asset('assets/img/pdf.png') }}" alt=""
-                                                    width="70px">
-                                            </div>
-                                            <div class="col-9">
-                                                <div class="mb-3 mt-2">
-                                                    {{-- start validation --}}
-                                                    <input type="hidden" name="nama_dokumen_1" value=""
-                                                        class="nama_dokumen" data-label="Nama Dokumen" data-iter="1"
-                                                        id="nama_dokumen-hidden-1">
-                                                    {{-- end validation --}}
-
-                                                    <input type="text" class="form-control nama-dokumen"
-                                                        id="nama-dokumen-1" name="nama_dokumen[]"
-                                                        placeholder="Masukkan Nama Dokumen" value="BPKB"
-                                                        data-iter="1" onkeyup="rmValNamaDokumen(1)" readonly>
-
-                                                    {{-- start validation --}}
-                                                    <p class="text-danger error-text nama_dokumen_1-error my-0"
-                                                        id="nama_dokumen-error-1"></p>
-                                                    {{-- end validation --}}
-
-                                                    <p class="text-danger error-text nama_dokumen-error my-0"
-                                                        id="nama_dokumen-error-1"></p>
+                            @if ($jenis_aset == 'aset_bergerak')
+                                <div class="col-md-6 col-lg-6 col-xl-6 col-document" id="col-dokumen-1">
+                                    <div class="card box-upload mb-3 pegawai" id="box-upload-1" class="box-upload">
+                                        <div class="card-body pb-3">
+                                            <div class="row">
+                                                <div class="col-3 d-flex align-items-center justify-content-center">
+                                                    <img src="{{ asset('assets/img/pdf.png') }}" alt=""
+                                                        width="70px">
                                                 </div>
-                                                <div class="mb-3">
-                                                    {{-- start validation --}}
-                                                    <input type="hidden" name="file_dokumen_1" value=""
-                                                        class="req file_dokumen" data-label="File Dokumen"
-                                                        data-iter="1" id="file_dokumen-hidden-1">
-                                                    {{-- end validation --}}
+                                                <div class="col-9">
+                                                    <div class="mb-3 mt-2">
+                                                        {{-- start validation --}}
+                                                        <input type="hidden" name="nama_dokumen_1" value=""
+                                                            class="nama_dokumen" data-label="Nama Dokumen"
+                                                            data-iter="1" id="nama_dokumen-hidden-1">
+                                                        {{-- end validation --}}
 
-                                                    <input name="file_dokumen[]" class="form-control file-dokumen"
-                                                        id="file-dokumen-1" type="file" multiple="true"
-                                                        data-iter="1" accept="application/pdf"
-                                                        onchange="rmValFileDokumen(1)">
+                                                        <input type="text" class="form-control nama-dokumen"
+                                                            id="nama-dokumen-1" name="nama_dokumen[]"
+                                                            placeholder="Masukkan Nama Dokumen" value="BPKB"
+                                                            data-iter="1" onkeyup="rmValNamaDokumen(1)" readonly>
 
-                                                    {{-- start validation --}}
-                                                    <p class="text-danger error-text file_dokumen_1-error my-0"
-                                                        id="file_dokumen-error-1"></p>
-                                                    {{-- end validation --}}
+                                                        {{-- start validation --}}
+                                                        <p class="text-danger error-text nama_dokumen_1-error my-0"
+                                                            id="nama_dokumen-error-1"></p>
+                                                        {{-- end validation --}}
 
-                                                    <p class="text-danger error-text file_dokumen-error my-0"
-                                                        id="file_dokumen-error-1"></p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                                        <p class="text-danger error-text nama_dokumen-error my-0"
+                                                            id="nama_dokumen-error-1"></p>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        {{-- start validation --}}
+                                                        <input type="hidden" name="file_dokumen_1" value=""
+                                                            class="req file_dokumen" data-label="File Dokumen"
+                                                            data-iter="1" id="file_dokumen-hidden-1">
+                                                        {{-- end validation --}}
 
-                                </div>
-                                <p class="text-danger error-text dokumen-error my-0" id="dokumen-error-1"></p>
-                            </div>
-                            <div class="col-md-6 col-lg-6 col-xl-6 col-document" id="col-dokumen-2">
-                                <div class="card box-upload mb-3 pegawai" id="box-upload-2" class="box-upload">
-                                    <div class="card-body pb-2">
-                                        <div class="row">
-                                            <div class="col-3 d-flex align-items-center justify-content-center">
-                                                <img src="{{ asset('assets/img/pdf.png') }}" alt=""
-                                                    width="70px">
-                                            </div>
-                                            <div class="col-9">
-                                                <div class="mb-3 mt-2">
-                                                    {{-- start validation --}}
-                                                    <input type="hidden" name="nama_dokumen_2" value=""
-                                                        class="nama_dokumen" data-label="Nama Dokumen" data-iter="2"
-                                                        id="nama_dokumen-hidden-2">
-                                                    {{-- end validation --}}
+                                                        <input name="file_dokumen[]" class="form-control file-dokumen"
+                                                            id="file-dokumen-1" type="file" multiple="true"
+                                                            data-iter="1" accept="application/pdf"
+                                                            onchange="rmValFileDokumen(1)">
 
-                                                    <input type="text" class="form-control nama-dokumen"
-                                                        id="nama-dokumen-2" name="nama_dokumen[]"
-                                                        placeholder="Masukkan Nama Dokumen" value="STNK"
-                                                        data-iter="2" onkeyup="rmValNamaDokumen(2)" readonly>
+                                                        {{-- start validation --}}
+                                                        <p class="text-danger error-text file_dokumen_1-error my-0"
+                                                            id="file_dokumen-error-1"></p>
+                                                        {{-- end validation --}}
 
-                                                    {{-- start validation --}}
-                                                    <p class="text-danger error-text nama_dokumen_2-error my-0"
-                                                        id="nama_dokumen-error-2"></p>
-                                                    {{-- end validation --}}
-
-                                                    <p class="text-danger error-text nama_dokumen-error my-0"
-                                                        id="nama_dokumen-error-2"></p>
-                                                </div>
-                                                <div class="mb-3">
-                                                    {{-- start validation --}}
-                                                    <input type="hidden" name="file_dokumen_2" value=""
-                                                        class="req file_dokumen" data-label="File Dokumen"
-                                                        data-iter="2" id="file_dokumen-hidden-2">
-                                                    {{-- end validation --}}
-
-                                                    <input name="file_dokumen[]" class="form-control file-dokumen"
-                                                        id="file-dokumen-2" type="file" multiple="true"
-                                                        data-iter="2" accept="application/pdf"
-                                                        onchange="rmValFileDokumen(2)">
-
-                                                    {{-- start validation --}}
-                                                    <p class="text-danger error-text file_dokumen_2-error my-0"
-                                                        id="file_dokumen-error-2"></p>
-                                                    {{-- end validation --}}
-
-                                                    <p class="text-danger error-text file_dokumen-error my-0"
-                                                        id="file_dokumen-error-2"></p>
+                                                        <p class="text-danger error-text file_dokumen-error my-0"
+                                                            id="file_dokumen-error-1"></p>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
 
+                                    </div>
+                                    <p class="text-danger error-text dokumen-error my-0" id="dokumen-error-1"></p>
                                 </div>
-                                <p class="text-danger error-text dokumen-error my-0" id="dokumen-error-2"></p>
-                            </div>
+                                <div class="col-md-6 col-lg-6 col-xl-6 col-document" id="col-dokumen-2">
+                                    <div class="card box-upload mb-3 pegawai" id="box-upload-2" class="box-upload">
+                                        <div class="card-body pb-2">
+                                            <div class="row">
+                                                <div class="col-3 d-flex align-items-center justify-content-center">
+                                                    <img src="{{ asset('assets/img/pdf.png') }}" alt=""
+                                                        width="70px">
+                                                </div>
+                                                <div class="col-9">
+                                                    <div class="mb-3 mt-2">
+                                                        {{-- start validation --}}
+                                                        <input type="hidden" name="nama_dokumen_2" value=""
+                                                            class="nama_dokumen" data-label="Nama Dokumen"
+                                                            data-iter="2" id="nama_dokumen-hidden-2">
+                                                        {{-- end validation --}}
+
+                                                        <input type="text" class="form-control nama-dokumen"
+                                                            id="nama-dokumen-2" name="nama_dokumen[]"
+                                                            placeholder="Masukkan Nama Dokumen" value="STNK"
+                                                            data-iter="2" onkeyup="rmValNamaDokumen(2)" readonly>
+
+                                                        {{-- start validation --}}
+                                                        <p class="text-danger error-text nama_dokumen_2-error my-0"
+                                                            id="nama_dokumen-error-2"></p>
+                                                        {{-- end validation --}}
+
+                                                        <p class="text-danger error-text nama_dokumen-error my-0"
+                                                            id="nama_dokumen-error-2"></p>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        {{-- start validation --}}
+                                                        <input type="hidden" name="file_dokumen_2" value=""
+                                                            class="req file_dokumen" data-label="File Dokumen"
+                                                            data-iter="2" id="file_dokumen-hidden-2">
+                                                        {{-- end validation --}}
+
+                                                        <input name="file_dokumen[]" class="form-control file-dokumen"
+                                                            id="file-dokumen-2" type="file" multiple="true"
+                                                            data-iter="2" accept="application/pdf"
+                                                            onchange="rmValFileDokumen(2)">
+
+                                                        {{-- start validation --}}
+                                                        <p class="text-danger error-text file_dokumen_2-error my-0"
+                                                            id="file_dokumen-error-2"></p>
+                                                        {{-- end validation --}}
+
+                                                        <p class="text-danger error-text file_dokumen-error my-0"
+                                                            id="file_dokumen-error-2"></p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <p class="text-danger error-text dokumen-error my-0" id="dokumen-error-2"></p>
+                                </div>
+                            @endif
                         @endif
                         <div class="col-md-2 col-lg-3 col-xl-2 align-self-center col-add-dokumen">
                             <div class="text-center text-muted" onclick="addDokumen()" style="cursor: pointer">
@@ -595,11 +609,22 @@
             }
         }
 
-        let iterDokumen = 3;
+        let iterDokumen = {{ $jenis_aset == 'aset_bergerak' ? 3 : 1 }};
 
         function addDokumen() {
-            if ((('{{ isset($asset) }}') || ('{{ $method }}' == 'PUT')) && (iterDokumen == 3)) {
-                let count = {{ isset($maxDocument) ? $maxDocument : 3 }};
+            let count = 0;
+            if ((('{{ isset($asset) }}') || ('{{ $method }}' == 'PUT')) && (iterDokumen ==
+                    {{ $jenis_aset == 'aset_bergerak' ? 3 : 1 }})) {
+                if ('{{ isset($maxDocument) }}') {
+                    count = {{ $maxDocument ?? 0 }}
+                } else {
+                    if (`{{ $jenis_aset == 'aset_bergerak' }}`) {
+                        count = 3
+                    } else {
+                        count = 1
+                    }
+
+                }
                 iterDokumen = count + 1;
             }
             $('.col-add-dokumen').remove();
@@ -696,7 +721,7 @@
             if ('{{ isset($aset) }}') {
                 data.append('id', '{{ isset($aset) ?? $aset->id }}')
             }
-            validation(formData)
+            // validation(formData)
 
             if ('{{ $method }}' == 'POST') {
                 var title = 'Simpan Data?'
@@ -811,7 +836,8 @@
                                         text: "Data berhasil disimpan!",
                                         icon: "success",
                                     }).then((value) => {
-                                        location.href = "{{ url()->previous() }}";
+                                        location.href =
+                                            "{{ url()->previous() }}";
                                     });
                                 }
                             } else {

@@ -1,7 +1,7 @@
 @extends('dashboard.layouts.main')
 
 @section('title')
-    Manajemen Aset Tidak Bergerak
+    Manajemen Aset Bergerak
 @endsection
 
 @push('style')
@@ -30,7 +30,7 @@
             <i class="flaticon-right-arrow"></i>
         </li>
         <li class="nav-item">
-            <span>Tambah</span>
+            <span>{{ $aset->ruangan ? 'Pindahkan Aset' : 'Tentukan Ruangan' }}</span>
         </li>
     </ul>
 @endsection
@@ -41,7 +41,10 @@
             <div class="card">
                 <div class="card-header">
                     <div class="card-head-row">
-                        <div class="card-title">Tambah Aset Tidak Bergerak</div>
+                        <div class="card-title">
+                            {{ $aset->ruangan ? 'Pindahkan Aset' : 'Tentukan Ruangan' }} | <span class="fw-bold">
+                                {{ $aset->nama_barang }}</span>
+                        </div>
                         <div class="card-tools">
                             <ul class="nav nav-pills nav-secondary nav-pills-no-bd nav-sm" id="pills-tab" role="tablist">
                                 <li class="nav-item submenu">
@@ -55,13 +58,13 @@
                         </div>
                     </div>
                 </div>
-                @component('dashboard.components.forms.utama.manajemenAset')
-                    @slot('action', url('duplikat-aset-tidak-bergerak'))
-                    @slot('jenis_aset', 'aset_tidak_bergerak')
-                    @slot('aset', $aset)
+                @component('dashboard.components.forms.utama.asetTidakBergerak.ruanganAset')
+                    @slot('action', url('tentukan-ruangan-aset/' . $aset->id))
                     @slot('method', 'POST')
+                    @slot('aset', $aset)
+                    @slot('ruangan', $ruangan)
+                    @slot('maxDocument', $aset->fileUploadDokumen->max('urutan'))
                 @endcomponent
-
             </div>
         </div>
     </div>

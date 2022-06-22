@@ -31,7 +31,7 @@ class CreateAsetTidakBergeraksTable extends Migration
             $table->string('harga_barang');
             // $table->string('nomor_polisi');
             $table->text('keterangan')->nullable();
-            $table->uuid('pegawai_id')->nullable();
+            $table->uuid('ruangan_id')->nullable();
             $table->string('status')->default('Baru');
             $table->uuid('created_by');
             $table->uuid('updated_by');

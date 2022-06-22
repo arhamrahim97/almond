@@ -824,11 +824,11 @@
                         columns: ':visible'
                     }
                 },
-                {
-                    extend: 'colvis',
-                    className: 'btn btn-sm btn-light-success px-2 btn-export-table d-inline ml-3 font-weight',
-                    text: '<i class="bi bi-eye-fill"></i> Tampil/Sembunyi Kolom',
-                }
+                // {
+                //     extend: 'colvis',
+                //     className: 'btn btn-sm btn-light-success px-2 btn-export-table d-inline ml-3 font-weight',
+                //     text: '<i class="bi bi-eye-fill"></i> Tampil/Sembunyi Kolom',
+                // }
             ],
             lengthMenu: [
                 [10, 25, 50, -1],

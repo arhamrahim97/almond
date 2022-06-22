@@ -69,7 +69,7 @@
                                         <th>Nama / Jenis Barang</th>
                                         {{-- <th>Jumlah Barang</th> --}}
                                         <th>Status</th>
-                                        <th>Lokasi Aset</th>
+                                        <th>Ruangan Aset</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
@@ -396,7 +396,7 @@
             disabledCloseModal()
             $.ajax({
                 type: "GET",
-                url: "{{ url('manajemen-aset-bergerak') }}" + '/' + id,
+                url: "{{ url('manajemen-aset-tidak-bergerak') }}" + '/' + id,
                 success: function(data) {
                     $('#modal-lihat').modal('show');
                     $('#td-kategori').text(data.kategori)
@@ -428,7 +428,7 @@
                     if (data.jumlah_foto_ != 0) {
                         $('#foto-aset-bergerak').removeClass('d-none')
                         $('#foto-aset-bergerak').html('')
-                        $.each(data.foto_aset_bergerak_, function(index, value) {
+                        $.each(data.foto_aset_tidak_bergerak_, function(index, value) {
                             $('#foto-aset-bergerak').append(`
                             <div class="col-lg-6">
                                 <img src="${value}" class="img-fluid card-img-top rounded mb-3" alt="">
@@ -452,6 +452,15 @@
                         `)
                     }
 
+                    if (data.ruangan_) {
+                        $('#dokumen-aset-bergerak').append(`
+                            <tr id="tr-ruangan">
+                                <td>Ruangan</td>
+                                <td class="text-right fw-bold">` + data.ruangan_ + `</td>
+                            </tr>
+                        `)
+                    }
+
                     $('#tr-jumlah-dokumen').remove()
                     if (data.jumlah_dokumen_) {
                         $('#dokumen-aset-bergerak').append(`
@@ -470,6 +479,17 @@
                         $('#dokumen-aset-bergerak').append(`
                             <tr class="tr-aset-dokumen">
                                 <td>` + value.deskripsi + ` <br> ` + value.pegawai + `</td>
+                                <td class="text-right td-modal fw-bold" id="td-jumlah-dokumen">
+                                    <a href="` + value.nama_file + `" target="_blank" class="badge badge-primary shadow">Lihat</a>
+                                </td>
+                            </tr>
+                            `)
+                    })
+
+                    $.each(data.dokumen_aset_tidak_bergerak_, function(index, value) {
+                        $('#dokumen-aset-bergerak').append(`
+                            <tr class="tr-aset-dokumen">
+                                <td>` + value.deskripsi + ` <br> ` + value.ruangan + `</td>
                                 <td class="text-right td-modal fw-bold" id="td-jumlah-dokumen">
                                     <a href="` + value.nama_file + `" target="_blank" class="badge badge-primary shadow">Lihat</a>
                                 </td>
@@ -824,11 +844,11 @@
                         columns: ':visible'
                     }
                 },
-                {
-                    extend: 'colvis',
-                    className: 'btn btn-sm btn-light-success px-2 btn-export-table d-inline ml-3 font-weight',
-                    text: '<i class="bi bi-eye-fill"></i> Tampil/Sembunyi Kolom',
-                }
+                // {
+                //     extend: 'colvis',
+                //     className: 'btn btn-sm btn-light-success px-2 btn-export-table d-inline ml-3 font-weight',
+                //     text: '<i class="bi bi-eye-fill"></i> Tampil/Sembunyi Kolom',
+                // }
             ],
             lengthMenu: [
                 [10, 25, 50, -1],
@@ -877,8 +897,8 @@
                     className: 'text-center',
                 },
                 {
-                    data: 'pegawai',
-                    name: 'pegawai',
+                    data: 'ruangan',
+                    name: 'ruangan',
                     className: 'text-center',
                 },
 
@@ -916,7 +936,7 @@
                 if (result) {
                     $.ajax({
                         type: 'DELETE',
-                        url: "{{ url('manajemen-aset-bergerak') }}" + '/' + id,
+                        url: "{{ url('manajemen-aset-tidak-bergerak') }}" + '/' + id,
                         data: {
                             _token: _token
                         },
@@ -972,7 +992,7 @@
                     if (result) {
                         $.ajax({
                             type: 'POST',
-                            url: "{{ url('manajemen-aset-bergerak/delete-selected') }}",
+                            url: "{{ url('manajemen-aset-tidak-bergerak/delete-selected') }}",
                             data: {
                                 id: id,
                                 _token: _token

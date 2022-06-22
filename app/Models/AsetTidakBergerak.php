@@ -37,9 +37,9 @@ class AsetTidakBergerak extends Model
         return $this->hasMany(FileUpload::class, 'another_id')->where('jenis_file', 'Dokumen')->orderBy('urutan', 'asc');
     }
 
-    public function pegawai()
+    public function ruangan()
     {
-        return $this->belongsTo(Pegawai::class, 'pegawai_id')->withTrashed();
+        return $this->belongsTo(Ruangan::class, 'ruangan_id')->withTrashed();
     }
 
     public function createdBy()

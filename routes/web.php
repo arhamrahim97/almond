@@ -47,8 +47,8 @@ Route::group(['middleware' => 'auth'], function () {
     # Start: Aset Bergerak
     Route::resource('/manajemen-aset-bergerak', ManajemenAsetBergerakController::class);
     Route::get('/tentukan-aset-pegawai/{manajemenAsetBergerak}', [ManajemenAsetBergerakController::class, 'tentukanPegawai']);
-    Route::get('/ubah-aset-pegawai/{manajemenAsetBergerak}', [ManajemenAsetBergerakController::class, 'tentukanPegawai']);
     Route::post('/tentukan-aset-pegawai/{manajemenAsetBergerak}', [ManajemenAsetBergerakController::class, 'tentukanPegawaiStore']);
+    Route::get('/ubah-aset-pegawai/{manajemenAsetBergerak}', [ManajemenAsetBergerakController::class, 'tentukanPegawai']);
     Route::get('/duplikat-aset-bergerak/{manajemenAsetBergerak}', [ManajemenAsetBergerakController::class, 'getDuplikatAsetBergerak'])->name('getDuplikatAsetBergerak');
     Route::post('/duplikat-aset-bergerak', [ManajemenAsetBergerakController::class, 'duplikatAsetBergerak'])->name('duplikatAsetBergerak');
     Route::post('/manajemen-aset-bergerak/delete-selected', [ManajemenAsetBergerakController::class, 'deleteSelected']);
@@ -63,6 +63,18 @@ Route::group(['middleware' => 'auth'], function () {
 
     # Start: Aset Tidak Bergerak
     Route::resource('/manajemen-aset-tidak-bergerak', ManajemenAsetTidakBergerakController::class);
+    Route::get('/tentukan-ruangan-aset/{manajemenAsetTidakBergerak}', [ManajemenAsetTidakBergerakController::class, 'tentukanRuangan']);
+    Route::post('/tentukan-ruangan-aset/{manajemenAsetTidakBergerak}', [ManajemenAsetTidakBergerakController::class, 'tentukanRuanganStore']);
+    Route::get('/ubah-ruangan-aset/{manajemenAsetTidakBergerak}', [ManajemenAsetTidakBergerakController::class, 'tentukanRuangan']);
+    Route::post('/manajemen-aset-tidak-bergerak/delete-selected', [ManajemenAsetTidakBergerakController::class, 'deleteSelected']);
+
+
+
+
+    Route::get('/duplikat-aset-tidak-bergerak/{manajemenAsetTidakBergerak}', [ManajemenAsetTidakBergerakController::class, 'getDuplikatAsetTidakBergerak'])->name('getDuplikatAsetTidakBergerak');
+    Route::post('/duplikat-aset-tidak-bergerak', [ManajemenAsetTidakBergerakController::class, 'duplikatAsetTidakBergerak'])->name('duplikatAsetTidakBergerak');
+
+
 
 
 
