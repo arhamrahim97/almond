@@ -33,7 +33,27 @@
                 </div>
                 <div class="card-body pb-0">
                     <div class="row">
-                        <div class="col-sm-6 col-md-12">
+                        <div class="col-sm-6 col-md-6">
+                            <div class="card card-stats card-round">
+                                <div class="card-body ">
+                                    <div class="row align-items-center">
+                                        <div class="col-icon">
+                                            <div class="icon-big text-center icon-success bubble-shadow-small">
+                                                <i class="flaticon-box-2"></i>
+                                            </div>
+                                        </div>
+                                        <div class="col col-stats ml-3 ml-sm-0">
+                                            <div class="numbers w-100">
+                                                <p class="card-category">Baru</p>
+                                                <h4 class="card-title">
+                                                    {{ $asetBergerakBaru }}</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-6">
                             <div class="card card-stats card-round">
                                 <div class="card-body ">
                                     <div class="row align-items-center">
@@ -43,16 +63,17 @@
                                             </div>
                                         </div>
                                         <div class="col col-stats ml-3 ml-sm-0">
-                                            <div class="numbers">
+                                            <div class="numbers w-100">
                                                 <p class="card-category">Digunakan</p>
-                                                <h4 class="card-title">100</h4>
+                                                <h4 class="card-title">
+                                                    {{ $asetBergerakDigunakan }}</h4>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-6 col-md-12">
+                        <div class="col-sm-6 col-md-6">
                             <div class="card card-stats card-round">
                                 <div class="card-body">
                                     <div class="row align-items-center">
@@ -62,16 +83,16 @@
                                             </div>
                                         </div>
                                         <div class="col col-stats ml-3 ml-sm-0">
-                                            <div class="numbers">
+                                            <div class="numbers w-100">
                                                 <p class="card-category">Diperbaiki</p>
-                                                <h4 class="card-title">5</h4>
+                                                <h4 class="card-title">{{ $asetBergerakDiperbaiki }}</h4>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-6 col-md-12">
+                        <div class="col-sm-6 col-md-6">
                             <div class="card card-stats card-round">
                                 <div class="card-body">
                                     <div class="row align-items-center">
@@ -81,28 +102,130 @@
                                             </div>
                                         </div>
                                         <div class="col col-stats ml-3 ml-sm-0">
-                                            <div class="numbers">
+                                            <div class="numbers w-100">
                                                 <p class="card-category">Rusak</p>
-                                                <h4 class="card-title">3</h4>
+                                                <h4 class="card-title">{{ $asetBergerakRusak }}</h4>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-6 col-md-12">
+                        <div class="col-sm-6 col-md-6">
                             <div class="card card-stats card-round">
                                 <div class="card-body">
                                     <div class="row align-items-center">
                                         <div class="col-icon">
                                             <div class="icon-big text-center icon-info bubble-shadow-small">
+                                                <i class="flaticon-search-1"></i>
+                                            </div>
+                                        </div>
+                                        <div class="col col-stats ml-3 ml-sm-0">
+                                            <div class="numbers w-100">
+                                                <p class="card-category">Hilang</p>
+                                                <h4 class="card-title">{{ $asetBergerakHilang }}</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-6">
+                            <div class="card card-stats card-round">
+                                <div class="card-body">
+                                    <div class="row align-items-center">
+                                        <div class="col-icon">
+                                            <div class="icon-big text-center icon-primary bubble-shadow-small">
+                                                <i class="flaticon-repeat"></i>
+                                            </div>
+                                        </div>
+                                        <div class="col col-stats ml-3 ml-sm-0">
+                                            <div class="numbers w-100">
+                                                <p class="card-category">Pengganti</p>
+                                                <h4 class="card-title">{{ $asetBergerakPengganti }}</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-6">
+                            <div class="card card-stats card-round">
+                                <div class="card-body">
+                                    <div class="row align-items-center">
+                                        <div class="col-icon">
+                                            <div class="icon-big text-center bubble-shadow-small text-white"
+                                                style="background: #BF8B67 !important; border-radius: 5px !important;">
+                                                <i
+                                                    class="
+                                                flaticon-box
+                                                "></i>
+                                            </div>
+                                        </div>
+                                        <div class="col col-stats ml-3 ml-sm-0">
+                                            <div class="numbers w-100">
+                                                <p class="card-category">Dihibahkan</p>
+                                                <h4 class="card-title">{{ $asetBergerakDihibahkan }}</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-6">
+                            <div class="card card-stats card-round">
+                                <div class="card-body">
+                                    <div class="row align-items-center">
+                                        <div class="col-icon">
+                                            <div class="icon-big text-center bubble-shadow-small text-white"
+                                                style="background: #A45D5D !important; border-radius: 5px !important;">
+                                                <i class="flaticon-coins"></i>
+                                            </div>
+                                        </div>
+                                        <div class="col col-stats ml-3 ml-sm-0">
+                                            <div class="numbers w-100">
+                                                <p class="card-category">Dijual</p>
+                                                <h4 class="card-title">{{ $asetBergerakDijual }}</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-6">
+                            <div class="card card-stats card-round">
+                                <div class="card-body">
+                                    <div class="row align-items-center">
+                                        <div class="col-icon">
+                                            <div class="icon-big text-center icon-info bubble-shadow-small text-white"
+                                                style="background: #534E52 !important; border-radius: 5px !important;">
                                                 <i class="flaticon-interface-5"></i>
                                             </div>
                                         </div>
                                         <div class="col col-stats ml-3 ml-sm-0">
-                                            <div class="numbers">
-                                                <p class="card-category">Dibuang</p>
-                                                <h4 class="card-title">2</h4>
+                                            <div class="numbers w-100">
+                                                <p class="card-category">Dimusnahkan</p>
+                                                <h4 class="card-title">{{ $asetBergerakDimusnahkan }}</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-6">
+                            <div class="card card-stats card-round">
+                                <div class="card-body">
+                                    <div class="row align-items-center">
+                                        <div class="col-icon">
+                                            <div class="icon-big text-center icon-info bubble-shadow-small text-white"
+                                                style="background: #C24914 !important; border-radius: 5px !important;">
+                                                <i class="flaticon-technology"></i>
+                                            </div>
+                                        </div>
+                                        <div class="col col-stats ml-3 ml-sm-0">
+                                            <div class="numbers w-100">
+                                                <p class="card-category">Total</p>
+                                                <h4 class="card-title">{{ $asetBergerakTotal }}</h4>
                                             </div>
                                         </div>
                                     </div>
@@ -120,7 +243,27 @@
                 </div>
                 <div class="card-body pb-0">
                     <div class="row">
-                        <div class="col-sm-6 col-md-12">
+                        <div class="col-sm-6 col-md-6">
+                            <div class="card card-stats card-round">
+                                <div class="card-body ">
+                                    <div class="row align-items-center">
+                                        <div class="col-icon">
+                                            <div class="icon-big text-center icon-success bubble-shadow-small">
+                                                <i class="flaticon-box-2"></i>
+                                            </div>
+                                        </div>
+                                        <div class="col col-stats ml-3 ml-sm-0">
+                                            <div class="numbers w-100">
+                                                <p class="card-category">Baru</p>
+                                                <h4 class="card-title">
+                                                    {{ $asetTidakBergerakBaru }}</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-6">
                             <div class="card card-stats card-round">
                                 <div class="card-body ">
                                     <div class="row align-items-center">
@@ -130,16 +273,17 @@
                                             </div>
                                         </div>
                                         <div class="col col-stats ml-3 ml-sm-0">
-                                            <div class="numbers">
+                                            <div class="numbers w-100">
                                                 <p class="card-category">Digunakan</p>
-                                                <h4 class="card-title">100</h4>
+                                                <h4 class="card-title">
+                                                    {{ $asetTidakBergerakDigunakan }}</h4>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-6 col-md-12">
+                        <div class="col-sm-6 col-md-6">
                             <div class="card card-stats card-round">
                                 <div class="card-body">
                                     <div class="row align-items-center">
@@ -149,16 +293,16 @@
                                             </div>
                                         </div>
                                         <div class="col col-stats ml-3 ml-sm-0">
-                                            <div class="numbers">
+                                            <div class="numbers w-100">
                                                 <p class="card-category">Diperbaiki</p>
-                                                <h4 class="card-title">5</h4>
+                                                <h4 class="card-title">{{ $asetTidakBergerakDiperbaiki }}</h4>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-6 col-md-12">
+                        <div class="col-sm-6 col-md-6">
                             <div class="card card-stats card-round">
                                 <div class="card-body">
                                     <div class="row align-items-center">
@@ -168,28 +312,130 @@
                                             </div>
                                         </div>
                                         <div class="col col-stats ml-3 ml-sm-0">
-                                            <div class="numbers">
+                                            <div class="numbers w-100">
                                                 <p class="card-category">Rusak</p>
-                                                <h4 class="card-title">3</h4>
+                                                <h4 class="card-title">{{ $asetTidakBergerakRusak }}</h4>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-6 col-md-12">
+                        <div class="col-sm-6 col-md-6">
                             <div class="card card-stats card-round">
                                 <div class="card-body">
                                     <div class="row align-items-center">
                                         <div class="col-icon">
                                             <div class="icon-big text-center icon-info bubble-shadow-small">
+                                                <i class="flaticon-search-1"></i>
+                                            </div>
+                                        </div>
+                                        <div class="col col-stats ml-3 ml-sm-0">
+                                            <div class="numbers w-100">
+                                                <p class="card-category">Hilang</p>
+                                                <h4 class="card-title">{{ $asetTidakBergerakHilang }}</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-6">
+                            <div class="card card-stats card-round">
+                                <div class="card-body">
+                                    <div class="row align-items-center">
+                                        <div class="col-icon">
+                                            <div class="icon-big text-center icon-primary bubble-shadow-small">
+                                                <i class="flaticon-repeat"></i>
+                                            </div>
+                                        </div>
+                                        <div class="col col-stats ml-3 ml-sm-0">
+                                            <div class="numbers w-100">
+                                                <p class="card-category">Pengganti</p>
+                                                <h4 class="card-title">{{ $asetTidakBergerakPengganti }}</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-6">
+                            <div class="card card-stats card-round">
+                                <div class="card-body">
+                                    <div class="row align-items-center">
+                                        <div class="col-icon">
+                                            <div class="icon-big text-center bubble-shadow-small text-white"
+                                                style="background: #BF8B67 !important; border-radius: 5px !important;">
+                                                <i
+                                                    class="
+                                                flaticon-box
+                                                "></i>
+                                            </div>
+                                        </div>
+                                        <div class="col col-stats ml-3 ml-sm-0">
+                                            <div class="numbers w-100">
+                                                <p class="card-category">Dihibahkan</p>
+                                                <h4 class="card-title">{{ $asetTidakBergerakDihibahkan }}</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-6">
+                            <div class="card card-stats card-round">
+                                <div class="card-body">
+                                    <div class="row align-items-center">
+                                        <div class="col-icon">
+                                            <div class="icon-big text-center bubble-shadow-small text-white"
+                                                style="background: #A45D5D !important; border-radius: 5px !important;">
+                                                <i class="flaticon-coins"></i>
+                                            </div>
+                                        </div>
+                                        <div class="col col-stats ml-3 ml-sm-0">
+                                            <div class="numbers w-100">
+                                                <p class="card-category">Dijual</p>
+                                                <h4 class="card-title">{{ $asetTidakBergerakDijual }}</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-6">
+                            <div class="card card-stats card-round">
+                                <div class="card-body">
+                                    <div class="row align-items-center">
+                                        <div class="col-icon">
+                                            <div class="icon-big text-center icon-info bubble-shadow-small text-white"
+                                                style="background: #534E52 !important; border-radius: 5px !important;">
                                                 <i class="flaticon-interface-5"></i>
                                             </div>
                                         </div>
                                         <div class="col col-stats ml-3 ml-sm-0">
-                                            <div class="numbers">
-                                                <p class="card-category">Dibuang</p>
-                                                <h4 class="card-title">2</h4>
+                                            <div class="numbers w-100">
+                                                <p class="card-category">Dimusnahkan</p>
+                                                <h4 class="card-title">{{ $asetTidakBergerakDimusnahkan }}</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-6">
+                            <div class="card card-stats card-round">
+                                <div class="card-body">
+                                    <div class="row align-items-center">
+                                        <div class="col-icon">
+                                            <div class="icon-big text-center icon-info bubble-shadow-small text-white"
+                                                style="background: #C24914 !important; border-radius: 5px !important;">
+                                                <i class="flaticon-technology"></i>
+                                            </div>
+                                        </div>
+                                        <div class="col col-stats ml-3 ml-sm-0">
+                                            <div class="numbers w-100">
+                                                <p class="card-category">Total</p>
+                                                <h4 class="card-title">{{ $asetTidakBergerakTotal }}</h4>
                                             </div>
                                         </div>
                                     </div>

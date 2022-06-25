@@ -10,6 +10,7 @@ use Illuminate\Validation\Rule;
 use App\Models\AsetTidakBergerak;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Redirect;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
 
@@ -24,6 +25,36 @@ class ManajemenAsetTidakBergerakController extends Controller
     {
         if ($request->ajax()) {
             $data = AsetTidakBergerak::with('aset', 'ruangan', 'fileUploadGambar')->latest();
+
+            // filter
+            $data->where(function ($query) use ($request) {
+                if ($request->keadaanBarang) {
+                    $query->where('keadaan_barang', $request->keadaanBarang);
+                }
+
+                if ($request->status) {
+                    $query->where('status', $request->status);
+                }
+
+                if ($request->ruangan) {
+                    if ($request->ruangan == 'NULL') {
+                        $query->whereDoesntHave('ruangan');
+                    } else {
+                        $query->whereHas('ruangan', function ($query) use ($request) {
+                            $query->where('id', 'like', '%' . $request->ruangan . '%');
+                        });
+                    }
+                }
+            });
+
+            $data->where(function ($query) use ($request) {
+                if ($request->search) {
+                    $query->where('nama_barang', 'like', '%' . $request->search . '%');
+                    $query->orWhere('kode_barang', 'like', '%' . $request->search . '%');
+                    $query->orWhere('register', 'like', '%' . $request->search . '%');
+                }
+            });
+
             return DataTables::of($data)
                 ->addIndexColumn()
 
@@ -79,21 +110,23 @@ class ManajemenAsetTidakBergerakController extends Controller
                     }
                 })
 
-                ->addColumn('created_by', function ($row) {
-                    return $row->createdBy->nama_lengkap;
-                })
-
-                ->addColumn('updated_by', function ($row) {
-                    return $row->updatedBy->nama_lengkap;
+                ->addColumn('keadaan_barang', function ($row) {
+                    if ($row->keadaan_barang == 'Baik') {
+                        return '<span class="badge badge-count text-success fw-bold">Baik</span>';
+                    } else if ($row->keadaan_barang == 'Kurang Baik') {
+                        return '<span class="badge badge-count text-warning fw-bold">Kurang Baik</span>';
+                    } else if ($row->keadaan_barang == 'Rusak Berat') {
+                        return '<span class="badge badge-count text-danger fw-bold">Rusak Berat</span>';
+                    }
                 })
 
                 ->addColumn('action', function ($row) {
                     $actionBtn = '<div class="text-center justify-content-center text-white">';
                     if ($row->ruangan) {
-                        $actionBtn .= '<a href="' . url('ubah-ruangan-aset', $row->id) . '" id="btn-edit" class="btn btn-secondary btn-sm me-1 text-white shadow" data-toggle="tooltip" data-placement="top" title="Pindahkan Aset/Ubah Ruangan" value="' . $row->id . '" data-toggle="modal" data-target="#exampleModalCenter"><i class="fas fa-map-marker-alt"></i></a> ';
+                        $actionBtn .= '<a href="' . url('ubah-ruangan-aset', $row->id) . '" id="btn-edit" class="btn btn-secondary btn-sm me-1 text-white shadow" data-toggle="tooltip" data-placement="top" title="Pindahkan Aset/Ubah Ruangan" value="' . $row->id . '" data-toggle="modal" data-target="#exampleModalCenter"><i class="fas fa-share"></i></a> ';
                     } else {
                         if (!in_array($row->status, ['Dihibahkan', 'Dijual', 'Dimusnahkan'])) {
-                            $actionBtn .= '<a href="' . url('tentukan-ruangan-aset', $row->id) . '" id="btn-edit" class="btn btn-success btn-sm me-1 text-white shadow" data-toggle="tooltip" data-placement="top" title="Tentukan Ruangan Aset" value="' . $row->id . '" data-toggle="modal" data-target="#exampleModalCenter"><i class="fas fa-map-marker-alt"></i></a> ';
+                            $actionBtn .= '<a href="' . url('tentukan-ruangan-aset', $row->id) . '" id="btn-edit" class="btn btn-success btn-sm me-1 text-white shadow" data-toggle="tooltip" data-placement="top" title="Tentukan Ruangan Aset" value="' . $row->id . '" data-toggle="modal" data-target="#exampleModalCenter"><i class="fas fa-map-pin"></i></a> ';
                         }
                     }
                     $actionBtn .= '<button id="btn-lihat" class="btn btn-primary btn-sm mr-1 text-white shadow btn-lihat" data-toggle="tooltip" data-placement="top" title="Lihat" value="' . $row->id . '" data-button="lihat"><i class="fas fa-eye"></i></button>';
@@ -113,11 +146,14 @@ class ManajemenAsetTidakBergerakController extends Controller
                 ->rawColumns([
                     'action',
                     'ruangan',
+                    'keadaan_barang',
                     'status',
                 ])
                 ->make(true);
         }
-        return view('dashboard.pages.utama.asetTidakBergerak.manajemenAset.index');
+
+        $ruangan = Ruangan::whereHas('asetTidakBergerak')->latest()->get();
+        return view('dashboard.pages.utama.asetTidakBergerak.manajemenAset.index', compact('ruangan'));
     }
 
     /**
@@ -270,6 +306,7 @@ class ManajemenAsetTidakBergerakController extends Controller
     public function tentukanRuangan(AsetTidakBergerak $manajemenAsetTidakBergerak)
     {
         $data = [
+            'metode' => 'satu_aset',
             'aset' => $manajemenAsetTidakBergerak,
             'ruangan' => Ruangan::latest()->get(),
         ];
@@ -803,5 +840,179 @@ class ManajemenAsetTidakBergerakController extends Controller
             $asetTidakBergerak->delete();
         }
         return response()->json(['success' => 'Data berhasil dihapus']);
+    }
+
+    public function tentukanAsetSelected(Request $request)
+    {
+        $asetTidakBergerak = AsetTidakBergerak::with('fileUploadGambar', 'fileUploadDokumen')->whereIn('id', $request->id)->get();
+        if ($request->purpose == 'penentuan-ruangan') {
+            foreach ($asetTidakBergerak as $row) {
+                if ($row->ruangan || in_array($row->status, ['Dijual', 'Dihibahkan', 'Dimusnahkan'])) {
+                    return 'ada_aset_yang_telah_memiliki_ruangan';
+                }
+            }
+        } else {
+            foreach ($asetTidakBergerak as $row) {
+                if (!$row->ruangan || in_array($row->status, ['Dijual', 'Dihibahkan', 'Dimusnahkan'])) {
+                    return 'ada_aset_yang_belum_memiliki_ruangan';
+                }
+            }
+        }
+
+        $data = [
+            'metode' => 'beberapa_aset',
+            'aset' => $asetTidakBergerak,
+            'ruangan' => Ruangan::latest()->get(),
+        ];
+
+        return $data;
+    }
+
+    public function tentukanRuanganBeberapaAset(Request $request)
+    {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'ruangan' => 'required',
+            ],
+            [
+                'ruangan.required' => 'Ruangan tidak boleh kosong',
+            ]
+        );
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()]);
+        }
+
+        if ($request->nama_dokumen != null) {
+            $countFileDokumen = count($request->file_dokumen ?? []);
+            $countNamaDokumen = count($request->nama_dokumen);
+
+            if ($countFileDokumen == $countNamaDokumen) {
+                if (in_array(null, $request->nama_dokumen)) {
+                    return 'nama_dokumen_kosong';
+                }
+            } else {
+                return 'nama_dokumen_kosong_dan_file_dokumen_kosong';
+            }
+        }
+
+        $aset_id = explode(',', $request->list_id);
+        foreach ($aset_id as $id) {
+            $aset = AsetTidakBergerak::find($id);
+
+            $aset->update([
+                'ruangan_id' => $request->ruangan,
+                'status' => 'Digunakan'
+            ]);
+
+            $no_dokumen = $aset->fileUploadDokumen->max('urutan') + 1;
+            if ($request->nama_dokumen != null) {
+                for ($i = 0; $i < $countFileDokumen; $i++) {
+                    $namaFile = mt_rand() . '-' . $request->nama_dokumen[$i] . '-' . $aset->nama_barang . '-' .  $no_dokumen . '.' . $request->file_dokumen[$i]->getClientOriginalExtension();
+                    $request->file_dokumen[$i]->storeAs(
+                        'upload/dokumen_aset_tidak_bergerak/',
+                        $namaFile
+                    );
+
+                    $dataDokumen = [
+                        'another_id' => $aset->id,
+                        'nama_file' => $namaFile,
+                        'jenis_file' => 'Dokumen',
+                        'deskripsi' => $request->nama_dokumen[$i],
+                        'urutan' => $no_dokumen,
+                        'ruangan_id' => $request->ruangan,
+                    ];
+
+                    FileUpload::create($dataDokumen);
+                    $no_dokumen++;
+                }
+            }
+        }
+
+        return 'success';
+    }
+
+    public function ubahStatusAsetTidakBergerak(Request $request)
+    {
+        $aset = AsetTidakBergerak::find($request->id);
+
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'status' => 'required',
+            ],
+            [
+                'status.required' => 'Status tidak boleh kosong',
+            ]
+        );
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()]);
+        }
+
+
+        if (in_array($request->status, ['Hilang', 'Pengganti', 'Dihibahkan', 'Dijual', 'Dimusnahkan'])) {
+            if ($request->nama_dokumen != null) {
+                $countFileDokumen = count($request->file_dokumen ?? []);
+                $countNamaDokumen = count($request->nama_dokumen);
+
+                if ($countFileDokumen == $countNamaDokumen) {
+                    if (in_array(null, $request->nama_dokumen)) {
+                        return 'nama_dokumen_kosong';
+                    }
+                } else {
+                    return 'nama_dokumen_kosong_dan_file_dokumen_kosong';
+                }
+            }
+
+            $update = [
+                'status' => $request->status,
+            ];
+
+            if (in_array($request->status, ['Dihibahkan', 'Dijual', 'Dimusnahkan'])) {
+                $update['ruangan_id'] = null;
+            }
+
+            $aset->update($update);
+
+            $no_dokumen = $aset->fileUploadDokumen->max('urutan') + 1;
+            if ($request->nama_dokumen != null) {
+                for ($i = 0; $i < $countFileDokumen; $i++) {
+                    $namaFile = mt_rand() . '-' . $request->nama_dokumen[$i] . '-' . $aset->nama_barang . '-' .  $no_dokumen . '.' . $request->file_dokumen[$i]->getClientOriginalExtension();
+                    $request->file_dokumen[$i]->storeAs(
+                        'upload/dokumen_aset_tidak_bergerak/',
+                        $namaFile
+                    );
+
+                    $dataDokumen = [
+                        'another_id' => $aset->id,
+                        'nama_file' => $namaFile,
+                        'jenis_file' => 'Dokumen',
+                        'deskripsi' => $request->nama_dokumen[$i],
+                        'urutan' => $no_dokumen,
+                    ];
+
+                    if (in_array($request->status, ['Hilang', 'Pengganti'])) {
+                        $dataDokumen['ruangan_id'] = $aset->ruangan_id;
+                    }
+
+                    FileUpload::create($dataDokumen);
+                    $no_dokumen++;
+                }
+            }
+        } else {
+            $update = [
+                'status' => $request->status,
+            ];
+
+            if (in_array($request->status, ['Dihibahkan', 'Dijual', 'Dimusnahkan'])) {
+                $update['ruangan_id'] = null;
+            }
+
+            $aset->update($update);
+        }
+
+        return 'success';
     }
 }

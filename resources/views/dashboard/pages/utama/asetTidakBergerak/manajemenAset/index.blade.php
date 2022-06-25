@@ -39,9 +39,28 @@
                         <div class="card-tools">
                             <ul class="nav nav-pills nav-secondary nav-pills-no-bd nav-sm" id="pills-tab" role="tablist">
                                 <li class="nav-item submenu">
-                                    @component('dashboard.components.buttons.deletedSelected',
+                                    @component('dashboard.components.buttons.selected',
                                         [
                                             'id' => 'deleteSelected',
+                                            'icon' => '<i class="fas fa-trash"></i>',
+                                            'color' => 'danger',
+                                            'title' => 'Hapus yang dipilih',
+                                        ])
+                                    @endcomponent
+                                    @component('dashboard.components.buttons.selected',
+                                        [
+                                            'id' => 'perpindahanRuanganSelected',
+                                            'icon' => '<i class="fas fa-share"></i></a>',
+                                            'color' => 'secondary',
+                                            'title' => 'Pindahkan Aset yang dipilih',
+                                        ])
+                                    @endcomponent
+                                    @component('dashboard.components.buttons.selected',
+                                        [
+                                            'id' => 'tentukanRuanganSelected',
+                                            'icon' => '<i class="fas fa-map-pin"></i>',
+                                            'color' => 'success',
+                                            'title' => 'Tentukan Ruangan Aset yang dipilih',
                                         ])
                                     @endcomponent
                                     @component('dashboard.components.buttons.add',
@@ -55,6 +74,60 @@
                     </div>
                 </div>
                 <div class="card-body">
+                    <div class="row mb-4">
+                        <div class="col-lg-4">
+                            @component('dashboard.components.formElements.select',
+                                [
+                                    'label' => 'Keadaan Barang',
+                                    'id' => 'keadaan-barang-filter',
+                                    'name' => 'keadaan_barang_filter',
+                                    'class' => 'select2 filter',
+                                ])
+                                @slot('options')
+                                    <option value="Baik">Baik</option>
+                                    <option value="Kurang Baik">Kurang Baik</option>
+                                    <option value="Rusak Berat">Rusak Berat</option>
+                                @endslot
+                            @endcomponent
+                        </div>
+                        <div class="col-lg-4">
+                            @component('dashboard.components.formElements.select',
+                                [
+                                    'label' => 'Status',
+                                    'id' => 'status-filter',
+                                    'name' => 'status_filter',
+                                    'class' => 'select2 filter',
+                                ])
+                                @slot('options')
+                                    <option value="Baru">Baru</option>
+                                    <option value="Digunakan">Digunakan</option>
+                                    <option value="Diperbaiki">Diperbaiki</option>
+                                    <option value="Rusak">Rusak</option>
+                                    <option value="Hilang">Hilang</option>
+                                    <option value="Pengganti">Pengganti</option>
+                                    <option value="Dihibahkan">Dihibahkan</option>
+                                    <option value="Dijual">Dijual</option>
+                                    <option value="Dimusnahkan">Dimusnahkan</option>
+                                @endslot
+                            @endcomponent
+                        </div>
+                        <div class="col-lg-4">
+                            @component('dashboard.components.formElements.select',
+                                [
+                                    'label' => 'Ruangan',
+                                    'id' => 'ruangan-filter',
+                                    'name' => 'ruangan_filter',
+                                    'class' => 'select2 filter',
+                                ])
+                                @slot('options')
+                                    <option value="NULL">Belum Ditentukan / Tidak Ada</option>
+                                    @foreach ($ruangan as $item)
+                                        <option value="{{ $item->id }}">{{ $item->nama_ruangan }}</option>
+                                    @endforeach
+                                @endslot
+                            @endcomponent
+                        </div>
+                    </div>
                     <div class="row">
                         <div class="table-responsive">
                             <table class="table table-hover table-striped" id="{{ $id ?? 'dataTables' }}" cellspacing="0"
@@ -67,7 +140,7 @@
                                         <th>Kode Barang</th>
                                         <th>Register</th>
                                         <th>Nama / Jenis Barang</th>
-                                        {{-- <th>Jumlah Barang</th> --}}
+                                        {{-- <th>Keadaan Barang</th> --}}
                                         <th>Status</th>
                                         <th>Ruangan Aset</th>
                                         <th>Aksi</th>
@@ -378,6 +451,79 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal Tentukan Ruangan Aset-->
+    <div class="modal fade" id="modal-tentukan-ruangan-aset" tabindex="-1" role="dialog"
+        aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold" id="exampleModalLongTitle">Tentukan Ruangan Beberapa Aset</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body mx-2">
+                    <form method="POST" id="form-tentukan-ruangan-aset">
+                        @csrf
+                        <div class="row align-items-end">
+                            <div class="col-12 px-2 mb-2">
+                                <div class="form-group pt-0">
+                                    <label for="" class="mb-2">Aset yang dipilih</label>
+                                    <ul class="list-group list-group-bordered list" id="list-aset">
+                                    </ul>
+
+                                </div>
+
+                            </div>
+                            <div class="col-12 px-2 w-100">
+                                <div class="form-group pt-0 w-100">
+                                    <label for="exampleFormControlSelect1">Pilih Ruangan</label>
+                                    <select class="form-select select2 w-100 req" id="ruangan" name="ruangan"
+                                        data-label="Ruangan" style="width:100%">
+                                        <option value="">Pilih Salah Satu</option>
+
+                                    </select>
+                                    <span class="text-danger error-text ruangan-error"></span>
+                                </div>
+                            </div>
+                            <div class="col-12 px-2 w-100 mt-2" id="dokumen-pendukung">
+                                <div class="form-group pt-0 w-100">
+                                    <label for="exampleFormControlSelect1">Dokumen <span class="text-muted"
+                                            style="font-style: italic">(Optional)</span></label>
+                                    <div class="row" id="dokumen-aset-ruangan">
+                                        <div class="col-12 align-self-center col-add-dokumen-ruangan">
+                                            <div class="text-center text-muted" onclick="addDokumenRuangan()"
+                                                style="cursor: pointer">
+                                                <h1><i class="fas fa-plus-circle"></i></h1>
+                                                <h6>Tambah Dokumen</h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row justify-content-end">
+                            <div class="col-12 justify-content-end text-right">
+                                <button type="submit" class="btn btn-success" id="btn-submit-ruangan-aset"
+                                    value="">
+                                    <i class="fas fa-save"></i>
+                                    Simpan</button>
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <div class="col-lg col-sm-12 mb-1">
+                        <button type="button" class="btn btn-md btn-dark w-100" data-dismiss="modal"><i
+                                class="fas fa-times"></i>
+                            Tutup</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @push('script')
@@ -515,57 +661,57 @@
 
             if (status_aset == 'Baru' || status_aset == 'Digunakan') {
                 let option = `
-            <option value="Rusak">Rusak</option>
-            <option value="Diperbaiki">Diperbaiki</option>
-            <option value="Hilang">Hilang</option>
-            <option value="Pengganti">Pengganti</option>
-            <option value="Dihibahkan">Dihibahkan</option>
-            <option value="Dijual">Dijual</option>
-            <option value="Dimusnahkan">Dimusnahkan</option>
+                    <option value="Rusak">Rusak</option>
+                    <option value="Diperbaiki">Diperbaiki</option>
+                    <option value="Hilang">Hilang</option>
+                    <option value="Pengganti">Pengganti</option>
+                    <option value="Dihibahkan">Dihibahkan</option>
+                    <option value="Dijual">Dijual</option>
+                    <option value="Dimusnahkan">Dimusnahkan</option>
             `
                 $('#status-aset').append(option)
             } else if (status_aset == "Diperbaiki") {
                 let option = `
-            <option value="Digunakan">Digunakan</option>
-            <option value="Rusak">Rusak</option>
-            <option value="Hilang">Hilang</option>
-            <option value="Pengganti">Pengganti</option>
-            <option value="Dihibahkan">Dihibahkan</option>
-            <option value="Dijual">Dijual</option>
-            <option value="Dimusnahkan">Dimusnahkan</option>
+                    <option value="Digunakan">Digunakan</option>
+                    <option value="Rusak">Rusak</option>
+                    <option value="Hilang">Hilang</option>
+                    <option value="Pengganti">Pengganti</option>
+                    <option value="Dihibahkan">Dihibahkan</option>
+                    <option value="Dijual">Dijual</option>
+                    <option value="Dimusnahkan">Dimusnahkan</option>
             `
                 $('#status-aset').append(option)
             } else if (status_aset == "Rusak") {
                 let option = `
-            <option value="Digunakan">Digunakan</option>
-            <option value="Diperbaiki">Diperbaiki</option>
-            <option value="Hilang">Hilang</option>
-            <option value="Pengganti">Pengganti</option>
-            <option value="Dihibahkan">Dihibahkan</option>
-            <option value="Dijual">Dijual</option>
-            <option value="Dimusnahkan">Dimusnahkan</option>
+                    <option value="Digunakan">Digunakan</option>
+                    <option value="Diperbaiki">Diperbaiki</option>
+                    <option value="Hilang">Hilang</option>
+                    <option value="Pengganti">Pengganti</option>
+                    <option value="Dihibahkan">Dihibahkan</option>
+                    <option value="Dijual">Dijual</option>
+                    <option value="Dimusnahkan">Dimusnahkan</option>
             `
                 $('#status-aset').append(option)
             } else if (status_aset == "Hilang") {
                 let option = `
-            <option value="Digunakan">Digunakan</option>
-            <option value="Diperbaiki">Diperbaiki</option>
-            <option value="Rusak">Rusak</option>
-            <option value="Pengganti">Pengganti</option>
-            <option value="Dihibahkan">Dihibahkan</option>
-            <option value="Dijual">Dijual</option>
-            <option value="Dimusnahkan">Dimusnahkan</option>
+                    <option value="Digunakan">Digunakan</option>
+                    <option value="Diperbaiki">Diperbaiki</option>
+                    <option value="Rusak">Rusak</option>
+                    <option value="Pengganti">Pengganti</option>
+                    <option value="Dihibahkan">Dihibahkan</option>
+                    <option value="Dijual">Dijual</option>
+                    <option value="Dimusnahkan">Dimusnahkan</option>
             `
                 $('#status-aset').append(option)
             } else if (status_aset == "Pengganti") {
                 let option = `
-            <option value="Digunakan">Digunakan</option>
-            <option value="Diperbaiki">Diperbaiki</option>
-            <option value="Rusak">Rusak</option>
-            <option value="Hilang">Hilang</option>
-            <option value="Dihibahkan">Dihibahkan</option>
-            <option value="Dijual">Dijual</option>
-            <option value="Dimusnahkan">Dimusnahkan</option>
+                    <option value="Digunakan">Digunakan</option>
+                    <option value="Diperbaiki">Diperbaiki</option>
+                    <option value="Rusak">Rusak</option>
+                    <option value="Hilang">Hilang</option>
+                    <option value="Dihibahkan">Dihibahkan</option>
+                    <option value="Dijual">Dijual</option>
+                    <option value="Dimusnahkan">Dimusnahkan</option>
             `
                 $('#status-aset').append(option)
             }
@@ -636,11 +782,6 @@
         let iterDokumen = 2;
 
         function addDokumen() {
-            if (('{{ isset($aset) && $aset->pegawai }}') && (iterDokumen == 2)) {
-                let count = {{ $maxDocument ?? '' }} + 1;
-                iterDokumen = count + 1;
-            }
-
             $('.col-add-dokumen').remove();
             $('#dokumen-aset').append(`
                 <div class="col-12 col-document" id="col-dokumen-` + iterDokumen + `">
@@ -715,11 +856,86 @@
             iterDokumen++;
         }
 
+        function addDokumenRuangan() {
+            $('.col-add-dokumen-ruangan').remove();
+            $('#dokumen-aset-ruangan').append(`
+                <div class="col-12 col-document" id="col-dokumen-` + iterDokumen + `">
+                    <div class="card box-upload mb-3" id="box-upload-` +
+                iterDokumen + `" class="box-upload">
+                        <div class="card-body pb-2">
+                            <div class="row">
+                                <div class="col-3 d-flex align-items-center justify-content-center">
+                                    <img src="{{ asset('assets/img/pdf.png') }}" alt="" width="70px">
+                                </div>
+                                <div class="col-9">
+                                    <div class="mb-3 mt-2">
+                                        <input type="hidden" name="nama_dokumen_` + iterDokumen +
+                `" value=""
+                                                            class="req nama_dokumen" data-label="Nama Dokumen" data-iter="` +
+                iterDokumen + `"
+                                                            id="nama_dokumen-hidden-` + iterDokumen +
+                `">
+                                                            <input type="text" class="form-control nama-dokumen" id="nama-dokumen-` +
+                iterDokumen +
+                `"
+                                                            name="nama_dokumen[]" placeholder="Masukkan Nama Dokumen" value="" data-iter="` +
+                iterDokumen +
+                `"  onkeyup="rmValNamaDokumen(` + iterDokumen +
+                `)">
+                                                            <p class="text-danger error-text nama_dokumen-error my-0" id="nama_dokumen-error-` +
+                iterDokumen +
+                `"></p>
+                                                            <p class="text-danger error-text nama_dokumen_` +
+                iterDokumen + `-error my-0"
+                                                                                id="nama_dokumen-error-` +
+                iterDokumen +
+                `"></p>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <input type="hidden" name="file_dokumen_` + iterDokumen +
+                `" value=""
+                                                            class="req file_dokumen" data-label="File Dokumen" data-iter="` +
+                iterDokumen + `"
+                                                            id="file_dokumen-hidden-` + iterDokumen +
+                `">
+                                        <input name="file_dokumen[]" class="form-control file-dokumen" type="file" id="file-dokumen-` +
+                iterDokumen + `"
+                                            multiple="true" data-iter="` + iterDokumen +
+                `" accept="application/pdf" onchange="rmValFileDokumen(` + iterDokumen + `)">
+                    <p class="text-danger error-text file_dokumen_` + iterDokumen + `-error my-0"
+                                                            id="file_dokumen-error-` + iterDokumen +
+                `"></p>
+                                        <p class="text-danger error-text file_dokumen-error my-0" id="file_dokumen-error-` +
+                iterDokumen + `"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button"
+                            class="btn btn-danger fw-bold card-footer bg-danger text-center p-0 delete-document"
+                            onclick="deleteDokumen(` + iterDokumen + `)"><i class="fas fa-trash-alt"></i>
+                            Hapus</button>
+                    </div>
+                    <p class="text-danger error-text dokumen-error my-0" id="dokumen-error-1"></p>
+                </div>
+                <div class="col-12 align-self-center col-add-dokumen-ruangan">
+                    <div class="text-center text-muted" onclick="addDokumenRuangan()" style="cursor: pointer">
+                        <h1><i class="fas fa-plus-circle"></i></h1>
+                        <h6>Tambah Dokumen</h6>
+                    </div>
+
+                </div>
+                    
+                `);
+            iterDokumen++;
+        }
+
         $('#form-ubah-status-aset').submit(function(e) {
             e.preventDefault();
             $('.error-text').text('')
-            var formData = $('.req').serializeArray()
-            // validation(formData)
+            var formData = $('#form-ubah-status-aset .req').serializeArray()
+            validation(formData)
             var data = new FormData(this)
             data.append('id', $('#btn-submit').val())
             swal({
@@ -731,7 +947,7 @@
                 if (result) {
                     $.ajax({
                         type: "POST",
-                        url: "{{ route('ubahStatusAsetBergerak') }}",
+                        url: "{{ route('ubahStatusAsetTidakBergerak') }}",
                         headers: {
                             'X-CSRF-TOKEN': '{{ csrf_token() }}'
                         },
@@ -826,6 +1042,10 @@
             });
         }
 
+        $('.select2').select2({
+            theme: "bootstrap"
+        })
+
         var table = $('#dataTables').DataTable({
             processing: true,
             serverSide: true,
@@ -834,7 +1054,7 @@
             buttons: [{
                     extend: 'excel',
                     className: 'btn btn-sm btn-light-success px-2 btn-export-table d-inline ml-3 font-weight',
-                    text: '<i class="bi bi-file-earmark-arrow-down"></i> Ekspor Data',
+                    text: '<i class="far fa-file-excel mr-1"></i> Ekspor Data',
                     exportOptions: {
                         modifier: {
                             order: 'index', // 'current', 'applied', 'index',  'original'
@@ -856,6 +1076,12 @@
             ],
             ajax: {
                 url: "{{ route('manajemen-aset-tidak-bergerak.index') }}",
+                data: function(d) {
+                    d.keadaanBarang = $('#keadaan-barang-filter').val();
+                    d.status = $('#status-filter').val();
+                    d.ruangan = $('#ruangan-filter').val();
+                    d.search = $('input[type="search"]').val();
+                }
             },
             columns: [{
                     data: 'checkData',
@@ -887,8 +1113,8 @@
                     name: 'nama_barang',
                 },
                 // {
-                //     data: 'jumlah_barang',
-                //     name: 'jumlah_barang',
+                //     data: 'keadaan_barang',
+                //     name: 'keadaan_barang',
                 //     className: 'text-center',
                 // },
                 {
@@ -922,6 +1148,10 @@
             //     },
             // ],
         });
+
+        $('.filter').change(function() {
+            table.draw();
+        })
 
         $(document).on('click', '.btn-delete', function() {
             let id = $(this).val();
@@ -966,6 +1196,274 @@
                 $('.checkData').prop('checked', false);
             }
         });
+
+
+        $('#tentukanRuanganSelected').click(function() {
+            var id = [];
+            var _token = "{{ csrf_token() }}";
+
+            $('#form-tentukan-ruangan-aset')[0].reset();
+            $("#ruangan option[value!='']").each(function() {
+                $(this).remove();
+            });
+            $('#ruangan').removeClass('is-invalid')
+            $('.error-text').text('')
+
+
+            $('.checkData:checked').each(function() {
+                id.push($(this).val());
+            });
+
+            if (id == '') {
+                swal({
+                    icon: 'error',
+                    title: 'Gagal!',
+                    text: 'Belum ada data yang dipilih!',
+                })
+            } else {
+                $.ajax({
+                    type: 'POST',
+                    url: "{{ url('manajemen-aset-tidak-bergerak/tentukan-ruangan-selected') }}",
+                    data: {
+                        id: id,
+                        purpose: 'penentuan-ruangan',
+                        _token: _token
+                    },
+                    success: function(response) {
+                        console.log(response);
+                        if (response == 'ada_aset_yang_telah_memiliki_ruangan') {
+                            swal({
+                                icon: 'error',
+                                title: 'Gagal!',
+                                text: 'Aset yang boleh dipilih hanyalah aset yang belum memiliki ruangan dan yang tidak berstatus Dihibahkan, Dijual, maupun Dimusnahkan.',
+                            })
+                        } else {
+                            let id_aset = [];
+                            $.each(response.ruangan, function(index, value) {
+                                $('#ruangan').append(`
+                                    <option value="${value.id}">${value.nama_ruangan}</option>
+                                    `)
+                            })
+
+                            $.each(response.aset, function(index, value) {
+                                $('#list-aset').append(`
+                                    <li class="list-group-item justify-content-between align-items-center list-aset py-2">
+                                        <div class="float-left">
+                                            <span class="name text-muted">${value.nama_barang}</span>
+                                            </span>
+                                        </div>
+                                        <div class="float-right">
+                                            <span class="name text-muted">${value.kode_barang} | ${value.register}</span>
+                                            </span>
+                                        </div>
+
+
+                                    </li>
+                                `)
+                                id_aset.push(value.id);
+
+                            })
+                            $('#modal-tentukan-ruangan-aset').modal({
+                                backdrop: 'static',
+                                keyboard: false
+                            });
+
+                            $('#btn-submit-ruangan-aset').attr('data-id', id_aset);
+
+                        }
+                    }
+                })
+
+            }
+
+        });
+
+        $('#perpindahanRuanganSelected').click(function() {
+            var id = [];
+            var _token = "{{ csrf_token() }}";
+
+            $('#form-tentukan-ruangan-aset')[0].reset();
+            $("#ruangan option[value!='']").each(function() {
+                $(this).remove();
+            });
+            $('#ruangan').removeClass('is-invalid')
+            $('.list-aset').remove();
+            $('.error-text').text('')
+
+
+            $('.checkData:checked').each(function() {
+                id.push($(this).val());
+            });
+
+            if (id == '') {
+                swal({
+                    icon: 'error',
+                    title: 'Gagal!',
+                    text: 'Belum ada data yang dipilih!',
+                })
+            } else {
+                $.ajax({
+                    type: 'POST',
+                    url: "{{ url('manajemen-aset-tidak-bergerak/tentukan-ruangan-selected') }}",
+                    data: {
+                        id: id,
+                        purpose: 'perpindahan-ruangan',
+                        _token: _token
+                    },
+                    success: function(response) {
+                        console.log(response);
+                        if (response == 'ada_aset_yang_belum_memiliki_ruangan') {
+                            swal({
+                                icon: 'error',
+                                title: 'Gagal!',
+                                text: 'Aset yang boleh dipilih hanyalah aset yang telah memiliki ruangan dan yang tidak berstatus Dihibahkan, Dijual, maupun Dimusnahkan.',
+                            })
+                        } else {
+                            let id_aset = [];
+                            $.each(response.ruangan, function(index, value) {
+                                $('#ruangan').append(`
+                                        <option value="${value.id}">${value.nama_ruangan}</option>
+                                        `)
+                            })
+
+                            $.each(response.aset, function(index, value) {
+                                $('#list-aset').append(`
+                                        <li class="list-group-item justify-content-between align-items-center list-aset py-2">
+                                            <div class="float-left">
+                                                <span class="name text-muted">${value.nama_barang}</span>
+                                                </span>
+                                            </div>
+                                            <div class="float-right">
+                                                <span class="name text-muted">${value.kode_barang} | ${value.register}</span>
+                                                </span>
+                                            </div>
+    
+    
+                                        </li>
+                                    `)
+                                id_aset.push(value.id);
+
+                            })
+                            $('#modal-tentukan-ruangan-aset').modal({
+                                backdrop: 'static',
+                                keyboard: false
+                            });
+
+                            $('#btn-submit-ruangan-aset').attr('data-id', id_aset);
+                        }
+                    }
+                })
+
+            }
+
+        });
+
+
+
+        $('#form-tentukan-ruangan-aset').submit(function(e) {
+            e.preventDefault();
+            $('.error-text').text('')
+            var formData = $('#form-tentukan-ruangan-aset .req').serializeArray()
+            validation(formData)
+            var data = new FormData(this)
+            data.append('list_id', $('#btn-submit-ruangan-aset').attr('data-id'))
+            swal({
+                title: 'Apakah Anda yakin?',
+                text: "Pindahkan aset keruangan yang dipilih?",
+                icon: "warning",
+                buttons: ["Batal", "Ya"],
+            }).then((result) => {
+                if (result) {
+                    $.ajax({
+                        type: "POST",
+                        url: "{{ route('tentukanRuanganBeberapaAset') }}",
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        data: data,
+                        cache: false,
+                        processData: false,
+                        contentType: false,
+                        success: function(response) {
+                            console.log(response)
+                            if ($.isEmptyObject(response.error)) {
+                                if (response == 'nama_dokumen_kosong') {
+                                    swal({
+                                        title: "Gagal!",
+                                        text: "Terdapat Nama Dokumen yang kosong.",
+                                        icon: "error",
+                                    })
+                                    $.each($('.nama-dokumen'), function(index, value) {
+                                        if ($(value).val() == '') {
+                                            $(value).addClass('is-invalid');
+                                            $('#nama_dokumen-error-' + $(value)
+                                                .data(
+                                                    'iter')).text(
+                                                'Nama Dokumen tidak boleh kosong.'
+                                            )
+                                        }
+                                    });
+                                }
+
+                                if (response ==
+                                    'nama_dokumen_kosong_dan_file_dokumen_kosong') {
+                                    swal({
+                                        title: "Gagal!",
+                                        text: "Terdapat Nama Dokumen dan File Dokumen yang kosong.",
+                                        icon: "error",
+                                    })
+                                    $.each($('.nama-dokumen'), function(index, value) {
+                                        if ($(value).val() == '') {
+                                            $(value).addClass('is-invalid');
+                                            $('#nama_dokumen-error-' + $(value)
+                                                .data(
+                                                    'iter')).text(
+                                                'Nama Dokumen tidak boleh kosong.'
+                                            )
+                                        }
+                                    });
+                                    $.each($('.file-dokumen'), function(index, value) {
+                                        if ($(value).val() == '') {
+                                            $(value).addClass('is-invalid');
+                                            $('#file_dokumen-error-' + $(value)
+                                                .data(
+                                                    'iter')).text(
+                                                'File Dokumen tidak boleh kosong.'
+                                            )
+                                        }
+                                    });
+                                }
+                                if (response == 'success') {
+                                    swal({
+                                        title: "Berhasil!",
+                                        text: "Status aset berhasil diubah.",
+                                        icon: "success",
+                                    }).then(function() {
+                                        $('#modal-ubah-status-aset').modal('hide');
+                                        location.reload();
+                                    });
+                                }
+                            } else {
+                                swal({
+                                    title: "Gagal!",
+                                    text: "Terjadi kesalahan, mohon periksa kembali data yang diinputkan.",
+                                    icon: "error",
+                                    button: "Ok",
+                                });
+                                printErrorMsg(response.error);
+                            }
+                        },
+                        error: function(response) {
+                            alert(response.responseJSON.message)
+                        },
+                    });
+                } else {
+                    swal("Status data batal diubah.", {
+                        icon: "error",
+                    });
+                }
+            })
+        })
 
         $('#deleteSelected').click(function() {
             var id = [];

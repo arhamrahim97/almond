@@ -27,16 +27,17 @@ class DatabaseSeeder extends Seeder
         Storage::deleteDirectory('/upload');
         Storage::makeDirectory('/upload');
 
-        // File::copyDirectory(
-        //     public_path('file_dummy'),
-        //     storage_path('app/public/upload')
-        // );
+        File::copyDirectory(
+            public_path('file_dummy'),
+            storage_path('app/public/upload')
+        );
 
         $this->call(JabatanStrukturalSeeder::class);
         $this->call(UserSeeder::class);
-        $this->call(RuanganSeeder::class);
         $this->call(PegawaiTableSeeder::class);
-        // $this->call(AsetBergerakTableSeeder::class);
-        // $this->call(FileUploadTableSeeder::class);
+        $this->call(AsetBergerakTableSeeder::class);
+        $this->call(FileUploadTableSeeder::class);
+        $this->call(AsetTidakBergerakTableSeeder::class);
+        $this->call(RuanganTableSeeder::class);
     }
 }

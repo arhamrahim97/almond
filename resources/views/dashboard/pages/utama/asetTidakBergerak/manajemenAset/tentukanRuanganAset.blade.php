@@ -1,7 +1,7 @@
 @extends('dashboard.layouts.main')
 
 @section('title')
-    Manajemen Aset Bergerak
+    Manajemen Aset Tidak Bergerak
 @endsection
 
 @push('style')
@@ -58,13 +58,16 @@
                         </div>
                     </div>
                 </div>
-                @component('dashboard.components.forms.utama.asetTidakBergerak.ruanganAset')
-                    @slot('action', url('tentukan-ruangan-aset/' . $aset->id))
-                    @slot('method', 'POST')
-                    @slot('aset', $aset)
-                    @slot('ruangan', $ruangan)
-                    @slot('maxDocument', $aset->fileUploadDokumen->max('urutan'))
-                @endcomponent
+                @if ($metode == 'satu_aset')
+                    @component('dashboard.components.forms.utama.asetTidakBergerak.ruanganAset')
+                        @slot('action', url('tentukan-ruangan-aset/' . $aset->id))
+                        @slot('method', 'POST')
+                        @slot('aset', $aset)
+                        @slot('ruangan', $ruangan)
+                        @slot('maxDocument', $aset->fileUploadDokumen->max('urutan'))
+                    @endcomponent
+                @else
+                @endif
             </div>
         </div>
     </div>

@@ -159,7 +159,7 @@
         $('#form').submit(function(e) {
             e.preventDefault()
             $('.error-text').html('')
-            var formData = $(this).serializeArray()
+            var formData = $('#form .req').serializeArray()
             var data = new FormData(this)
             validation(formData)
             if ('{{ $method }}' == 'POST') {

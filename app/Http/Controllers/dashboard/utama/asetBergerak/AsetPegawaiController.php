@@ -20,6 +20,7 @@ class AsetPegawaiController extends Controller
         $asetPegawaiAll = Pegawai::with('jabatanStruktural', 'asetBergerak')->whereHas('asetBergerak')->latest()->get();
         $asetPegawai = Pegawai::with('jabatanStruktural', 'asetBergerak')->whereHas('asetBergerak')->latest()->paginate(6);
         return view('dashboard.pages.utama.asetBergerak.asetPegawai.index', compact('asetPegawai', 'asetPegawaiAll'));
+        // return view('dashboard.pages.utama.asetTidakBergerak.ruanganAset.index');
     }
 
     /**

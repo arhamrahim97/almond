@@ -28,6 +28,36 @@ class ManajemenAsetBergerakController extends Controller
     {
         if ($request->ajax()) {
             $data = AsetBergerak::with('aset', 'pegawai', 'fileUploadGambar')->latest();
+
+            // filter
+            $data->where(function ($query) use ($request) {
+                if ($request->keadaanBarang) {
+                    $query->where('keadaan_barang', $request->keadaanBarang);
+                }
+
+                if ($request->status) {
+                    $query->where('status', $request->status);
+                }
+
+                if ($request->penganggungJawab) {
+                    if ($request->penganggungJawab == 'NULL') {
+                        $query->whereDoesntHave('pegawai');
+                    } else {
+                        $query->whereHas('pegawai', function ($query) use ($request) {
+                            $query->where('id', 'like', '%' . $request->penganggungJawab . '%');
+                        });
+                    }
+                }
+            });
+
+            $data->where(function ($query) use ($request) {
+                if ($request->search) {
+                    $query->where('nama_barang', 'like', '%' . $request->search . '%');
+                    $query->orWhere('kode_barang', 'like', '%' . $request->search . '%');
+                    $query->orWhere('register', 'like', '%' . $request->search . '%');
+                }
+            });
+
             return DataTables::of($data)
                 ->addIndexColumn()
 
@@ -83,12 +113,14 @@ class ManajemenAsetBergerakController extends Controller
                     }
                 })
 
-                ->addColumn('created_by', function ($row) {
-                    return $row->createdBy->nama_lengkap;
-                })
-
-                ->addColumn('updated_by', function ($row) {
-                    return $row->updatedBy->nama_lengkap;
+                ->addColumn('keadaan_barang', function ($row) {
+                    if ($row->keadaan_barang == 'Baik') {
+                        return '<span class="badge badge-count text-success fw-bold">Baik</span>';
+                    } else if ($row->keadaan_barang == 'Kurang Baik') {
+                        return '<span class="badge badge-count text-warning fw-bold">Kurang Baik</span>';
+                    } else if ($row->keadaan_barang == 'Rusak Berat') {
+                        return '<span class="badge badge-count text-danger fw-bold">Rusak Berat</span>';
+                    }
                 })
 
                 ->addColumn('action', function ($row) {
@@ -117,11 +149,14 @@ class ManajemenAsetBergerakController extends Controller
                 ->rawColumns([
                     'action',
                     'pegawai',
+                    'keadaan_barang',
                     'status',
                 ])
                 ->make(true);
         }
-        return view('dashboard.pages.utama.asetBergerak.manajemenAset.index');
+
+        $pegawai = Pegawai::whereHas('asetBergerak')->latest()->get();
+        return view('dashboard.pages.utama.asetBergerak.manajemenAset.index', compact('pegawai'));
     }
 
     /**
@@ -817,5 +852,88 @@ class ManajemenAsetBergerakController extends Controller
             $asetBergerak->delete();
         }
         return response()->json(['success' => 'Data berhasil dihapus']);
+    }
+
+    public function ubahStatusAsetBergerak(Request $request)
+    {
+        $aset = AsetBergerak::find($request->id);
+
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'status' => 'required',
+            ],
+            [
+                'status.required' => 'Status tidak boleh kosong',
+            ]
+        );
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()]);
+        }
+
+
+        if (in_array($request->status, ['Hilang', 'Pengganti', 'Dihibahkan', 'Dijual', 'Dimusnahkan'])) {
+            if ($request->nama_dokumen != null) {
+                $countFileDokumen = count($request->file_dokumen ?? []);
+                $countNamaDokumen = count($request->nama_dokumen);
+
+                if ($countFileDokumen == $countNamaDokumen) {
+                    if (in_array(null, $request->nama_dokumen)) {
+                        return 'nama_dokumen_kosong';
+                    }
+                } else {
+                    return 'nama_dokumen_kosong_dan_file_dokumen_kosong';
+                }
+            }
+
+            $update = [
+                'status' => $request->status,
+            ];
+
+            if (in_array($request->status, ['Dihibahkan', 'Dijual', 'Dimusnahkan'])) {
+                $update['pegawai_id'] = null;
+            }
+
+            $aset->update($update);
+
+            $no_dokumen = $aset->fileUploadDokumen->max('urutan') + 1;
+            if ($request->nama_dokumen != null) {
+                for ($i = 0; $i < $countFileDokumen; $i++) {
+                    $namaFile = mt_rand() . '-' . $request->nama_dokumen[$i] . '-' . $aset->nama_barang . '-' .  $no_dokumen . '.' . $request->file_dokumen[$i]->getClientOriginalExtension();
+                    $request->file_dokumen[$i]->storeAs(
+                        'upload/dokumen_aset_bergerak/',
+                        $namaFile
+                    );
+
+                    $dataDokumen = [
+                        'another_id' => $aset->id,
+                        'nama_file' => $namaFile,
+                        'jenis_file' => 'Dokumen',
+                        'deskripsi' => $request->nama_dokumen[$i],
+                        'urutan' => $no_dokumen,
+                    ];
+
+                    if (in_array($request->status, ['Hilang', 'Pengganti'])) {
+                        $dataDokumen['pegawai_id'] = $aset->pegawai_id;
+                    }
+
+                    FileUpload::create($dataDokumen);
+                    $no_dokumen++;
+                }
+            }
+        } else {
+            $update = [
+                'status' => $request->status,
+            ];
+
+            if (in_array($request->status, ['Dihibahkan', 'Dijual', 'Dimusnahkan'])) {
+                $update['pegawai_id'] = null;
+            }
+
+            $aset->update($update);
+        }
+
+        return 'success';
     }
 }

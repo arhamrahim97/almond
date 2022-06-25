@@ -41,8 +41,8 @@
                                 <div class="card mb-1">
                                     <div class="p-2 text-center">
                                         <img class="card-img-top rounded text-center"
-                                            src="{{ asset('assets/img/blank_photo.png') }}" alt="image" data-iter="1"
-                                            id="preview-image-1" style="height: 180px">
+                                            src="{{ asset('assets/img/blank_photo.png') }}" alt="image"
+                                            data-iter="1" id="preview-image-1" style="height: 180px">
                                     </div>
                                     {{-- start validation --}}
                                     <input type="hidden" name="file_gambar_1" value="" class="req file_gambar"
@@ -238,7 +238,7 @@
         $('#form').submit(function(e) {
             e.preventDefault()
             $('.error-text').html('')
-            var formData = $('.req').serializeArray()
+            var formData = $('#form .req').serializeArray()
             var data = new FormData(this)
             if ('{{ $method }}' == 'PUT') {
                 data.append('deleteImageOld', itemImageOld)

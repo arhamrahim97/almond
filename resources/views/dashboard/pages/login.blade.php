@@ -5,7 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>Login</title>
     <meta content='width=device-width, initial-scale=1.0, shrink-to-fit=no' name='viewport' />
-    <link rel="icon" href="{{ asset('assets') }}/img/icon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="{{ asset('assets/landingPage/favicon/favicon.ico') }}" type="image/x-icon" />
+
 
     <!-- Fonts and icons -->
     <script src="{{ asset('assets') }}/js/plugin/webfont/webfont.min.js"></script>
@@ -63,61 +64,61 @@
                 transform: rotate(360deg);
             }
         }
-
     </style>
 </head>
 
-<body class="login">
+<body
+    style="background: rgb(99,34,195);
+background: linear-gradient(101deg, rgba(99,34,195,1) 0%, rgba(34,118,195,1) 35%, rgba(45,253,128,1) 100%, rgba(185,253,45,1) 100%); ">
     <div id="overlay">
         <div class="cv-spinner">
             <span class="spinner"></span>
         </div>
     </div>
-    <div class="wrapper wrapper-login wrapper-login-full p-0">
-        <div
-            class="login-aside w-50 d-flex flex-column align-items-center justify-content-center text-center bg-secondary-gradient">
-            <h1 class="title fw-bold text-white mb-3">Inventori</h1>
-            {{-- <p class="subtitle text-white op-7">Ayo bergabung dengan komunitas kami untuk masa depan yang lebih baik</p> --}}
-        </div>
-        <div class="login-aside w-50 d-flex align-items-center justify-content-center bg-white">
-            <div class="container container-login container-transparent animated fadeIn">
-                <h3 class="text-center">Masuk sebagai Admin / Staf</h3>
-                <div class="login-form">
-                    <form action="{{ url('/cekLogin') }}" method="POST" id="formLogin">
+    <div class="wrapper wrapper-login wrapper-login-full p-0" style="">
+        <div class="login-aside w-100 d-flex align-items-center justify-content-center bg-white">
+            <div class="row w-100 d-flex justify-items-center px-4"
+                style="position: absolute !important; margin-left: auto;
+            margin-right: auto;
+            left: 0;
+            right: 0; 
+transform: translateY(100%);">
+                <div class="card pt-3 mb-0 shadow"
+                    style="width: 30em !important; border-radius: 10px !important; margin-left: auto;
+                    margin-right: auto;
+                    left: 0;
+                    right: 0;">
+                    <div class="m-4">
+                        <h3 class="text-center fw-bold mb-3">Masuk sebagai Admin / Staf</h3>
+                        <div class="login-form">
+                            <form action="{{ url('/cekLogin') }}" method="POST" id="formLogin">
 
-                        @csrf
-                        <div class="form-group">
-                            <label for="username" class="placeholder"><b>Nama Pengguna</b></label>
-                            <input id="username" name="username" type="text" class="form-control req"
-                                data-label="Nama Pengguna">
-                            <span class="text-danger d-block error-text username-error"></span>
-                        </div>
-                        <div class="form-group">
-                            <label for="password" class="placeholder"><b>Kata Sandi</b></label>
-                            {{-- <a href="#" class="link float-right">Forget Password ?</a> --}}
-                            <div class="position-relative">
-                                <input id="password" name="password" type="password" class="form-control req"
-                                    data-label="Password">
-                                <div class="show-password">
-                                    <i class="icon-eye"></i>
+                                @csrf
+                                <div class="form-group">
+                                    <label for="username" class="placeholder"><b>Nama Pengguna</b></label>
+                                    <input id="username" name="username" type="text" class="form-control req"
+                                        data-label="Nama Pengguna">
+                                    <span class="text-danger d-block error-text username-error"></span>
                                 </div>
-                            </div>
-                            <span class="text-danger d-block error-text password-error"></span>
+                                <div class="form-group">
+                                    <label for="password" class="placeholder"><b>Kata Sandi</b></label>
+                                    {{-- <a href="#" class="link float-right">Forget Password ?</a> --}}
+                                    <div class="position-relative">
+                                        <input id="password" name="password" type="password" class="form-control req"
+                                            data-label="Password">
+                                    </div>
+                                    <span class="text-danger d-block error-text password-error"></span>
+                                </div>
+                                <div class="form-group form-action-d-flex mb-3 text-center justify-content-center mt-3">
+                                    <button type="submit"
+                                        class="btn btn-secondary col-md-5 float-center mt-0 mt-sm-0 fw-bold"><i
+                                            class="fas fa-sign-in-alt"></i> Masuk</button>
+                                </div>
+                            </form>
                         </div>
-                        <div class="form-group form-action-d-flex mb-3 text-center justify-content-center">
-                            {{-- <div class="custom-control custom-checkbox">
-								<input type="checkbox" class="custom-control-input" id="rememberme">
-								<label class="custom-control-label m-0" for="rememberme">Remember Me</label>
-							</div> --}}
-                            <button type="submit"
-                                class="btn btn-secondary col-md-5 float-center mt-3 mt-sm-0 fw-bold">Masuk</button>
-                        </div>
-                        {{-- <div class="login-account">
-							<span class="msg">Don't have an account yet ?</span>
-							<a href="#" id="show-signup" class="link">Sign Up</a>
-						</div> --}}
-                    </form>
+                    </div>
                 </div>
+
             </div>
         </div>
     </div>

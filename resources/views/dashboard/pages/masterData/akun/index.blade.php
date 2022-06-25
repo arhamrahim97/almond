@@ -29,13 +29,13 @@
             <div class="card">
                 <div class="card-header">
                     <div class="card-head-row">
-                        <div class="card-title">Data Pegawai</div>
+                        <div class="card-title">Data Akun</div>
                         <div class="card-tools">
                             <ul class="nav nav-pills nav-secondary nav-pills-no-bd nav-sm" id="pills-tab" role="tablist">
                                 <li class="nav-item submenu">
                                     @component('dashboard.components.buttons.add',
                                         [
-                                            'url' => url('pegawai/create'),
+                                            'url' => url('akun/create'),
                                         ])
                                     @endcomponent
                                 </li>
@@ -64,7 +64,7 @@
     <script>
         $(document).ready(function() {
             $('.nav-item').removeClass('active');
-            $('#nav-pegawai').addClass('active');
+            $('#nav-akun').addClass('active');
         })
 
         var table = $('#dataTables').removeAttr('width').DataTable({
@@ -72,24 +72,18 @@
             serverSide: true,
             dom: 'lBfrtip',
             buttons: [{
-                    extend: 'excel',
-                    className: 'btn btn-sm btn-light-success px-2 btn-export-table d-inline ml-3 font-weight',
-                    text: '<i class="bi bi-file-earmark-arrow-down"></i> Ekspor Data',
-                    exportOptions: {
-                        modifier: {
-                            order: 'index', // 'current', 'applied', 'index',  'original'
-                            page: 'all', // 'all',     'current'
-                            search: 'applied' // 'none',    'applied', 'removed'
-                        },
-                        columns: ':visible'
-                    }
-                },
-                {
-                    extend: 'colvis',
-                    className: 'btn btn-sm btn-light-success px-2 btn-export-table d-inline ml-3 font-weight',
-                    text: '<i class="bi bi-eye-fill"></i> Tampil/Sembunyi Kolom',
+                extend: 'excel',
+                className: 'btn btn-sm btn-light-success px-2 btn-export-table d-inline ml-3 font-weight',
+                text: '<i class="far fa-file-excel mr-1"></i> Ekspor Data',
+                exportOptions: {
+                    modifier: {
+                        order: 'index', // 'current', 'applied', 'index',  'original'
+                        page: 'all', // 'all',     'current'
+                        search: 'applied' // 'none',    'applied', 'removed'
+                    },
+                    columns: ':visible'
                 }
-            ],
+            }],
             lengthMenu: [
                 [10, 25, 50, -1],
                 [10, 25, 50, "All"]
@@ -154,5 +148,41 @@
             //     },
             // ],
         });
+
+        $(document).on('click', '.btn-delete', function() {
+            let id = $(this).val();
+            var _token = "{{ csrf_token() }}";
+            swal({
+                title: 'Apakah Anda yakin?',
+                text: "Data yang dipilih akan dihapus!",
+                icon: "warning",
+                dangerMode: true,
+                buttons: ["Batal", "Ya"],
+            }).then((result) => {
+                if (result) {
+                    $.ajax({
+                        type: 'DELETE',
+                        url: "{{ url('akun') }}" + '/' + id,
+                        data: {
+                            _token: _token
+                        },
+                        success: function(data) {
+                            swal({
+                                title: "Berhasil!",
+                                text: "Data yang dipilih berhasil dihapus.",
+                                icon: "success",
+                            }).then(function() {
+                                table.ajax.reload();
+                                $('#checkAllData').prop('checked', false);
+                            });
+                        }
+                    })
+                } else {
+                    swal("Data batal dihapus.", {
+                        icon: "error",
+                    });
+                }
+            })
+        })
     </script>
 @endpush

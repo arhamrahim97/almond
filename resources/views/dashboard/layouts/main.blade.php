@@ -3,9 +3,9 @@
 
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>Inventori</title>
+    <title>SI PINTAR BERAKSI</title>
     <meta content='width=device-width, initial-scale=1.0, shrink-to-fit=no' name='viewport' />
-    <link rel="icon" href="{{ asset('assets') }}/img/icon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="{{ asset('assets/landingPage/favicon/favicon.ico') }}" type="image/x-icon" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
 
@@ -34,6 +34,30 @@
     <link rel="stylesheet" href="{{ asset('assets') }}/css/atlantis.css">
 
     <style>
+        .btn-success {
+            background-color: #15c68e !important;
+            border-color: #15c68e !important;
+        }
+
+        .btn-success:hover {
+            background-color: #37bd93 !important;
+            border-color: #37bd93 !important;
+        }
+
+        .badge-success {
+            background-color: #15c68e !important;
+            border-color: #15c68e !important;
+        }
+
+        /* .badge-succes:hover {
+            background-color: #976980 !important;
+            border-color: #976980 !important;
+        } */
+
+        a:hover {
+            text-decoration: none;
+        }
+
         .sidebar-wrapper {
             padding-bottom: 0px !important;
         }
@@ -196,8 +220,9 @@
         <!-- Logo Header -->
         <div class="logo-header position-fixed" data-background-color="blue">
 
-            <a href="index.html" class="logo">
-                <img src="{{ asset('assets') }}/img/logo.svg" alt="navbar brand" class="navbar-brand">
+            <a href="{{ url('/dashboard') }}" class="logo">
+                <img src="{{ asset('assets/img/logo2.png') }}" alt="navbar brand" class="navbar-brand mt-2"
+                    width="165em">
             </a>
             <button class="navbar-toggler sidenav-toggler ml-auto" type="button" data-toggle="collapse"
                 data-target="collapse" aria-expanded="false" aria-label="Toggle navigation">
@@ -227,6 +252,68 @@
                         @yield('breadcrumb')
                     </div>
                     <div class="page-category">@yield('content')</div>
+                    <!-- Modal Ubah Status Aset-->
+                    <div class="modal fade" id="modal-ubah-akun" tabindex="-1" role="dialog"
+                        aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title fw-bold" id="exampleModalLongTitle">Ubah Akun</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body mx-2">
+                                    <form method="PUT" id="form-ubah-akun">
+                                        @csrf
+                                        <div class="row align-items-end">
+                                            <div class="col-12 px-2 w-100">
+                                                <div class="col-12 px-2">
+                                                    <div class="form-group">
+                                                        @component('dashboard.components.formElements.input', ['label' => 'Nama Lengkap', 'name' => 'nama_lengkap_', 'class' => 'req', 'wajib' => '<sup class="text-danger">*</sup>', 'placeholder' => 'Masukkan Nama Lengkap', 'id' => 'nama-lengkap'])
+                                                        @endcomponent
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 px-2">
+                                                    <div class="form-group">
+                                                        @component('dashboard.components.formElements.input', ['label' => 'Username', 'name' => 'username_', 'class' => 'req', 'wajib' => '<sup class="text-danger">*</sup>', 'placeholder' => 'Masukkan Username', 'id' => 'username'])
+                                                        @endcomponent
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-12 px-2">
+                                                    <div class="form-group">
+                                                        @component('dashboard.components.formElements.input', ['label' => 'Password Baru', 'name' => 'password_', 'class' => 'req', 'placeholder' => 'Masukkan Password Baru', 'id' => 'password'])
+                                                        @endcomponent
+                                                        <span class="text-muted" style="font-style: italic">Kosongkan
+                                                            saja apabila tidak
+                                                            ingin mengubah
+                                                            password yang sekarang</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row justify-content-end">
+                                            <div class="col-12 justify-content-end text-right">
+                                                <button type="submit" class="btn btn-success" id="btn-submit"
+                                                    value="">
+                                                    <i class="fas fa-save"></i>
+                                                    Perbarui Akun</button>
+                                            </div>
+
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <div class="col-lg col-sm-12 mb-1">
+                                        <button type="button" class="btn btn-md btn-dark w-100" data-dismiss="modal"><i
+                                                class="fas fa-times"></i>
+                                            Tutup</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             @include('dashboard.layouts.footer')
@@ -350,6 +437,69 @@
                 keyboard: false
             })
         }
+
+        $('#ubah-akun').click(function() {
+            $('#modal-ubah-akun').modal('show');
+
+            $('#nama-lengkap').val('{{ Auth::user()->nama_lengkap }}');
+            $('#username').val('{{ Auth::user()->username }}');
+        })
+
+        $('#form-ubah-akun').submit(function(e) {
+            e.preventDefault();
+            $('.error-text').text('')
+            swal({
+                title: 'Perbarui Akun?',
+                text: 'Apakah anda yakin ingin perbarui akun anda?',
+                icon: "info",
+                buttons: ["Batal", "Ya"],
+            }).then((result) => {
+                if (result) {
+                    $.ajax({
+                        url: `{{ url('update-akun') }}` + '/' + `{{ Auth::user()->id }}`,
+                        type: 'POST',
+                        data: new FormData(this),
+                        cache: false,
+                        processData: false,
+                        contentType: false,
+                        success: function(response) {
+                            if ($.isEmptyObject(response.error)) {
+                                swal({
+                                    title: "Berhasil!",
+                                    text: "Data berhasil disimpan!",
+                                    icon: "success",
+                                }).then((value) => {
+                                    location.href = "{{ url()->current() }}";
+                                });
+                            } else {
+                                swal({
+                                    title: "Gagal!",
+                                    text: "Terjadi kesalahan, mohon periksa kembali data yang diinputkan.",
+                                    icon: "error",
+                                    button: "Ok",
+                                });
+                                printErrorMsg(response.error);
+                            }
+                        },
+                        error: function(response) {
+                            alert(response.responseJSON.message)
+                        }
+                    })
+                } else {
+                    swal("Data batal disimpan.", {
+                        icon: "error",
+                    });
+                }
+            });
+            const printErrorMsg = (msg) => {
+                $.each(msg, function(key, value) {
+                    $('.' + key + '-error').text(value);
+                });
+            }
+        })
+
+
+
 
         function validation(formData) {
             $('.error-text').html('');

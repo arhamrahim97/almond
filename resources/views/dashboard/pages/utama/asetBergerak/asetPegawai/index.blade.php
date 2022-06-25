@@ -722,8 +722,8 @@
         $('#form-ubah-status-aset').submit(function(e) {
             e.preventDefault();
             $('.error-text').text('')
-            var formData = $('.req').serializeArray()
-            // validation(formData)
+            var formData = $('#form-ubah-status-aset .req').serializeArray()
+            validation(formData)
             var data = new FormData(this)
             data.append('id', $('#btn-submit').val())
             swal({

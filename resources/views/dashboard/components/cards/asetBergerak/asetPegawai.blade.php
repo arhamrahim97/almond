@@ -1,11 +1,11 @@
 @foreach ($asetPegawai as $item)
-    <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6">
+    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6">
         <div class="card">
             <div class="profile-picture pt-3" style="text-align: center">
                 <div class="avatar avatar-xxl">
                     <img class="avatar-img rounded-circle shadow-sm"
                         src="{{ $item->foto_profil != null && Storage::exists('upload/foto_profil/pegawai/' . $item->foto_profil) ? Storage::url('upload/foto_profil/pegawai/' . $item->foto_profil) : asset('assets/img/no-profile4.png') }}"
-                        alt="Card image cap">
+                        alt="Foto Profil Pegawai">
                 </div>
             </div>
             <div class="card-body">

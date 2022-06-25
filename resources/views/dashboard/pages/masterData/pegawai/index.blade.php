@@ -33,9 +33,12 @@
                         <div class="card-tools">
                             <ul class="nav nav-pills nav-secondary nav-pills-no-bd nav-sm" id="pills-tab" role="tablist">
                                 <li class="nav-item submenu">
-                                    @component('dashboard.components.buttons.deletedSelected',
+                                    @component('dashboard.components.buttons.selected',
                                         [
                                             'id' => 'deleteSelected',
+                                            'icon' => '<i class="fas fa-trash"></i>',
+                                            'color' => 'danger',
+                                            'title' => 'Hapus yang dipilih',
                                         ])
                                     @endcomponent
                                     @component('dashboard.components.buttons.add',
@@ -207,7 +210,8 @@
                 </div>
                 <div class="modal-footer py-4">
                     <div class="col-6">
-                        <a href="" class="btn btn-md btn-warning w-100" id="btn-ubah-modal"><i class="fas fa-edit"></i>
+                        <a href="" class="btn btn-md btn-warning w-100" id="btn-ubah-modal"><i
+                                class="fas fa-edit"></i>
                             Ubah</a>
                     </div>
                     <div class="col-6">
@@ -276,24 +280,18 @@
             dom: 'lBfrtip',
             ordering: false,
             buttons: [{
-                    extend: 'excel',
-                    className: 'btn btn-sm btn-light-success px-2 btn-export-table d-inline ml-3 font-weight',
-                    text: '<i class="bi bi-file-earmark-arrow-down"></i> Ekspor Data',
-                    exportOptions: {
-                        modifier: {
-                            order: 'index', // 'current', 'applied', 'index',  'original'
-                            page: 'all', // 'all',     'current'
-                            search: 'applied' // 'none',    'applied', 'removed'
-                        },
-                        columns: ':visible'
-                    }
-                },
-                {
-                    extend: 'colvis',
-                    className: 'btn btn-sm btn-light-success px-2 btn-export-table d-inline ml-3 font-weight',
-                    text: '<i class="bi bi-eye-fill"></i> Tampil/Sembunyi Kolom',
+                extend: 'excel',
+                className: 'btn btn-sm btn-light-success px-2 btn-export-table d-inline ml-3 font-weight',
+                text: '<i class="far fa-file-excel mr-1"></i> Ekspor Data',
+                exportOptions: {
+                    modifier: {
+                        order: 'index', // 'current', 'applied', 'index',  'original'
+                        page: 'all', // 'all',     'current'
+                        search: 'applied' // 'none',    'applied', 'removed'
+                    },
+                    columns: ':visible'
                 }
-            ],
+            }, ],
             lengthMenu: [
                 [10, 25, 50, -1],
                 [10, 25, 50, "All"]
@@ -403,6 +401,7 @@
         });
 
         $('#deleteSelected').click(function() {
+
             var id = [];
             var _token = "{{ csrf_token() }}";
 
@@ -418,28 +417,43 @@
                 })
             } else {
                 swal({
-                    title: 'Apakah Anda yakin?',
-                    text: "Data yang dipilih akan dihapus!",
+                    title: 'Mohon pastikan bahwa pegawai yang anda pilih sudah tidak memilik aset apapun',
+                    text: "Lanjutkan penghapusan data pegawai yang anda pilih?",
                     icon: "warning",
                     dangerMode: true,
                     buttons: ["Batal", "Ya"],
                 }).then((result) => {
                     if (result) {
-                        $.ajax({
-                            type: 'POST',
-                            url: "{{ url('pegawai/delete-selected') }}",
-                            data: {
-                                id: id,
-                                _token: _token
-                            },
-                            success: function(data) {
-                                swal({
-                                    title: "Berhasil!",
-                                    text: "Data yang dipilih berhasil dihapus.",
-                                    icon: "success",
-                                }).then(function() {
-                                    table.ajax.reload();
-                                    $('#checkAllData').prop('checked', false);
+                        swal({
+                            title: 'Apakah Anda yakin?',
+                            text: "Data yang dipilih akan dihapus!",
+                            icon: "warning",
+                            dangerMode: true,
+                            buttons: ["Batal", "Ya"],
+                        }).then((result) => {
+                            if (result) {
+                                $.ajax({
+                                    type: 'POST',
+                                    url: "{{ url('pegawai/delete-selected') }}",
+                                    data: {
+                                        id: id,
+                                        _token: _token
+                                    },
+                                    success: function(data) {
+                                        swal({
+                                            title: "Berhasil!",
+                                            text: "Data yang dipilih berhasil dihapus.",
+                                            icon: "success",
+                                        }).then(function() {
+                                            table.ajax.reload();
+                                            $('#checkAllData').prop('checked',
+                                                false);
+                                        });
+                                    }
+                                })
+                            } else {
+                                swal("Data batal dihapus.", {
+                                    icon: "error",
                                 });
                             }
                         })
@@ -457,27 +471,42 @@
             let id = $(this).val();
             var _token = "{{ csrf_token() }}";
             swal({
-                title: 'Apakah Anda yakin?',
-                text: "Data yang dipilih akan dihapus!",
+                title: 'Mohon pastikan bahwa pegawai yang anda pilih sudah tidak memilik aset apapun',
+                text: "Lanjutkan penghapusan data pegawai yang anda pilih?",
                 icon: "warning",
                 dangerMode: true,
                 buttons: ["Batal", "Ya"],
             }).then((result) => {
                 if (result) {
-                    $.ajax({
-                        type: 'DELETE',
-                        url: "{{ url('pegawai') }}" + '/' + id,
-                        data: {
-                            _token: _token
-                        },
-                        success: function(data) {
-                            swal({
-                                title: "Berhasil!",
-                                text: "Data yang dipilih berhasil dihapus.",
-                                icon: "success",
-                            }).then(function() {
-                                table.ajax.reload();
-                                $('#checkAllData').prop('checked', false);
+                    swal({
+                        title: 'Apakah Anda yakin?',
+                        text: "Data yang dipilih akan dihapus!",
+                        icon: "warning",
+                        dangerMode: true,
+                        buttons: ["Batal", "Ya"],
+                    }).then((result) => {
+                        if (result) {
+                            $.ajax({
+                                type: 'DELETE',
+                                url: "{{ url('pegawai') }}" + '/' + id,
+                                data: {
+                                    _token: _token
+                                },
+                                success: function(data) {
+                                    swal({
+                                        title: "Berhasil!",
+                                        text: "Data yang dipilih berhasil dihapus.",
+                                        icon: "success",
+                                    }).then(function() {
+                                        table.ajax.reload();
+                                        $('#checkAllData').prop('checked',
+                                            false);
+                                    });
+                                }
+                            })
+                        } else {
+                            swal("Data batal dihapus.", {
+                                icon: "error",
                             });
                         }
                     })

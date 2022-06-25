@@ -710,7 +710,7 @@
             $('.error-text').html('')
             $('.nama-dokumen').removeClass('is-invalid')
             $('.file-dokumen').removeClass('is-invalid')
-            var formData = $('.req').serializeArray()
+            var formData = $('#form .req').serializeArray()
             var data = new FormData(this)
             // console.log(data)
             if ('{{ $method }}' == 'PUT') {
@@ -721,7 +721,7 @@
             if ('{{ isset($aset) }}') {
                 data.append('id', '{{ isset($aset) ?? $aset->id }}')
             }
-            // validation(formData)
+            validation(formData)
 
             if ('{{ $method }}' == 'POST') {
                 var title = 'Simpan Data?'

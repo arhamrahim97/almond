@@ -39,9 +39,12 @@
                         <div class="card-tools">
                             <ul class="nav nav-pills nav-secondary nav-pills-no-bd nav-sm" id="pills-tab" role="tablist">
                                 <li class="nav-item submenu">
-                                    @component('dashboard.components.buttons.deletedSelected',
+                                    @component('dashboard.components.buttons.selected',
                                         [
                                             'id' => 'deleteSelected',
+                                            'icon' => '<i class="fas fa-trash"></i>',
+                                            'color' => 'danger',
+                                            'title' => 'Hapus yang dipilih',
                                         ])
                                     @endcomponent
                                     @component('dashboard.components.buttons.add',
@@ -55,6 +58,60 @@
                     </div>
                 </div>
                 <div class="card-body">
+                    <div class="row mb-4">
+                        <div class="col-lg-4">
+                            @component('dashboard.components.formElements.select',
+                                [
+                                    'label' => 'Keadaan Barang',
+                                    'id' => 'keadaan-barang-filter',
+                                    'name' => 'keadaan_barang_filter',
+                                    'class' => 'select2 filter',
+                                ])
+                                @slot('options')
+                                    <option value="Baik">Baik</option>
+                                    <option value="Kurang Baik">Kurang Baik</option>
+                                    <option value="Rusak Berat">Rusak Berat</option>
+                                @endslot
+                            @endcomponent
+                        </div>
+                        <div class="col-lg-4">
+                            @component('dashboard.components.formElements.select',
+                                [
+                                    'label' => 'Status',
+                                    'id' => 'status-filter',
+                                    'name' => 'status_filter',
+                                    'class' => 'select2 filter',
+                                ])
+                                @slot('options')
+                                    <option value="Baru">Baru</option>
+                                    <option value="Digunakan">Digunakan</option>
+                                    <option value="Diperbaiki">Diperbaiki</option>
+                                    <option value="Rusak">Rusak</option>
+                                    <option value="Hilang">Hilang</option>
+                                    <option value="Pengganti">Pengganti</option>
+                                    <option value="Dihibahkan">Dihibahkan</option>
+                                    <option value="Dijual">Dijual</option>
+                                    <option value="Dimusnahkan">Dimusnahkan</option>
+                                @endslot
+                            @endcomponent
+                        </div>
+                        <div class="col-lg-4">
+                            @component('dashboard.components.formElements.select',
+                                [
+                                    'label' => 'Penanggung Jawab',
+                                    'id' => 'penanggung-jawab-filter',
+                                    'name' => 'penanggung-jawab_filter',
+                                    'class' => 'select2 filter',
+                                ])
+                                @slot('options')
+                                    <option value="NULL">Belum Ditentukan / Tidak Ada</option>
+                                    @foreach ($pegawai as $item)
+                                        <option value="{{ $item->id }}">{{ $item->nama_lengkap }}</option>
+                                    @endforeach
+                                @endslot
+                            @endcomponent
+                        </div>
+                    </div>
                     <div class="row">
                         <div class="table-responsive">
                             <table class="table table-hover table-striped" id="{{ $id ?? 'dataTables' }}" cellspacing="0"
@@ -67,7 +124,7 @@
                                         <th>Kode Barang</th>
                                         <th>Register</th>
                                         <th>Nama / Jenis Barang</th>
-                                        {{-- <th>Jumlah Barang</th> --}}
+                                        {{-- <th>Keadaan Barang</th> --}}
                                         <th>Status</th>
                                         <th>Penanggung Jawab (Pegawai)</th>
                                         <th>Aksi</th>
@@ -698,8 +755,8 @@
         $('#form-ubah-status-aset').submit(function(e) {
             e.preventDefault();
             $('.error-text').text('')
-            var formData = $('.req').serializeArray()
-            // validation(formData)
+            var formData = $('#form-ubah-status-aset .req').serializeArray()
+            validation(formData)
             var data = new FormData(this)
             data.append('id', $('#btn-submit').val())
             swal({
@@ -806,6 +863,10 @@
             });
         }
 
+        $('.select2').select2({
+            theme: "bootstrap"
+        })
+
         var table = $('#dataTables').DataTable({
             processing: true,
             serverSide: true,
@@ -814,7 +875,7 @@
             buttons: [{
                     extend: 'excel',
                     className: 'btn btn-sm btn-light-success px-2 btn-export-table d-inline ml-3 font-weight',
-                    text: '<i class="bi bi-file-earmark-arrow-down"></i> Ekspor Data',
+                    text: '<i class="far fa-file-excel mr-1"></i> Ekspor Data',
                     exportOptions: {
                         modifier: {
                             order: 'index', // 'current', 'applied', 'index',  'original'
@@ -836,6 +897,12 @@
             ],
             ajax: {
                 url: "{{ route('manajemen-aset-bergerak.index') }}",
+                data: function(d) {
+                    d.keadaanBarang = $('#keadaan-barang-filter').val();
+                    d.status = $('#status-filter').val();
+                    d.penganggungJawab = $('#penanggung-jawab-filter').val();
+                    d.search = $('input[type="search"]').val();
+                }
             },
             columns: [{
                     data: 'checkData',
@@ -867,8 +934,8 @@
                     name: 'nama_barang',
                 },
                 // {
-                //     data: 'jumlah_barang',
-                //     name: 'jumlah_barang',
+                //     data: 'keadaan_barang',
+                //     name: 'keadaan_barang',
                 //     className: 'text-center',
                 // },
                 {
@@ -902,6 +969,10 @@
             //     },
             // ],
         });
+
+        $('.filter').change(function() {
+            table.draw();
+        })
 
         $(document).on('click', '.btn-delete', function() {
             let id = $(this).val();

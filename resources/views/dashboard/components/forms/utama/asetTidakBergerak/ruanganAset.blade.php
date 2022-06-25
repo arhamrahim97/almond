@@ -72,10 +72,11 @@
                         status aset menjadi "<span class="fw-bold">Digunakan</span>".</small>
                 </div>
                 <div class="form-group">
-                    <label for="" class="mb-2">Dokumen <sup class="text-danger">*</sup></label>
+                    <label for="" class="mb-2">Dokumen <span class="text-muted"
+                            style="font-style: italic">(Optional)</span></label>
                     {{-- <label for="">(Surat-surat Kendaraan, Berita Acara, dan Lainnya)</label> --}}
                     <div class="row" id="dokumen-aset">
-                        <div class="col-md-6 col-lg-12 col-xl-12 col-document" id="col-dokumen-1">
+                        {{-- <div class="col-md-6 col-lg-12 col-xl-12 col-document" id="col-dokumen-1">
                             <div class="card box-upload mb-3 ruangan" id="box-upload-1" class="box-upload">
                                 <div class="card-body py-3">
                                     <div class="row">
@@ -85,11 +86,9 @@
                                         </div>
                                         <div class="col-9">
                                             <div class="mb-3 mt-2">
-                                                {{-- start validation --}}
                                                 <input type="hidden" name="nama_dokumen_1" value=""
                                                     class="nama_dokumen" data-label="Nama Dokumen" data-iter="1"
                                                     id="nama_dokumen-hidden-1">
-                                                {{-- end validation --}}
 
                                                 <input type="text" class="form-control nama-dokumen"
                                                     id="nama-dokumen-1" name="nama_dokumen[]"
@@ -97,29 +96,23 @@
                                                     value="Berita Acara Penanggung Jawab Aset" data-iter="1"
                                                     onkeyup="rmValNamaDokumen(1)" readonly>
 
-                                                {{-- start validation --}}
                                                 <p class="text-danger error-text nama_dokumen_1-error my-0"
                                                     id="nama_dokumen-error-1"></p>
-                                                {{-- end validation --}}
 
                                                 <p class="text-danger error-text nama_dokumen-error my-0"
                                                     id="nama_dokumen-error-1"></p>
                                             </div>
                                             <div class="mb-3">
-                                                {{-- start validation --}}
                                                 <input type="hidden" name="file_dokumen_1" value=""
                                                     class="req file_dokumen" data-label="File Dokumen" data-iter="1"
                                                     id="file_dokumen-hidden-1">
-                                                {{-- end validation --}}
 
                                                 <input name="file_dokumen[]" class="form-control file-dokumen"
                                                     id="file-dokumen-1" type="file" multiple="true" data-iter="1"
                                                     accept="application/pdf" onchange="rmValFileDokumen(1)">
 
-                                                {{-- start validation --}}
                                                 <p class="text-danger error-text file_dokumen_1-error my-0"
                                                     id="file_dokumen-error-1"></p>
-                                                {{-- end validation --}}
 
                                                 <p class="text-danger error-text file_dokumen-error my-0"
                                                     id="file_dokumen-error-1"></p>
@@ -130,7 +123,7 @@
 
                             </div>
                             <p class="text-danger error-text dokumen-error my-0" id="dokumen-error-1"></p>
-                        </div>
+                        </div> --}}
                         <div class="col-md-2 col-lg-3 col-xl-12 align-self-center col-add-dokumen">
                             <div class="text-center text-muted" onclick="addDokumen()" style="cursor: pointer">
                                 <h1><i class="fas fa-plus-circle"></i></h1>
@@ -304,7 +297,7 @@
             $('.error-text').html('')
             $('.nama-dokumen').removeClass('is-invalid')
             $('.file-dokumen').removeClass('is-invalid')
-            var formData = $('.req').serializeArray()
+            var formData = $('#form .req').serializeArray()
             var data = new FormData(this)
 
             if ('{{ $aset->ruangan }}') {
