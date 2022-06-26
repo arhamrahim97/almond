@@ -73,22 +73,21 @@
                 </div>
                 <div class="card-body">
                     <div class="row mb-4">
-                        <div class="col-lg-6">
-                            @component('dashboard.components.formElements.select',
-                                [
-                                    'label' => 'Keadaan Barang',
-                                    'id' => 'keadaan-barang-filter',
-                                    'name' => 'keadaan_barang_filter',
-                                    'class' => 'select2 filter',
-                                ])
+                        {{-- <div class="col-lg">
+                            @component('dashboard.components.formElements.select', [
+    'label' => 'Keadaan Barang',
+    'id' => 'keadaan-barang-filter',
+    'name' => 'keadaan_barang_filter',
+    'class' => 'select2 filter',
+])
                                 @slot('options')
                                     <option value="Baik">Baik</option>
                                     <option value="Kurang Baik">Kurang Baik</option>
                                     <option value="Rusak Berat">Rusak Berat</option>
                                 @endslot
                             @endcomponent
-                        </div>
-                        <div class="col-lg-6">
+                        </div> --}}
+                        <div class="col-lg">
                             @component('dashboard.components.formElements.select',
                                 [
                                     'label' => 'Status',
