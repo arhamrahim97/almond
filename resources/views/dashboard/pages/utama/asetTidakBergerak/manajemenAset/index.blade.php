@@ -457,7 +457,7 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title fw-bold" id="exampleModalLongTitle">Tentukan Ruangan Beberapa Aset</h5>
+                    <h5 class="modal-title fw-bold" id="tentukan-atau-pindahkan">-</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -1207,6 +1207,7 @@
             var id = [];
             var _token = "{{ csrf_token() }}";
 
+            $('#tentukan-atau-pindahkan').text('Tentukan Ruangan Beberapa Aset');
             $('#form-tentukan-ruangan-aset')[0].reset();
             $("#ruangan option[value!='']").each(function() {
                 $(this).remove();
@@ -1287,6 +1288,7 @@
             var id = [];
             var _token = "{{ csrf_token() }}";
 
+            $('#tentukan-atau-pindahkan').text('Pindahkan Ruangan Beberapa Aset');
             $('#form-tentukan-ruangan-aset')[0].reset();
             $("#ruangan option[value!='']").each(function() {
                 $(this).remove();
