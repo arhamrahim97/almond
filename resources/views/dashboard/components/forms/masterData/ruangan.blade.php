@@ -41,13 +41,16 @@
                                 <div class="card mb-1">
                                     <div class="p-2 text-center">
                                         <img class="card-img-top rounded text-center"
-                                            src="{{ asset('assets/img/blank_photo.png') }}" alt="image" data-iter="1"
-                                            id="preview-image-1" style="height: 180px">
+                                            src="{{ asset('assets/img/blank_photo.png') }}" alt="image"
+                                            data-iter="1" id="preview-image-1" style="height: 180px">
                                     </div>
-                                    <input type="hidden" name="file_gambar" value="" class="req"
-                                        data-label="Foto Ruangan" id="foto_ruangan-hidden">
-                                    <input type="file" class="form-control form-control-file file-gambar req"
-                                        id="file-gambar-1" data-iter="1" name="file_gambar[]" accept="image/*">
+                                    {{-- start validation --}}
+                                    <input type="hidden" name="file_gambar_1" value="" class="req file_gambar"
+                                        data-label="Foto Ruangan" data-iter="1" id="file_gambar-hidden-1">
+                                    {{-- start validation --}}
+                                    <input type="file" class="form-control form-control-file file-gambar"
+                                        id="file-gambar-1" data-iter="1" name="file_gambar[]" accept="image/*"
+                                        onchange="rmValFileGambar(1)">
                                     <label class="selectgroup-item mb-0">
                                         <input type="radio" value="" class="selectgroup-input foto_sampul"
                                             id="foto-sampul" checked='checked'>
@@ -57,10 +60,14 @@
                                         </span>
                                     </label>
                                 </div>
+                                {{-- start validation --}}
+                                <p class="text-danger error-text file_gambar_1-error my-0" id="file_gambar-error-1">
+                                </p>
+                                {{-- end validation --}}
                                 <span class="text-danger error-text file_gambar-error d-block my-0"></span>
                             </div>
                         @else
-                            @foreach ($ruangan->fileUpload as $item)
+                            @foreach ($ruangan->fileUploadGambar as $item)
                                 <div class="col-md-4 col-lg-4 col-xl-3 text-center"
                                     id="col-image-old-{{ $loop->iteration }}">
                                     <div class="card mb-1">
@@ -166,7 +173,6 @@
 
         function addImage() {
             if (('{{ $method }}' == 'PUT') && (itemImage == 2)) {
-                // coutn class preview-image
                 let count = {{ $maxImage ?? '' }} + 1;
                 itemImage = count + 1;
             }
@@ -187,15 +193,22 @@
                     itemImage +
                     `" id="preview-image-` + itemImage + `"  style="height: 180px">
                             </div>
+                            <input type="hidden" name="file_gambar_` + itemImage + `" value="" class="req file_gambar"
+                                        data-label="Foto Ruangan" data-iter="` + itemImage +
+                    `" id="file_gambar-hidden-` + itemImage + `">
                             <input type="file" class="form-control form-control-file file-gambar" id="file-gambar-` +
                     itemImage + `"
-                                data-iter="` + itemImage + `" name="file_gambar[]" accept="image/*">
+                                data-iter="` + itemImage +
+                    `" name="file_gambar[]" accept="image/*" onchange="rmValFileGambar(` + itemImage + `)">
                             <span class="text-danger error-text file-gambar-error my-0"></span>
                             <button type="button"
                                 class="btn btn-danger fw-bold card-footer bg-danger text-center p-0"
                                 onclick="deleteImage(` + itemImage + `)"><i class="fas fa-trash-alt"></i>
                                 Hapus</button>
                         </div>
+                        <p class="text-danger error-text file_gambar_` + itemImage +
+                    `-error my-0" id="file_gambar-error-` + itemImage + `">
+                                </p>
                     </div>
                     <div class="col-md-2 col-lg-2 col-xl-1 align-self-center col-add-image">
                         <div class="text-center text-muted" onclick="addImage()" style="cursor: pointer">
@@ -214,15 +227,18 @@
             });
         }
 
-        $('#file-gambar-1').change(function() {
-            $('#foto_ruangan-hidden').remove()
-        });
-
+        function rmValFileGambar(iter) {
+            if ($('#file-gambar-' + iter).val() != '') {
+                $('#file_gambar-hidden-' + iter).removeClass('req');
+            } else {
+                $('#file_gambar-hidden-' + iter).addClass('req');
+            }
+        }
 
         $('#form').submit(function(e) {
             e.preventDefault()
             $('.error-text').html('')
-            var formData = $(this).serializeArray()
+            var formData = $('#form .req').serializeArray()
             var data = new FormData(this)
             if ('{{ $method }}' == 'PUT') {
                 data.append('deleteImageOld', itemImageOld)

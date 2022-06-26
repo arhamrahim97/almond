@@ -52,7 +52,7 @@
                 @component('dashboard.components.forms.masterData.ruangan')
                     @slot('method', 'PUT')
                     @slot('labelSubmit', 'Perbarui')
-                    @slot('maxImage', $ruangan->fileUpload->max('urutan'))
+                    @slot('maxImage', $ruangan->fileUploadGambar->max('urutan'))
                     @slot('action', route('ruangan.update', $ruangan->id))
                     @slot('ruangan', $ruangan)
                 @endcomponent

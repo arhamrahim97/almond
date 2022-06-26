@@ -55,9 +55,14 @@
                         </div>
                     </div>
                 </div>
-                @component('dashboard.components.forms.utama.asetBergerak.manajemenAset')
-                    @slot('action', route('manajemen-aset-bergerak.store'))
-                    @slot('method', 'POST')
+                @component('dashboard.components.forms.utama.manajemenAset')
+                    @slot('method', 'PUT')
+                    @slot('jenis_aset', 'aset_bergerak')
+                    @slot('labelSubmit', 'Perbarui')
+                    @slot('maxImage', $aset->fileUploadGambar->max('urutan'))
+                    @slot('maxDocument', $aset->fileUploadDokumen->max('urutan'))
+                    @slot('action', route('manajemen-aset-bergerak.update', $aset->id))
+                    @slot('aset', $aset)
                 @endcomponent
 
             </div>

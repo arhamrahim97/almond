@@ -18,14 +18,19 @@ class AsetBergerak extends Model
     protected $table = 'aset_bergerak';
     protected $guarded = ['id'];
 
-    public function fileUpload()
+    public function aset()
+    {
+        return $this->belongsTo(AsetBergerak::class, 'aset_id');
+    }
+
+    public function fileUploadAll()
     {
         return $this->hasMany(FileUpload::class, 'another_id')->orderBy('is_sampul', 'desc');
     }
 
     public function fileUploadGambar()
     {
-        return $this->hasMany(FileUpload::class, 'another_id')->where('jenis_file', 'Gambar')->orderBy('is_sampul', 'desc');
+        return $this->hasMany(FileUpload::class, 'another_id')->where('jenis_file', 'Gambar')->orderBy('is_sampul', 'desc')->orderBy('urutan', 'asc');
     }
 
     public function fileUploadDokumen()

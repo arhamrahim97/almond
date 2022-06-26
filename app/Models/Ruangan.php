@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use App\Models\User;
 use App\Traits\TraitUuid;
+use App\Models\FileUpload;
 use App\Traits\Blameables;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\AsetTidakBergerak;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Ruangan extends Model
 {
@@ -17,9 +20,19 @@ class Ruangan extends Model
     protected $table = 'ruangan';
     protected $guarded = ['id'];
 
-    public function fileUpload()
+    public function asetTidakBergerak()
     {
-        return $this->hasMany(FileUpload::class, 'another_id')->orderBy('is_sampul', 'desc');
+        return $this->hasMany(AsetTidakBergerak::class, 'ruangan_id')->orderBy('created_at', 'desc');
+    }
+
+    public function fileUploadGambar()
+    {
+        return $this->hasMany(FileUpload::class, 'another_id')->where('jenis_file', 'Gambar')->orderBy('is_sampul', 'desc')->orderBy('urutan', 'asc');
+    }
+
+    public function fotoSampul()
+    {
+        return $this->hasOne(FileUpload::class, 'another_id')->where('jenis_file', 'Gambar')->where('is_sampul', 1);
     }
 
     public function createdBy()

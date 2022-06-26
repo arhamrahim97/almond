@@ -14,4 +14,15 @@ class FileUpload extends Model
     use Blameables;
     protected $table = 'file_upload';
     protected $guarded = ['id'];
+
+
+    public function pegawai()
+    {
+        return $this->belongsTo(Pegawai::class, 'pegawai_id')->withTrashed();
+    }
+
+    public function ruangan()
+    {
+        return $this->belongsTo(Ruangan::class, 'ruangan_id')->withTrashed();
+    }
 }

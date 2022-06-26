@@ -2,10 +2,16 @@
 
 namespace Database\Seeders;
 
-use App\Models\Pegawai;
 use App\Models\User;
+use App\Models\Pegawai;
 use Illuminate\Database\Seeder;
 use Database\Seeders\UserSeeder;
+use Database\Seeders\RuanganSeeder;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
+use Database\Seeders\PegawaiTableSeeder;
+use Database\Seeders\FileUploadTableSeeder;
+use Database\Seeders\AsetBergerakTableSeeder;
 use Database\Seeders\JabatanStrukturalSeeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
@@ -18,11 +24,20 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
+        Storage::deleteDirectory('/upload');
+        Storage::makeDirectory('/upload');
+
+        File::copyDirectory(
+            public_path('file_dummy'),
+            storage_path('app/public/upload')
+        );
+
         $this->call(JabatanStrukturalSeeder::class);
         $this->call(UserSeeder::class);
-        Pegawai::factory(50)->create();
-        $this->call(RuanganSeeder::class);
+        $this->call(PegawaiTableSeeder::class);
+        $this->call(AsetBergerakTableSeeder::class);
         $this->call(FileUploadTableSeeder::class);
+        $this->call(AsetTidakBergerakTableSeeder::class);
+        $this->call(RuanganTableSeeder::class);
     }
 }

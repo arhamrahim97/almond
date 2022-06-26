@@ -19,8 +19,10 @@ class CreateFileUploadsTable extends Migration
             $table->string('nama_file');
             $table->string('jenis_file');
             $table->string('deskripsi')->nullable();
-            $table->bigInteger('urutan');
+            $table->bigInteger('urutan')->default(0);
             $table->integer('is_sampul')->default(0);
+            $table->uuid('pegawai_id')->nullable();
+            $table->uuid('ruangan_id')->nullable();
             $table->uuid('created_by');
             $table->uuid('updated_by');
             $table->timestamps();

@@ -2,41 +2,6 @@
 <div class="sidebar sidebar-style-2" data-background-color="blue">
     <div class="sidebar-wrapper scrollbar scrollbar-inner">
         <div class="sidebar-content">
-            <div class="user">
-                <div class="avatar-sm float-left mr-2">
-                    <img src="{{ asset('assets') }}/img/profile.jpg" alt="..." class="avatar-img rounded-circle">
-                </div>
-                <div class="info">
-                    <a data-toggle="collapse" href="#collapseExample" aria-expanded="true">
-                        <span>
-                            Hizrian
-                            <span class="user-level">Administrator</span>
-                            <span class="caret"></span>
-                        </span>
-                    </a>
-                    <div class="clearfix"></div>
-
-                    <div class="collapse in" id="collapseExample">
-                        <ul class="nav">
-                            <li>
-                                <a href="#profile">
-                                    <span class="link-collapse">My Profile</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#edit">
-                                    <span class="link-collapse">Edit Profile</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#settings">
-                                    <span class="link-collapse">Settings</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
             <ul class="nav">
                 <li class="nav-item">
                     <a href="{{ url('/dashboard') }}">
@@ -63,14 +28,9 @@
                                     <span class="sub-item">Manajemen Aset</span>
                                 </a>
                             </li>
-                            <li>
-                                <a href="email-compose.html">
+                            <li id="li-aset-pegawai">
+                                <a href="{{ url('aset-pegawai') }}">
                                     <span class="sub-item">Aset Pegawai</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="email-compose.html">
-                                    <span class="sub-item">Status Aset</span>
                                 </a>
                             </li>
                         </ul>
@@ -85,79 +45,50 @@
                     <div class="collapse" id="aset-tidak-bergerak">
                         <ul class="nav nav-collapse">
                             <li id="li-manajemen-aset-tidak-bergerak">
-                                <a href="{{ url('aset-tidak-bergerak') }}">
+                                <a href="{{ url('manajemen-aset-tidak-bergerak') }}">
                                     <span class="sub-item">Manajemen Aset</span>
                                 </a>
                             </li>
-                            <li>
-                                <a href="email-compose.html">
-                                    <span class="sub-item">Lokasi Aset</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="email-compose.html">
-                                    <span class="sub-item">Status Aset</span>
+                            <li id="li-ruangan-aset">
+                                <a href="{{ url('ruangan-aset') }}">
+                                    <span class="sub-item">Ruangan Aset</span>
                                 </a>
                             </li>
                         </ul>
                     </div>
                 </li>
-                {{-- <li class="nav-item">
-                    <a href="starter-template.html">
-                        <i class="fas fa-print"></i>
-                        <p>IPO Report</p>
-                    </a>
-                </li> --}}
-                <li class="nav-section">
-                    <span class="sidebar-mini-icon">
-                        <i class="fa fa-ellipsis-h"></i>
-                    </span>
-                    <h4 class="text-section">Master Data</h4>
-                </li>
-                <li class="nav-item" id="nav-ruangan">
-                    <a href="{{ url('ruangan') }}">
-                        <i class="fas fa-box"></i>
-                        <p>Ruangan</p>
+                <li class="nav-item" id="nav-export-simda">
+                    <a href="{{ url('/preview-export-simda') }}">
+                        <i class="fas fa-download"></i>
+                        <p>Ekspor SIMDA</p>
                     </a>
                 </li>
-                <li class="nav-item" id="nav-pegawai">
-                    <a href="{{ url('pegawai') }}">
-                        <i class="fas fa-user-tie"></i>
-                        <p>Pegawai</p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="starter-template.html">
-                        <i class="fas fa-user-circle"></i>
-                        <p>Akun</p>
-                    </a>
-                </li>
-                {{-- <li class="nav-item">
-                    <a data-toggle="collapse" href="#email-nav">
-                        <i class="far fa-envelope"></i>
-                        <p>Email</p>
-                        <span class="caret"></span>
-                    </a>
-                    <div class="collapse" id="email-nav">
-                        <ul class="nav nav-collapse">
-                            <li>
-                                <a href="email-inbox.html">
-                                    <span class="sub-item">Inbox</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="email-compose.html">
-                                    <span class="sub-item">Email Compose</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="email-detail.html">
-                                    <span class="sub-item">Email Detail</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </li> --}}
+                @if (Auth::user()->role == 'Admin')
+                    <li class="nav-section">
+                        <span class="sidebar-mini-icon">
+                            <i class="fa fa-ellipsis-h"></i>
+                        </span>
+                        <h4 class="text-section">Master Data</h4>
+                    </li>
+                    <li class="nav-item" id="nav-ruangan">
+                        <a href="{{ url('ruangan') }}">
+                            <i class="fas fa-box"></i>
+                            <p>Ruangan</p>
+                        </a>
+                    </li>
+                    <li class="nav-item" id="nav-pegawai">
+                        <a href="{{ url('pegawai') }}">
+                            <i class="fas fa-user-tie"></i>
+                            <p>Pegawai</p>
+                        </a>
+                    </li>
+                    <li class="nav-item" id="nav-akun">
+                        <a href="{{ url('/akun') }}">
+                            <i class="fas fa-user-circle"></i>
+                            <p>Akun</p>
+                        </a>
+                    </li>
+                @endif
             </ul>
         </div>
     </div>
