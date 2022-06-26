@@ -409,7 +409,7 @@
     {{-- DataTables Extensions --}}
     <script src="{{ asset('assets') }}/datatables/dataTables.buttons.min.js"></script>
     <script src="{{ asset('assets') }}/datatables/jszip.min.js"></script>
-    <script src="{{ asset('assets') }}/datatables/vfs_fonts.js"></script>
+    {{-- <script src="{{ asset('assets') }}/datatables/vfs_fonts.js"></script> --}}
     <script src="{{ asset('assets') }}/datatables/buttons.html5.min.js"></script>
     <script src="{{ asset('assets') }}/datatables/buttons.print.min.js"></script>
     <script src="{{ asset('assets') }}/datatables/buttons.colVis.min.js"></script>
@@ -482,7 +482,13 @@
                             }
                         },
                         error: function(response) {
-                            alert(response.responseJSON.message)
+                            overlay.hide();
+                            swal({
+                                title: "Coba kembali",
+                                text: "Maaf, terjadi kesalahan pengiriman data, silahkan coba kembali.",
+                                icon: "error",
+                                button: "Ok",
+                            });
                         }
                     })
                 } else {
