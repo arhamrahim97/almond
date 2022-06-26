@@ -406,7 +406,13 @@
                             }
                         },
                         error: function(response) {
-                            alert(response.responseJSON.message)
+                            overlay.hide();
+                            swal({
+                                title: "Coba kembali",
+                                text: "Maaf, terjadi kesalahan pengiriman data, silahkan coba kembali.",
+                                icon: "error",
+                                button: "Ok",
+                            });
                         },
                     });
                 } else {
