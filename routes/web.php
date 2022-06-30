@@ -75,6 +75,7 @@ Route::group(['middleware' => 'auth'], function () {
     # End: Aset Tidak Bergerak
 
     Route::get('/preview-export-simda', [ExportController::class, 'previewExportSimda']);
+    Route::get('/export-ruangan/{ruanganAset}', [ExportController::class, 'exportRuangan']);
     Route::get('/export-simda', [ExportController::class, 'exportSimda']);
 
 

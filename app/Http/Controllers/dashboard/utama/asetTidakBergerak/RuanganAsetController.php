@@ -130,7 +130,7 @@ class RuanganAsetController extends Controller
                     if ($row->ruangan) {
                         return $row->ruangan->nama_ruangan;
                     } else {
-                        if (in_array($row->status, ['Dihibahkan', 'Dijual', 'Dimusnahkan'])) {
+                        if (in_array($row->status, ['Dihibahkan', 'Dihapuskan'])) {
                             return '<span class="badge badge-dark shadow text-gray">Tidak Ada</span>';
                         } else {
                             return '<a href="' . url('tentukan-ruangan-aset', $row->id) . '" class="badge badge-danger shadow" data-toggle="tooltip" data-placement="top" title="Tentukan Ruangan Aset">Belum Ditentukan</a>';

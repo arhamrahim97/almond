@@ -3,12 +3,13 @@
 namespace App\Exports;
 
 use App\Models\AsetBergerak;
+use Illuminate\Support\Carbon;
 use App\Models\AsetTidakBergerak;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
 use Maatwebsite\Excel\Concerns\WithStyles;
-use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use Maatwebsite\Excel\Concerns\WithColumnWidths;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 
 class ExportSimda implements FromView, WithStyles, WithColumnWidths
@@ -16,11 +17,27 @@ class ExportSimda implements FromView, WithStyles, WithColumnWidths
     /**
      * @return \Illuminate\Support\Collection
      */
+
+    protected $jumlahKategori;
+    protected $jumlahAset;
+    protected $totalRow;
+
+    function __construct($data)
+    {
+        $this->jumlahKategori = $data['jumlahKategori'];
+        $this->jumlahAset = $data['jumlahAset'];
+        $this->totalRow = $data['totalRow'];
+    }
+
     public function view(): View
     {
-        $aset = AsetBergerak::orderBy('kode_barang', 'ASC')->orderBy('register', 'ASC')->get()->merge(AsetTidakBergerak::orderBy('kode_barang', 'ASC')->orderBy('register', 'ASC')->get())->whereNotIn('status', ['Dihibahkan', 'Dijual', 'Dimusnahkan']);
+        $aset = AsetBergerak::orderBy('kode_barang', 'ASC')->orderBy('register', 'ASC')->get()->merge(AsetTidakBergerak::orderBy('kode_barang', 'ASC')->orderBy('register', 'ASC')->get())->whereNotIn('status', ['Dihibahkan', 'Dihapuskan']);
+        $totalHarga = $aset->sum('harga_barang');
+
         return view('dashboard.pages.utama.exportSimda', [
-            'asets' => $aset
+            'asets' => $aset,
+            'totalHarga' => $totalHarga,
+            'tanggal' => Carbon::now()->translatedFormat('j F Y'),
         ]);
     }
 
@@ -40,7 +57,7 @@ class ExportSimda implements FromView, WithStyles, WithColumnWidths
             'borders' => [
                 'allBorders' => [
                     'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
-                    'color' => ['argb' => 'D4D4D4'],
+                    'color' => ['argb' => '000000'],
                 ],
             ],
             'fill' => [
@@ -52,6 +69,18 @@ class ExportSimda implements FromView, WithStyles, WithColumnWidths
 
         ];
 
+        $styleArrayBorderAll = [
+            'alignment' => [
+                'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+            ],
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                    'color' => ['argb' => '000000'],
+                ],
+            ],
+        ];
+
         $sheet->getStyle('A1:A2')->getFont()->setBold(true);
         $sheet->getStyle('A4:O4')->applyFromArray($styleArray);
         $sheet->getStyle('A5:O5')->applyFromArray($styleArray);
@@ -59,20 +88,20 @@ class ExportSimda implements FromView, WithStyles, WithColumnWidths
 
         $sheet->getStyle('B:O')->getAlignment()->setWrapText(true);
 
-        // $sheet->getStyle('A')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+        $totalRow = $this->totalRow;
 
-        // $sheet->getStyle('B')->getFont()->setSize(17);
+        for ($i = 7; $i < $totalRow + 8; $i++) {
+            $sheet->getStyle('A' . $i . ':O' . $i)->applyFromArray($styleArrayBorderAll);
+            $sheet->getStyle('N' . $i)->getNumberFormat()
+                ->setFormatCode('#,##0');
+            if ($i == $totalRow + 7) {
+                $sheet->getStyle('A' . $i . ':O' . $i)->getFont()->setBold(true);
+                $sheet->getStyle('A' . $i)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+            }
+        }
 
-
-        // $sheet->getStyle('A5:O5')->getAlignment()->setHorizontal(true);
-        // return [
-        //     1    => ['font' => ['bold' => true]], //title
-        //     2    => ['font' => ['bold' => true]], //subTitle
-        //     3    => ['font' => ['bold' => true]], // space
-        //     4    => ['font' => ['bold' => true]], // header 1
-        //     5    => ['font' => ['bold' => true]], // header 2
-        //     6    => ['font' => ['bold' => true]], // header 3
-        // ];
+        $sheet->getStyle('K' . $totalRow + 11)->getFont()->setBold(true);
+        $sheet->getStyle('K' . $totalRow + 18)->getFont()->setBold(true);
     }
 
     public function columnWidths(): array

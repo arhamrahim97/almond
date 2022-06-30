@@ -105,8 +105,7 @@
                                     <option value="Hilang">Hilang</option>
                                     <option value="Pengganti">Pengganti</option>
                                     <option value="Dihibahkan">Dihibahkan</option>
-                                    <option value="Dijual">Dijual</option>
-                                    <option value="Dimusnahkan">Dimusnahkan</option>
+                                    <option value="Dihapuskan">Dihapuskan</option>
                                 @endslot
                             @endcomponent
                         </div>
@@ -471,9 +470,7 @@
                                     <label for="" class="mb-2">Aset yang dipilih</label>
                                     <ul class="list-group list-group-bordered list" id="list-aset">
                                     </ul>
-
                                 </div>
-
                             </div>
                             <div class="col-12 px-2 w-100">
                                 <div class="form-group pt-0 w-100">
@@ -665,8 +662,7 @@
                     <option value="Hilang">Hilang</option>
                     <option value="Pengganti">Pengganti</option>
                     <option value="Dihibahkan">Dihibahkan</option>
-                    <option value="Dijual">Dijual</option>
-                    <option value="Dimusnahkan">Dimusnahkan</option>
+                    <option value="Dihapuskan">Dihapuskan</option>
             `
                 $('#status-aset').append(option)
             } else if (status_aset == "Diperbaiki") {
@@ -676,8 +672,7 @@
                     <option value="Hilang">Hilang</option>
                     <option value="Pengganti">Pengganti</option>
                     <option value="Dihibahkan">Dihibahkan</option>
-                    <option value="Dijual">Dijual</option>
-                    <option value="Dimusnahkan">Dimusnahkan</option>
+                    <option value="Dihapuskan">Dihapuskan</option>
             `
                 $('#status-aset').append(option)
             } else if (status_aset == "Rusak") {
@@ -687,8 +682,7 @@
                     <option value="Hilang">Hilang</option>
                     <option value="Pengganti">Pengganti</option>
                     <option value="Dihibahkan">Dihibahkan</option>
-                    <option value="Dijual">Dijual</option>
-                    <option value="Dimusnahkan">Dimusnahkan</option>
+                    <option value="Dihapuskan">Dihapuskan</option>
             `
                 $('#status-aset').append(option)
             } else if (status_aset == "Hilang") {
@@ -698,8 +692,7 @@
                     <option value="Rusak">Rusak</option>
                     <option value="Pengganti">Pengganti</option>
                     <option value="Dihibahkan">Dihibahkan</option>
-                    <option value="Dijual">Dijual</option>
-                    <option value="Dimusnahkan">Dimusnahkan</option>
+                    <option value="Dihapuskan">Dihapuskan</option>
             `
                 $('#status-aset').append(option)
             } else if (status_aset == "Pengganti") {
@@ -709,8 +702,7 @@
                     <option value="Rusak">Rusak</option>
                     <option value="Hilang">Hilang</option>
                     <option value="Dihibahkan">Dihibahkan</option>
-                    <option value="Dijual">Dijual</option>
-                    <option value="Dimusnahkan">Dimusnahkan</option>
+                    <option value="Dihapuskan">Dihapuskan</option>
             `
                 $('#status-aset').append(option)
             }
@@ -729,7 +721,7 @@
             //         
             $('.file-dokumen').val('')
             if ($(this).val() == 'Hilang' || $(this).val() == 'Pengganti' || $(this).val() == 'Dihibahkan' || $(
-                    this).val() == 'Dijual' || $(this).val() == 'Dimusnahkan') {
+                    this).val() == 'Dihapuskan') {
                 $('#dokumen-pendukung').removeClass('d-none')
                 if ($(this).val() == 'Hilang') {
                     $('#nama-dokumen-1').val('Berita Acara Laporan Kehilangan Aset')
@@ -737,10 +729,8 @@
                     $('#nama-dokumen-1').val('Berita Acara Penggantian Aset')
                 } else if ($(this).val() == 'Dihibahkan') {
                     $('#nama-dokumen-1').val('Berita Acara Penghibahkan Aset')
-                } else if ($(this).val() == 'Dijual') {
-                    $('#nama-dokumen-1').val('Berita Acara Penjualan Aset')
-                } else if ($(this).val() == 'Dimusnahkan') {
-                    $('#nama-dokumen-1').val('Berita Acara Pemusnahan Aset')
+                } else if ($(this).val() == 'Dihapuskan') {
+                    $('#nama-dokumen-1').val('Berita Acara Penghapusan Aset')
                 }
 
                 $('.file_dokumen').attr('disabled', false)
@@ -1054,7 +1044,7 @@
         var table = $('#dataTables').DataTable({
             processing: true,
             serverSide: true,
-            dom: 'lBfrtip',
+            // dom: 'lBfrtip',
             ordering: false,
             buttons: [{
                     extend: 'excel',
@@ -1241,7 +1231,7 @@
                             swal({
                                 icon: 'error',
                                 title: 'Gagal!',
-                                text: 'Aset yang boleh dipilih hanyalah aset yang belum memiliki ruangan dan yang tidak berstatus Dihibahkan, Dijual, maupun Dimusnahkan.',
+                                text: 'Aset yang boleh dipilih hanyalah aset yang belum memiliki ruangan dan yang tidak berstatus Dihibahkan atau Dihapuskan.',
                             })
                         } else {
                             let id_aset = [];
@@ -1323,7 +1313,7 @@
                             swal({
                                 icon: 'error',
                                 title: 'Gagal!',
-                                text: 'Aset yang boleh dipilih hanyalah aset yang telah memiliki ruangan dan yang tidak berstatus Dihibahkan, Dijual, maupun Dimusnahkan.',
+                                text: 'Aset yang boleh dipilih hanyalah aset yang telah memiliki ruangan dan yang tidak berstatus Dihibahkan atau Dihapuskan.',
                             })
                         } else {
                             let id_aset = [];

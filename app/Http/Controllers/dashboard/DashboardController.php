@@ -19,8 +19,7 @@ class DashboardController extends Controller
             'asetBergerakHilang' => AsetBergerak::where('status', 'Hilang')->count(),
             'asetBergerakPengganti' => AsetBergerak::where('status', 'Pengganti')->count(),
             'asetBergerakDihibahkan' => AsetBergerak::where('status', 'Dihibahkan')->count(),
-            'asetBergerakDijual' => AsetBergerak::where('status', 'Dijual')->count(),
-            'asetBergerakDimusnahkan' => AsetBergerak::where('status', 'Dimusnahkan')->count(),
+            'asetBergerakDihapuskan' => AsetBergerak::where('status', 'Dihapuskan')->count(),
             'asetBergerakTotal' => AsetBergerak::count(),
 
             'asetTidakBergerakBaru' => AsetTidakBergerak::where('status', 'Baru')->count(),
@@ -30,8 +29,7 @@ class DashboardController extends Controller
             'asetTidakBergerakHilang' => AsetTidakBergerak::where('status', 'Hilang')->count(),
             'asetTidakBergerakPengganti' => AsetTidakBergerak::where('status', 'Pengganti')->count(),
             'asetTidakBergerakDihibahkan' => AsetTidakBergerak::where('status', 'Dihibahkan')->count(),
-            'asetTidakBergerakDijual' => AsetTidakBergerak::where('status', 'Dijual')->count(),
-            'asetTidakBergerakDimusnahkan' => AsetTidakBergerak::where('status', 'Dimusnahkan')->count(),
+            'asetTidakBergerakDihapuskan' => AsetTidakBergerak::where('status', 'Dihapuskan')->count(),
             'asetTidakBergerakTotal' => AsetTidakBergerak::count(),
 
         ];

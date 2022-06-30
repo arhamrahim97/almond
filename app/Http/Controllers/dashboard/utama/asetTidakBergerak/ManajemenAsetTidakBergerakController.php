@@ -66,7 +66,7 @@ class ManajemenAsetTidakBergerakController extends Controller
                     if ($row->ruangan) {
                         return $row->ruangan->nama_ruangan;
                     } else {
-                        if (in_array($row->status, ['Dihibahkan', 'Dijual', 'Dimusnahkan'])) {
+                        if (in_array($row->status, ['Dihibahkan', 'Dihapuskan'])) {
                             return '<span class="badge badge-dark shadow text-gray">Tidak Ada</span>';
                         } else {
                             return '<a href="' . url('tentukan-ruangan-aset', $row->id) . '" class="badge badge-danger shadow" data-toggle="tooltip" data-placement="top" title="Tentukan Ruangan Aset">Belum Ditentukan</a>';
@@ -105,7 +105,7 @@ class ManajemenAsetTidakBergerakController extends Controller
                         data-placement="top" title="Ubah Status Aset" value="' . $row->id . '"
                         data-status_aset="' . $row->status . '" data-id="' . $row->id . '"
                         style="cursor: pointer">Pengganti</span>';
-                    } else { // Dihibahkan, Dijual, Dimusnahkan
+                    } else { // Dihibahkan, Dihapuskan
                         return '<span class="badge badge-dark shadow text-gray">' . $row->status . '</span>';
                     }
                 })
@@ -125,7 +125,7 @@ class ManajemenAsetTidakBergerakController extends Controller
                     if ($row->ruangan) {
                         $actionBtn .= '<a href="' . url('ubah-ruangan-aset', $row->id) . '" id="btn-edit" class="btn btn-secondary btn-sm me-1 text-white shadow" data-toggle="tooltip" data-placement="top" title="Pindahkan Aset/Ubah Ruangan" value="' . $row->id . '" data-toggle="modal" data-target="#exampleModalCenter"><i class="fas fa-share"></i></a> ';
                     } else {
-                        if (!in_array($row->status, ['Dihibahkan', 'Dijual', 'Dimusnahkan'])) {
+                        if (!in_array($row->status, ['Dihibahkan', 'Dihapuskan'])) {
                             $actionBtn .= '<a href="' . url('tentukan-ruangan-aset', $row->id) . '" id="btn-edit" class="btn btn-success btn-sm me-1 text-white shadow" data-toggle="tooltip" data-placement="top" title="Tentukan Ruangan Aset" value="' . $row->id . '" data-toggle="modal" data-target="#exampleModalCenter"><i class="fas fa-map-pin"></i></a> ';
                         }
                     }
@@ -847,13 +847,13 @@ class ManajemenAsetTidakBergerakController extends Controller
         $asetTidakBergerak = AsetTidakBergerak::with('fileUploadGambar', 'fileUploadDokumen')->whereIn('id', $request->id)->get();
         if ($request->purpose == 'penentuan-ruangan') {
             foreach ($asetTidakBergerak as $row) {
-                if ($row->ruangan || in_array($row->status, ['Dijual', 'Dihibahkan', 'Dimusnahkan'])) {
+                if ($row->ruangan || in_array($row->status, ['Dihibahkan', 'Dihapuskan'])) {
                     return 'ada_aset_yang_telah_memiliki_ruangan';
                 }
             }
         } else {
             foreach ($asetTidakBergerak as $row) {
-                if (!$row->ruangan || in_array($row->status, ['Dijual', 'Dihibahkan', 'Dimusnahkan'])) {
+                if (!$row->ruangan || in_array($row->status, ['Dihibahkan', 'Dihapuskan'])) {
                     return 'ada_aset_yang_belum_memiliki_ruangan';
                 }
             }
@@ -952,7 +952,7 @@ class ManajemenAsetTidakBergerakController extends Controller
         }
 
 
-        if (in_array($request->status, ['Hilang', 'Pengganti', 'Dihibahkan', 'Dijual', 'Dimusnahkan'])) {
+        if (in_array($request->status, ['Hilang', 'Pengganti', 'Dihibahkan', 'Dihapuskan'])) {
             if ($request->nama_dokumen != null) {
                 $countFileDokumen = count($request->file_dokumen ?? []);
                 $countNamaDokumen = count($request->nama_dokumen);
@@ -970,7 +970,7 @@ class ManajemenAsetTidakBergerakController extends Controller
                 'status' => $request->status,
             ];
 
-            if (in_array($request->status, ['Dihibahkan', 'Dijual', 'Dimusnahkan'])) {
+            if (in_array($request->status, ['Dihibahkan', 'Dihapuskan'])) {
                 $update['ruangan_id'] = null;
             }
 
@@ -1006,7 +1006,7 @@ class ManajemenAsetTidakBergerakController extends Controller
                 'status' => $request->status,
             ];
 
-            if (in_array($request->status, ['Dihibahkan', 'Dijual', 'Dimusnahkan'])) {
+            if (in_array($request->status, ['Dihibahkan', 'Dihapuskan'])) {
                 $update['ruangan_id'] = null;
             }
 
