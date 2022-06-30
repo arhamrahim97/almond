@@ -33,7 +33,7 @@
                         <div class="card-tools">
                             <ul class="nav nav-pills nav-secondary nav-pills-no-bd nav-sm" id="pills-tab" role="tablist">
                                 <li class="nav-item submenu">
-                                    <a href="{{ url('/export-simda') }}" class="btn btn-sm btn-primary"><i
+                                    <a href="{{ url('/export-simda') }}" class="btn btn-sm btn-info"><i
                                             class="fas fa-download"></i> Ekspor Data</a>
                                 </li>
                             </ul>
@@ -49,8 +49,8 @@
                                     Data yang ditampilkan di bawah ini adalah preview data aset yang akan di ekspor.
                                 </li>
                                 <li>
-                                    Data yang ditampilkan/diekspor adalah data yang tidak berstatus <b>Dihibahkan</b>,
-                                    <b>Dijual</b>, dan <b>Dimusnahkan</b>.
+                                    Data yang ditampilkan/diekspor adalah data yang tidak berstatus <b>Dihibahkan</b> dan
+                                    <b>Dihapuskan</b>.
                                 </li>
                             </ul>
                         </div>

@@ -222,7 +222,7 @@
             </div>
             <div class="col-md-12 col-lg-12 col-xl-12 px-2 mt-3">
                 <div class="form-group">
-                    <label for="" class="mb-2">Dokumen <sup class="text-danger">*</sup></label>
+                    <label for="" class="mb-2">Dokumen</label>
                     {{-- <label for="">(Surat-surat Kendaraan, Berita Acara, dan Lainnya)</label> --}}
                     <div class="row" id="dokumen-aset">
                         @if (isset($aset) && $aset->fileUploadDokumen && $method == 'PUT')

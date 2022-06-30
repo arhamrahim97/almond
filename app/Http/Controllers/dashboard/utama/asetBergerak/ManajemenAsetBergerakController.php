@@ -69,7 +69,7 @@ class ManajemenAsetBergerakController extends Controller
                     if ($row->pegawai) {
                         return $row->pegawai->nama_lengkap;
                     } else {
-                        if (in_array($row->status, ['Dihibahkan', 'Dijual', 'Dimusnahkan'])) {
+                        if (in_array($row->status, ['Dihibahkan', 'Dihapuskan'])) {
                             return '<span class="badge badge-dark shadow text-gray">Tidak Ada</span>';
                         } else {
                             return '<a href="' . url('tentukan-aset-pegawai', $row->id) . '" class="badge badge-danger shadow" data-toggle="tooltip" data-placement="top" title="Tentukan Pegawai">Belum Ditentukan</a>';
@@ -108,7 +108,7 @@ class ManajemenAsetBergerakController extends Controller
                         data-placement="top" title="Ubah Status Aset" value="' . $row->id . '"
                         data-status_aset="' . $row->status . '" data-id="' . $row->id . '"
                         style="cursor: pointer">Pengganti</span>';
-                    } else { // Dihibahkan, Dijual, Dimusnahkan
+                    } else { // Dihibahkan, Dihapuskan
                         return '<span class="badge badge-dark shadow text-gray">' . $row->status . '</span>';
                     }
                 })
@@ -128,7 +128,7 @@ class ManajemenAsetBergerakController extends Controller
                     if ($row->pegawai) {
                         $actionBtn .= '<a href="' . url('ubah-aset-pegawai', $row->id) . '" id="btn-edit" class="btn btn-secondary btn-sm me-1 text-white shadow" data-toggle="tooltip" data-placement="top" title="Pindahkan Aset/Ubah Pegawai" value="' . $row->id . '" data-toggle="modal" data-target="#exampleModalCenter"><i class="fas fa-user-edit"></i></a> ';
                     } else {
-                        if (!in_array($row->status, ['Dihibahkan', 'Dijual', 'Dimusnahkan'])) {
+                        if (!in_array($row->status, ['Dihibahkan', 'Dihapuskan'])) {
                             $actionBtn .= '<a href="' . url('tentukan-aset-pegawai', $row->id) . '" id="btn-edit" class="btn btn-success btn-sm me-1 text-white shadow" data-toggle="tooltip" data-placement="top" title="Tentukan Pegawai" value="' . $row->id . '" data-toggle="modal" data-target="#exampleModalCenter"><i class="fas fa-user-plus"></i></a> ';
                         }
                     }
@@ -873,7 +873,7 @@ class ManajemenAsetBergerakController extends Controller
         }
 
 
-        if (in_array($request->status, ['Hilang', 'Pengganti', 'Dihibahkan', 'Dijual', 'Dimusnahkan'])) {
+        if (in_array($request->status, ['Hilang', 'Pengganti', 'Dihibahkan', 'Dihapuskan'])) {
             if ($request->nama_dokumen != null) {
                 $countFileDokumen = count($request->file_dokumen ?? []);
                 $countNamaDokumen = count($request->nama_dokumen);
@@ -891,7 +891,7 @@ class ManajemenAsetBergerakController extends Controller
                 'status' => $request->status,
             ];
 
-            if (in_array($request->status, ['Dihibahkan', 'Dijual', 'Dimusnahkan'])) {
+            if (in_array($request->status, ['Dihibahkan', 'Dihapuskan'])) {
                 $update['pegawai_id'] = null;
             }
 
@@ -927,7 +927,7 @@ class ManajemenAsetBergerakController extends Controller
                 'status' => $request->status,
             ];
 
-            if (in_array($request->status, ['Dihibahkan', 'Dijual', 'Dimusnahkan'])) {
+            if (in_array($request->status, ['Dihibahkan', 'Dihapuskan'])) {
                 $update['pegawai_id'] = null;
             }
 
