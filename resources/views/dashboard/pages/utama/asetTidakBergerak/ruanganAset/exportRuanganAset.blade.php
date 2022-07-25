@@ -15,7 +15,7 @@
             <th></th>
             <th></th>
             <th></th>
-            <th colspan="3">NO. KODE LOKASI : </th>
+            <th colspan="3">NO. KODE LOKASI : {{ $ruangan->deskripsi }}</th>
         </tr>
         <tr>
             <th colspan="2">UNIT</th>

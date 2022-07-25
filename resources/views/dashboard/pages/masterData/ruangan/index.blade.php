@@ -61,7 +61,7 @@
                                         <th><input type="checkbox" id="checkAllData" autocomplete="off" /></th>
                                         <th>No</th>
                                         <th>Nama Ruangan</th>
-                                        <th>Deskripsi</th>
+                                        <th>No. Kode Lokasi</th>
                                         <th>Jumlah Foto</th>
                                         <th>Dibuat Tanggal</th>
                                         <th>Dibuat Oleh</th>
