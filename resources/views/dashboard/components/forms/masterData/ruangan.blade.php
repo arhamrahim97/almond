@@ -22,13 +22,29 @@
         <div class="row">
             <div class="col-md-12 col-lg-12 col-xl-12 px-2">
                 <div class="form-group">
-                    @component('dashboard.components.formElements.input', ['label' => 'Nama Ruangan', 'name' => 'nama_ruangan', 'class' => 'req', 'wajib' => '<sup class="text-danger">*</sup>', 'placeholder' => 'Masukkan Nama Ruangan', 'value' => isset($ruangan) ? $ruangan->nama_ruangan : ''])
+                    @component('dashboard.components.formElements.input',
+                        [
+                            'label' => 'Nama Ruangan',
+                            'name' => 'nama_ruangan',
+                            'class' => 'req',
+                            'wajib' => '<sup class="text-danger">*</sup>',
+                            'placeholder' => 'Masukkan Nama Ruangan',
+                            'value' => isset($ruangan) ? $ruangan->nama_ruangan : '',
+                        ])
                     @endcomponent
                 </div>
             </div>
             <div class="col-md-12 col-lg-12 px-2">
                 <div class="form-group">
-                    @component('dashboard.components.formElements.textArea', ['label' => 'Deskripsi', 'name' => 'deskripsi', 'class' => '', 'id' => 'deskripsi', 'placeholder' => 'Masukkan Deskripsi', 'value' => isset($ruangan) ? $ruangan->deskripsi : ''])
+                    @component('dashboard.components.formElements.textArea',
+                        [
+                            'label' => 'No. Kode Lokasi',
+                            'name' => 'deskripsi',
+                            'class' => '',
+                            'id' => 'deskripsi',
+                            'placeholder' => 'Masukkan No. Kode Lokasi',
+                            'value' => isset($ruangan) ? $ruangan->deskripsi : '',
+                        ])
                     @endcomponent
                 </div>
             </div>

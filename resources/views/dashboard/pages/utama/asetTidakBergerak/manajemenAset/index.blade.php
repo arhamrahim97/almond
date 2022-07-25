@@ -572,10 +572,10 @@
                         $('#foto-aset-bergerak').html('')
                         $.each(data.foto_aset_tidak_bergerak_, function(index, value) {
                             $('#foto-aset-bergerak').append(`
-                            <div class="col-lg-6">
-                                <img src="${value}" class="img-fluid card-img-top rounded mb-3" alt="">
-                            </div>
-                        `)
+                        <div class="col-lg-6">
+                            <img src="${value}" class="img-fluid card-img-top rounded mb-3" alt="">
+                        </div>
+                    `)
                         })
                     } else {
                         $('#foto-aset-bergerak').addClass('d-none')
@@ -587,56 +587,57 @@
                     $('#tr-pegawai').remove()
                     if (data.pegawai_) {
                         $('#dokumen-aset-bergerak').append(`
-                            <tr id="tr-pegawai">
-                                <td>Pegawai</td>
-                                <td class="text-right fw-bold">` + data.pegawai_ + `</td>
-                            </tr>
-                        `)
+                        <tr id="tr-pegawai">
+                            <td>Pegawai</td>
+                            <td class="text-right fw-bold">` + data.pegawai_ + `</td>
+                        </tr>
+                    `)
                     }
 
+                    $('#tr-ruangan').remove()
                     if (data.ruangan_) {
                         $('#dokumen-aset-bergerak').append(`
-                            <tr id="tr-ruangan">
-                                <td>Ruangan</td>
-                                <td class="text-right fw-bold">` + data.ruangan_ + `</td>
-                            </tr>
-                        `)
+                        <tr id="tr-ruangan">
+                            <td>Ruangan</td>
+                            <td class="text-right fw-bold">` + data.ruangan_ + `</td>
+                        </tr>
+                    `)
                     }
 
                     $('#tr-jumlah-dokumen').remove()
                     if (data.jumlah_dokumen_) {
                         $('#dokumen-aset-bergerak').append(`
-                        <tr id="tr-jumlah-dokumen">
-                            <td>Jumlah Dokumen:</td>
-                            <td class="text-right td-modal fw-bold" id="td-jumlah-dokumen">
-                                ` + data.jumlah_dokumen_ + `
-                            </td>
-                        </tr>
-    
-                        `)
+                    <tr id="tr-jumlah-dokumen">
+                        <td>Jumlah Dokumen:</td>
+                        <td class="text-right td-modal fw-bold" id="td-jumlah-dokumen">
+                            ` + data.jumlah_dokumen_ + `
+                        </td>
+                    </tr>
+
+                    `)
                     }
 
                     $('.tr-aset-dokumen').remove()
                     $.each(data.dokumen_aset_bergerak_, function(index, value) {
                         $('#dokumen-aset-bergerak').append(`
-                            <tr class="tr-aset-dokumen">
-                                <td>` + value.deskripsi + ` <br> ` + value.pegawai + `</td>
-                                <td class="text-right td-modal fw-bold" id="td-jumlah-dokumen">
-                                    <a href="` + value.nama_file + `" target="_blank" class="badge badge-primary shadow">Lihat</a>
-                                </td>
-                            </tr>
-                            `)
+                        <tr class="tr-aset-dokumen">
+                            <td>` + value.deskripsi + ` <br> ` + value.pegawai + `</td>
+                            <td class="text-right td-modal fw-bold" id="td-jumlah-dokumen">
+                                <a href="` + value.nama_file + `" target="_blank" class="badge badge-primary shadow">Lihat</a>
+                            </td>
+                        </tr>
+                        `)
                     })
 
                     $.each(data.dokumen_aset_tidak_bergerak_, function(index, value) {
                         $('#dokumen-aset-bergerak').append(`
-                            <tr class="tr-aset-dokumen">
-                                <td>` + value.deskripsi + ` <br> ` + value.ruangan + `</td>
-                                <td class="text-right td-modal fw-bold" id="td-jumlah-dokumen">
-                                    <a href="` + value.nama_file + `" target="_blank" class="badge badge-primary shadow">Lihat</a>
-                                </td>
-                            </tr>
-                            `)
+                        <tr class="tr-aset-dokumen">
+                            <td>` + value.deskripsi + ` <br> ` + value.ruangan + `</td>
+                            <td class="text-right td-modal fw-bold" id="td-jumlah-dokumen">
+                                <a href="` + value.nama_file + `" target="_blank" class="badge badge-primary shadow">Lihat</a>
+                            </td>
+                        </tr>
+                        `)
                     })
                 }
             });
