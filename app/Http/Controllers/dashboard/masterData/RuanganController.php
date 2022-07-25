@@ -84,10 +84,13 @@ class RuanganController extends Controller
             $request->all(),
             [
                 'nama_ruangan' => 'required|unique:ruangan,nama_ruangan,NULL,id,deleted_at,NULL',
+                'deskripsi' => 'required|unique:ruangan,deskripsi,NULL,id,deleted_at,NULL',
             ],
             [
                 'nama_ruangan.required' => 'Nama Ruangan tidak boleh kosong',
                 'nama_ruangan.unique' => 'Nama Ruangan sudah ada',
+                'deskripsi.required' => 'No. Kode Lokasi tidak boleh kosong',
+                'deskripsi.unique' => 'No. Kode Lokasi sudah ada',
             ]
 
         );
@@ -179,10 +182,13 @@ class RuanganController extends Controller
             $request->all(),
             [
                 'nama_ruangan' => 'required|unique:ruangan,nama_ruangan,' . $ruangan->nama_ruangan . ',nama_ruangan,deleted_at,NULL',
+                'deskripsi' => 'required|unique:ruangan,deskripsi,' . $ruangan->deskripsi . ',deskripsi,deleted_at,NULL',
             ],
             [
                 'nama_ruangan.required' => 'Nama Ruangan tidak boleh kosong',
                 'nama_ruangan.unique' => 'Nama Ruangan sudah ada',
+                'deskripsi.required' => 'No. Kode Lokasi tidak boleh kosong',
+                'deskripsi.unique' => 'No. Kode Lokasi sudah ada',
             ]
 
         );

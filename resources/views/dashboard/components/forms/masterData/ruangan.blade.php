@@ -36,11 +36,12 @@
             </div>
             <div class="col-md-12 col-lg-12 px-2">
                 <div class="form-group">
-                    @component('dashboard.components.formElements.textArea',
+                    @component('dashboard.components.formElements.input',
                         [
                             'label' => 'No. Kode Lokasi',
                             'name' => 'deskripsi',
-                            'class' => '',
+                            'class' => 'req',
+                            'wajib' => '<sup class="text-danger">*</sup>',
                             'id' => 'deskripsi',
                             'placeholder' => 'Masukkan No. Kode Lokasi',
                             'value' => isset($ruangan) ? $ruangan->deskripsi : '',
