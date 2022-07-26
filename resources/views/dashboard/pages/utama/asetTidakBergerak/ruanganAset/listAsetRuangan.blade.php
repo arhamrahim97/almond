@@ -578,6 +578,7 @@
                         `)
                     }
 
+                    $('#tr-ruangan').remove()
                     if (data.ruangan_) {
                         $('#dokumen-aset-bergerak').append(`
                             <tr id="tr-ruangan">
