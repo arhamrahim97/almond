@@ -15,7 +15,15 @@
 
             <div class="col-md-6 col-lg-6 col-xl-4 px-2">
                 <div class="form-group">
-                    @component('dashboard.components.formElements.input', ['label' => 'Nama Lengkap', 'name' => 'nama_lengkap', 'class' => 'req', 'wajib' => '<sup class="text-danger">*</sup>', 'placeholder' => 'Masukkan Nama Lengkap', 'value' => isset($pegawai) ? $pegawai->nama_lengkap : ''])
+                    @component('dashboard.components.formElements.input',
+                        [
+                            'label' => 'Nama Lengkap',
+                            'name' => 'nama_lengkap',
+                            'class' => 'req',
+                            'wajib' => '<sup class="text-danger">*</sup>',
+                            'placeholder' => 'Masukkan Nama Lengkap',
+                            'value' => isset($pegawai) ? $pegawai->nama_lengkap : '',
+                        ])
                     @endcomponent
                 </div>
             </div>
@@ -27,9 +35,25 @@
                             <input type="hidden" name="jenis_kelamin" value="" data-label="Jenis Kelamin"
                                 id="jenis-kelamin-hidden">
                         @endif
-                        @component('dashboard.components.formElements.radioButton', ['label' => 'Laki-laki', 'value' => 'Laki-laki', 'name' => 'jenis_kelamin', 'class' => 'jenis-kelamin req', 'icon' => '<i class="fas fa-mars"></i>', 'checked' => isset($pegawai) && $pegawai->jenis_kelamin == 'Laki-laki' ? 'checked' : ''])
+                        @component('dashboard.components.formElements.radioButton',
+                            [
+                                'label' => 'Laki-laki',
+                                'value' => 'Laki-laki',
+                                'name' => 'jenis_kelamin',
+                                'class' => 'jenis-kelamin req',
+                                'icon' => '<i class="fas fa-mars"></i>',
+                                'checked' => isset($pegawai) && $pegawai->jenis_kelamin == 'Laki-laki' ? 'checked' : '',
+                            ])
                         @endcomponent
-                        @component('dashboard.components.formElements.radioButton', ['label' => 'Perempuan', 'value' => 'Perempuan', 'name' => 'jenis_kelamin', 'class' => 'jenis-kelamin req', 'icon' => '<i class="fas fa-venus"></i>', 'checked' => isset($pegawai) && $pegawai->jenis_kelamin == 'Perempuan' ? 'checked' : ''])
+                        @component('dashboard.components.formElements.radioButton',
+                            [
+                                'label' => 'Perempuan',
+                                'value' => 'Perempuan',
+                                'name' => 'jenis_kelamin',
+                                'class' => 'jenis-kelamin req',
+                                'icon' => '<i class="fas fa-venus"></i>',
+                                'checked' => isset($pegawai) && $pegawai->jenis_kelamin == 'Perempuan' ? 'checked' : '',
+                            ])
                         @endcomponent
                     </div>
                     <span class="text-danger error-text jenis_kelamin-error"></span>
@@ -37,38 +61,88 @@
             </div>
             <div class="col-md-6 col-lg-6 col-xl-4 px-2">
                 <div class="form-group">
-                    @component('dashboard.components.formElements.input', ['label' => 'Tempat Lahir', 'name' => 'tempat_lahir', 'class' => 'req', 'wajib' => '<sup class="text-danger">*</sup>', 'placeholder' => 'Masukkan Tempat Lahir', 'value' => isset($pegawai) ? $pegawai->tempat_lahir : ''])
+                    @component('dashboard.components.formElements.input',
+                        [
+                            'label' => 'Tempat Lahir',
+                            'name' => 'tempat_lahir',
+                            'class' => 'req',
+                            'wajib' => '<sup class="text-danger">*</sup>',
+                            'placeholder' => 'Masukkan Tempat Lahir',
+                            'value' => isset($pegawai) ? $pegawai->tempat_lahir : '',
+                        ])
                     @endcomponent
                 </div>
             </div>
             <div class="col-md-6 col-lg-6 col-xl-4 px-2">
                 <div class="form-group">
-                    @component('dashboard.components.formElements.input', ['label' => 'Tanggal Lahir', 'name' => 'tanggal_lahir', 'class' => 'tanggal req', 'wajib' => '<sup class="text-danger">*</sup>', 'placeholder' => 'Masukkan Tanggal Lahir (DD-MM-YYYY)', 'value' => isset($pegawai) ? Carbon\Carbon::parse($pegawai->tanggal_lahir)->isoFormat('DD-MM-YYYY') : ''])
+                    @component('dashboard.components.formElements.input',
+                        [
+                            'label' => 'Tanggal Lahir',
+                            'name' => 'tanggal_lahir',
+                            'class' => 'tanggal req',
+                            'wajib' => '<sup class="text-danger">*</sup>',
+                            'placeholder' => 'Masukkan Tanggal Lahir (DD-MM-YYYY)',
+                            'value' => isset($pegawai) ? Carbon\Carbon::parse($pegawai->tanggal_lahir)->isoFormat('DD-MM-YYYY') : '',
+                        ])
                     @endcomponent
                 </div>
             </div>
 
             <div class="col-md-6 col-lg-6 col-xl-4 px-2">
                 <div class="form-group">
-                    @component('dashboard.components.formElements.input', ['label' => 'Nomor HP', 'name' => 'nomor_hp', 'class' => 'angka req', 'wajib' => '<sup class="text-danger">*</sup>', 'placeholder' => 'Masukkan Nomor HP', 'value' => isset($pegawai) ? $pegawai->nomor_hp : ''])
+                    @component('dashboard.components.formElements.input',
+                        [
+                            'label' => 'Nomor HP',
+                            'name' => 'nomor_hp',
+                            'class' => 'angka req',
+                            'wajib' => '<sup class="text-danger">*</sup>',
+                            'placeholder' => 'Masukkan Nomor HP',
+                            'value' => isset($pegawai) ? $pegawai->nomor_hp : '',
+                        ])
                     @endcomponent
                 </div>
             </div>
             <div class="col-md-6 col-lg-6 col-xl-4 px-2">
                 <div class="form-group">
-                    @component('dashboard.components.formElements.input', ['label' => 'Email', 'name' => 'email', 'optional' => '<span class="text-muted"><i>(Optional)</i></span>', 'placeholder' => 'Masukkan Email', 'value' => isset($pegawai) ? $pegawai->email : ''])
+                    @component('dashboard.components.formElements.input',
+                        [
+                            'label' => 'Email',
+                            'name' => 'email',
+                            'optional' => '<span class="text-muted"><i>(Optional)</i></span>',
+                            'placeholder' => 'Masukkan Email',
+                            'value' => isset($pegawai) ? $pegawai->email : '',
+                        ])
                     @endcomponent
                 </div>
             </div>
             <div class="col-md-12 col-lg-12 px-2">
                 <div class="form-group">
-                    @component('dashboard.components.formElements.textArea', ['label' => 'Alamat', 'name' => 'alamat', 'class' => 'req', 'id' => 'alamat', 'wajib' => '<sup class="text-danger">*</sup>', 'placeholder' => 'Masukkan Alamat', 'value' => isset($pegawai) ? $pegawai->alamat : ''])
+                    @component('dashboard.components.formElements.textArea',
+                        [
+                            'label' => 'Alamat',
+                            'name' => 'alamat',
+                            'class' => 'req',
+                            'id' => 'alamat',
+                            'wajib' => '<sup class="text-danger">*</sup>',
+                            'placeholder' => 'Masukkan Alamat',
+                            'value' => isset($pegawai) ? $pegawai->alamat : '',
+                        ])
                     @endcomponent
                 </div>
             </div>
             <div class="col-md-6 col-lg-6 col-xl-4 px-2">
                 <div class="form-group">
-                    @component('dashboard.components.formElements.input', ['label' => 'NIP', 'name' => 'nip', 'class' => 'req', 'wajib' => '<sup class="text-danger">*</sup>', 'placeholder' => 'Masukkan NIP', 'attribute' => 'onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57" maxlength="16"', 'value' => isset($pegawai) ? $pegawai->nip : ''])
+                    @component('dashboard.components.formElements.input',
+                        [
+                            'label' => 'NIP',
+                            'name' => 'nip',
+                            'class' => 'req',
+                            'wajib' => '<sup class="text-danger">*</sup>',
+                            'placeholder' => 'Masukkan NIP',
+                            'attribute' =>
+                                'onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57" maxlength="18"',
+                            'value' => isset($pegawai) ? $pegawai->nip : '',
+                        ])
                     @endcomponent
                 </div>
             </div>
@@ -99,7 +173,15 @@
             </div>
             <div class="col-md-6 col-lg-6 col-xl-4 px-2">
                 <div class="form-group">
-                    @component('dashboard.components.formElements.input', ['label' => 'Unit Kerja / Tempat Tugas', 'name' => 'unit_kerja', 'class' => 'req', 'wajib' => '<sup class="text-danger">*</sup>', 'placeholder' => 'Masukkan Unit Kerja / Tempat Tugas', 'value' => isset($pegawai) ? $pegawai->unit_kerja : ''])
+                    @component('dashboard.components.formElements.input',
+                        [
+                            'label' => 'Unit Kerja / Tempat Tugas',
+                            'name' => 'unit_kerja',
+                            'class' => 'req',
+                            'wajib' => '<sup class="text-danger">*</sup>',
+                            'placeholder' => 'Masukkan Unit Kerja / Tempat Tugas',
+                            'value' => isset($pegawai) ? $pegawai->unit_kerja : '',
+                        ])
                     @endcomponent
                 </div>
             </div>
