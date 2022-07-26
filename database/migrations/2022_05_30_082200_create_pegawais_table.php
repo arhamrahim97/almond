@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('nomor_hp');
             $table->string('email')->nullable();
             $table->text('alamat');
-            $table->string('nip', 16);
+            $table->string('nip', 18);
             $table->uuid('jabatan_struktural_id');
             $table->string('unit_kerja');
             $table->string('foto_profil')->nullable();
